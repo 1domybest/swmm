@@ -3,3 +3,4 @@
 *.tmp
 *.bak
 .DS_Store
+run-results/
