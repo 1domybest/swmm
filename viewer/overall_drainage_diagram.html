@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전체 도시 배수도</title>
+<style>
+:root {
+  --bg: #f5f7fb;
+  --surface: #ffffff;
+  --ink: #172033;
+  --muted: #667085;
+  --line: #d7dee9;
+  --sky: #eaf6ff;
+  --soil: #9b5d34;
+  --soil-dark: #744321;
+  --river: #25b6bd;
+  --storm: #1f8cff;
+  --sewer: #9b5a24;
+  --combined: #7a59d1;
+  --treated: #31a66a;
+  --overflow: #db3b2f;
+  --pump: #f0b429;
+  --shadow: 0 14px 32px rgba(16, 24, 40, .10);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  background: rgba(255,255,255,.94);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+}
+h1 {
+  margin: 0 0 4px;
+  font-size: 22px;
+}
+.sub {
+  color: var(--muted);
+  font-size: 13px;
+}
+.controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+button {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+button.active {
+  background: #172033;
+  border-color: #172033;
+  color: #fff;
+  font-weight: 700;
+}
+main {
+  display: grid;
+  grid-template-columns: minmax(1040px, 1fr) 360px;
+  gap: 18px;
+  padding: 18px;
+}
+.stage, aside {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+.stage {
+  overflow: auto;
+}
+svg {
+  display: block;
+  min-width: 1420px;
+  width: 100%;
+  height: 780px;
+}
+aside {
+  align-self: start;
+  padding: 16px;
+  position: sticky;
+  top: 86px;
+  max-height: calc(100vh - 104px);
+  overflow: auto;
+}
+h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+h3 {
+  margin: 18px 0 8px;
+  font-size: 14px;
+}
+.note {
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 13px;
+}
+.legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.status-card {
+  border: 1px solid var(--line);
+  background: #fbfdff;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 8px 0;
+}
+.status-card b {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+.status-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+  font-size: 13px;
+}
+.label {
+  fill: #172033;
+  font-size: 12px;
+  font-weight: 800;
+  paint-order: stroke;
+  stroke: rgba(255,255,255,.9);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+.small-label {
+  fill: #475467;
+  font-size: 10px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: rgba(255,255,255,.9);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+.zone-title {
+  fill: #344054;
+  font-size: 16px;
+  font-weight: 900;
+}
+.ground-label {
+  fill: #fff;
+  font-size: 13px;
+  font-weight: 900;
+}
+.node rect, .node circle {
+  stroke: #1f2937;
+  stroke-width: 1.6;
+}
+.node text {
+  fill: #172033;
+  font-size: 12px;
+  font-weight: 850;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+.pipe {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .22;
+  transition: opacity .2s, stroke-width .2s, filter .2s;
+}
+.pipe.active {
+  opacity: .96;
+  filter: drop-shadow(0 4px 8px rgba(16,24,40,.16));
+  stroke-dasharray: 14 12;
+  animation: flow 1.1s linear infinite;
+}
+.pipe.backflow {
+  stroke-dasharray: 8 8;
+  animation: reverseFlow .85s linear infinite;
+}
+.pipe-muted {
+  opacity: .16;
+}
+.arrow {
+  fill: currentColor;
+}
+.facility {
+  stroke: #1f2937;
+  stroke-width: 1.5;
+}
+.surface-item {
+  stroke: #334155;
+  stroke-width: 1.4;
+}
+.rain {
+  opacity: 0;
+  transition: opacity .2s;
+}
+body[data-mode="normal"] .rain,
+body[data-mode="heavy"] .rain {
+  opacity: 1;
+}
+body[data-mode="dry"] .dry-active,
+body[data-mode="normal"] .normal-active,
+body[data-mode="heavy"] .heavy-active {
+  opacity: .96;
+  filter: drop-shadow(0 4px 8px rgba(16,24,40,.16));
+  stroke-dasharray: 14 12;
+  animation: flow 1.1s linear infinite;
+}
+body[data-mode="heavy"] .heavy-reverse {
+  opacity: .96;
+  filter: drop-shadow(0 4px 8px rgba(16,24,40,.16));
+  stroke-dasharray: 8 8;
+  animation: reverseFlow .85s linear infinite;
+}
+body[data-mode="heavy"] .heavy-warning {
+  opacity: 1;
+}
+body[data-mode="dry"] .dry-hidden,
+body[data-mode="normal"] .normal-hidden,
+body[data-mode="heavy"] .heavy-hidden {
+  opacity: .08;
+}
+.warning {
+  opacity: 0;
+  transition: opacity .2s;
+}
+.callout {
+  fill: #fff7ed;
+  stroke: #fb923c;
+  stroke-width: 1.2;
+}
+.callout-danger {
+  fill: #fff1f1;
+  stroke: #ef4444;
+}
+.callout-text {
+  fill: #9a3412;
+  font-size: 12px;
+  font-weight: 900;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+.callout-danger + .callout-text {
+  fill: #b42318;
+}
+@keyframes flow {
+  to { stroke-dashoffset: -26; }
+}
+@keyframes reverseFlow {
+  to { stroke-dashoffset: 22; }
+}
+@media (max-width: 1180px) {
+  main { grid-template-columns: 1fr; }
+  aside { position: static; max-height: none; }
+  header { align-items: flex-start; flex-direction: column; }
+  .controls { justify-content: flex-start; }
+}
+</style>
+</head>
+<body data-mode="normal">
+<header>
+  <div>
+    <h1>전체 도시 배수도</h1>
+    <div class="sub">분류식과 합류식을 한 장에 놓고, 상황별로 활성 흐름만 강조합니다.</div>
+  </div>
+  <div class="controls">
+    <button data-mode="dry">비 안 올 때</button>
+    <button class="active" data-mode="normal">일반 비</button>
+    <button data-mode="heavy">폭우</button>
+  </div>
+</header>
+<main>
+  <section class="stage">
+    <svg viewBox="0 0 1600 820" role="img" aria-label="전체 도시 배수 단면도">
+      <defs>
+        <pattern id="soilPattern" width="34" height="22" patternUnits="userSpaceOnUse">
+          <rect width="34" height="22" fill="#9b5d34"></rect>
+          <path d="M0 8 C8 2 18 14 34 7 M0 18 C10 13 22 24 34 17" fill="none" stroke="#b77a4e" stroke-width="1" opacity=".55"></path>
+        </pattern>
+        <pattern id="waterPattern" width="42" height="18" patternUnits="userSpaceOnUse">
+          <rect width="42" height="18" fill="#25b6bd"></rect>
+          <path d="M0 9 C8 2 14 16 22 9 C30 2 36 16 42 9" fill="none" stroke="#bff5f6" stroke-width="1.5" opacity=".65"></path>
+        </pattern>
+        <marker id="arrowStorm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
+          <path d="M0 0L10 5L0 10Z" fill="#1f8cff"></path>
+        </marker>
+        <marker id="arrowSewer" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
+          <path d="M0 0L10 5L0 10Z" fill="#9b5a24"></path>
+        </marker>
+        <marker id="arrowCombined" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
+          <path d="M0 0L10 5L0 10Z" fill="#7a59d1"></path>
+        </marker>
+        <marker id="arrowOverflow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
+          <path d="M0 0L10 5L0 10Z" fill="#db3b2f"></path>
+        </marker>
+        <marker id="arrowTreated" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
+          <path d="M0 0L10 5L0 10Z" fill="#31a66a"></path>
+        </marker>
+      </defs>
+
+      <rect x="0" y="0" width="1600" height="232" fill="var(--sky)"></rect>
+      <rect x="0" y="232" width="1056" height="568" fill="url(#soilPattern)"></rect>
+      <rect x="1056" y="232" width="544" height="568" fill="url(#waterPattern)"></rect>
+      <rect x="0" y="220" width="1056" height="12" fill="#6b4429"></rect>
+
+      <text x="28" y="258" class="ground-label">지하 배수 시설</text>
+      <text x="1128" y="260" class="ground-label">하천 / 바다 방향</text>
+
+      <g class="rain">
+        <path d="M246 54 L232 112 M286 54 L272 112 M326 54 L312 112 M812 54 L798 112 M856 54 L842 112 M900 54 L886 112" stroke="#1f8cff" stroke-width="4" stroke-linecap="round"></path>
+        <text x="474" y="48" class="label">강우</text>
+      </g>
+
+      <g>
+        <rect x="116" y="112" width="88" height="58" rx="8" fill="#fff1d6" class="surface-item"></rect>
+        <polygon points="106,112 160,78 214,112" fill="#e16f2f" class="surface-item"></polygon>
+        <rect x="138" y="130" width="16" height="18" fill="#bfe3ff" stroke="#5b9bd5"></rect>
+        <rect x="174" y="130" width="16" height="18" fill="#bfe3ff" stroke="#5b9bd5"></rect>
+        <text x="160" y="188" class="small-label">가정</text>
+
+        <rect x="344" y="112" width="88" height="58" rx="8" fill="#fff1d6" class="surface-item"></rect>
+        <polygon points="334,112 388,78 442,112" fill="#e16f2f" class="surface-item"></polygon>
+        <rect x="366" y="130" width="16" height="18" fill="#bfe3ff" stroke="#5b9bd5"></rect>
+        <rect x="402" y="130" width="16" height="18" fill="#bfe3ff" stroke="#5b9bd5"></rect>
+        <text x="388" y="188" class="small-label">분류식 구역</text>
+
+        <rect x="520" y="78" width="250" height="84" rx="8" fill="#111827" class="surface-item"></rect>
+        <path d="M538 120 H752 M538 103 H752 M538 137 H752" stroke="#facc15" stroke-width="2" stroke-dasharray="10 13"></path>
+        <text x="645" y="188" class="small-label">도로 / 빗물받이</text>
+
+        <rect x="842" y="112" width="88" height="58" rx="8" fill="#fff1d6" class="surface-item"></rect>
+        <polygon points="832,112 886,78 940,112" fill="#e16f2f" class="surface-item"></polygon>
+        <rect x="864" y="130" width="16" height="18" fill="#bfe3ff" stroke="#5b9bd5"></rect>
+        <rect x="900" y="130" width="16" height="18" fill="#bfe3ff" stroke="#5b9bd5"></rect>
+        <text x="886" y="188" class="small-label">합류식 구역</text>
+
+        <rect x="576" y="178" width="46" height="36" rx="6" fill="#bfe3ff" stroke="#5b9bd5" stroke-width="2"></rect>
+        <rect x="812" y="178" width="46" height="36" rx="6" fill="#bfe3ff" stroke="#5b9bd5" stroke-width="2"></rect>
+        <rect x="914" y="178" width="46" height="36" rx="6" fill="#bfe3ff" stroke="#5b9bd5" stroke-width="2"></rect>
+      </g>
+
+      <text x="250" y="292" class="zone-title">분류식: 빗물과 생활오수가 따로 이동</text>
+      <text x="742" y="292" class="zone-title">합류식: 빗물과 생활오수가 같은 관으로 이동</text>
+
+      <g class="node">
+        <circle cx="160" cy="368" r="18" fill="#fff"></circle>
+        <text x="160" y="368">집</text>
+        <rect x="248" y="326" width="78" height="42" rx="8" fill="#d9ecff"></rect>
+        <text x="287" y="347">빗물받이</text>
+        <circle cx="388" cy="438" r="18" fill="#fff"></circle>
+        <text x="388" y="438">맨홀</text>
+        <rect x="506" y="386" width="104" height="48" rx="8" fill="#d9ecff" class="facility"></rect>
+        <text x="558" y="410">우수 본관</text>
+        <rect x="770" y="374" width="98" height="52" rx="8" fill="#ffefb4" class="facility"></rect>
+        <text x="819" y="400">펌프장</text>
+        <rect x="956" y="386" width="96" height="46" rx="8" fill="#8ee1df" class="facility"></rect>
+        <text x="1004" y="409">방류구</text>
+
+        <circle cx="160" cy="560" r="18" fill="#fff"></circle>
+        <text x="160" y="560">집</text>
+        <rect x="316" y="540" width="112" height="48" rx="8" fill="#ffe0c2" class="facility"></rect>
+        <text x="372" y="564">오수관거</text>
+        <rect x="610" y="548" width="116" height="48" rx="8" fill="#d8cdfd" class="facility"></rect>
+        <text x="668" y="572">차집관거</text>
+        <rect x="846" y="624" width="120" height="58" rx="8" fill="#b8f5ca" class="facility"></rect>
+        <text x="906" y="654">물재생센터</text>
+
+        <circle cx="886" cy="368" r="18" fill="#fff"></circle>
+        <text x="886" y="368">집</text>
+        <rect x="806" y="326" width="78" height="42" rx="8" fill="#d9ecff"></rect>
+        <text x="845" y="347">빗물받이</text>
+        <rect x="720" y="454" width="130" height="52" rx="8" fill="#d8cdfd" class="facility"></rect>
+        <text x="785" y="480">합류식 본관</text>
+        <rect x="914" y="454" width="116" height="52" rx="8" fill="#fff3c7" class="facility"></rect>
+        <text x="972" y="480">우수토실</text>
+        <rect x="1058" y="454" width="100" height="52" rx="8" fill="#ffd6d6" class="facility"></rect>
+        <text x="1108" y="480">월류시설</text>
+        <rect x="1136" y="624" width="118" height="58" rx="8" fill="#b8f5ca" class="facility"></rect>
+        <text x="1195" y="654">처리수 방류</text>
+      </g>
+
+      <path class="pipe normal-active heavy-active" d="M248 347 C206 338 178 318 160 232" stroke="var(--storm)" stroke-width="7" marker-end="url(#arrowStorm)"></path>
+      <path class="pipe normal-active heavy-active" d="M287 368 C314 404 342 428 388 438" stroke="var(--storm)" stroke-width="8" marker-end="url(#arrowStorm)"></path>
+      <path class="pipe normal-active heavy-active" d="M406 438 H506" stroke="var(--storm)" stroke-width="9" marker-end="url(#arrowStorm)"></path>
+      <path class="pipe normal-active heavy-active" d="M610 410 C682 406 720 394 770 400" stroke="var(--storm)" stroke-width="9" marker-end="url(#arrowStorm)"></path>
+      <path class="pipe normal-active heavy-active" d="M868 400 H956" stroke="var(--storm)" stroke-width="9" marker-end="url(#arrowStorm)"></path>
+      <path class="pipe normal-active heavy-active" d="M1052 409 C1098 410 1132 404 1178 390" stroke="var(--storm)" stroke-width="9" marker-end="url(#arrowStorm)"></path>
+
+      <path class="pipe dry-active normal-active heavy-active" d="M160 386 V560 H316" stroke="var(--sewer)" stroke-width="8" marker-end="url(#arrowSewer)"></path>
+      <path class="pipe dry-active normal-active heavy-active" d="M428 564 C505 564 546 566 610 572" stroke="var(--sewer)" stroke-width="8" marker-end="url(#arrowSewer)"></path>
+      <path class="pipe dry-active normal-active heavy-active" d="M726 572 C792 590 832 616 846 646" stroke="var(--sewer)" stroke-width="8" marker-end="url(#arrowSewer)"></path>
+      <path class="pipe dry-active normal-active heavy-active" d="M966 654 H1136" stroke="var(--treated)" stroke-width="8" marker-end="url(#arrowTreated)"></path>
+      <path class="pipe dry-active normal-active heavy-active" d="M1254 654 C1302 638 1344 596 1384 548" stroke="var(--treated)" stroke-width="8" marker-end="url(#arrowTreated)"></path>
+
+      <path class="pipe normal-active heavy-active" d="M845 368 C826 390 808 424 785 454" stroke="var(--combined)" stroke-width="8" marker-end="url(#arrowCombined)"></path>
+      <path class="pipe dry-active normal-active heavy-active" d="M886 386 C858 424 818 446 785 454" stroke="var(--combined)" stroke-width="8" marker-end="url(#arrowCombined)"></path>
+      <path class="pipe dry-active normal-active heavy-active" d="M850 480 H914" stroke="var(--combined)" stroke-width="8" marker-end="url(#arrowCombined)"></path>
+      <path class="pipe dry-active normal-active heavy-active" d="M972 506 C955 560 925 602 906 624" stroke="var(--combined)" stroke-width="8" marker-end="url(#arrowCombined)"></path>
+      <path class="pipe heavy-active" d="M1030 480 H1058" stroke="var(--overflow)" stroke-width="7" marker-end="url(#arrowOverflow)"></path>
+      <path class="pipe heavy-active" d="M1158 480 C1200 468 1254 448 1322 418" stroke="var(--overflow)" stroke-width="7" marker-end="url(#arrowOverflow)"></path>
+      <path class="pipe heavy-reverse" d="M1378 390 C1335 426 1270 450 1158 480" stroke="var(--overflow)" stroke-width="7" marker-end="url(#arrowOverflow)"></path>
+
+      <g class="warning heavy-warning">
+        <rect x="1090" y="396" width="154" height="36" rx="8" class="callout callout-danger"></rect>
+        <text x="1167" y="414" class="callout-text">월류/역류 위험</text>
+      </g>
+      <g class="warning heavy-warning">
+        <rect x="728" y="322" width="142" height="34" rx="8" class="callout"></rect>
+        <text x="799" y="339" class="callout-text">펌프장 가동</text>
+      </g>
+
+      <text x="286" y="318" class="small-label">도로 빗물</text>
+      <text x="552" y="382" class="small-label">우수관거</text>
+      <text x="360" y="532" class="small-label">생활오수관거</text>
+      <text x="655" y="542" class="small-label">차집</text>
+      <text x="792" y="448" class="small-label">빗물 + 생활오수</text>
+      <text x="1094" y="448" class="small-label">폭우 초과분</text>
+      <text x="1350" y="444" class="small-label">하천 방류</text>
+    </svg>
+  </section>
+
+  <aside>
+    <h2 id="modeTitle">일반 비</h2>
+    <p class="note" id="modeDesc">분류식에서는 빗물이 우수관으로, 생활오수는 오수관으로 따로 이동합니다. 합류식에서는 빗물과 생활오수가 같은 관으로 들어가 차집관거와 물재생센터 방향으로 갑니다.</p>
+
+    <div class="legend">
+      <span><i class="dot" style="background:var(--storm)"></i>우수</span>
+      <span><i class="dot" style="background:var(--sewer)"></i>생활오수</span>
+      <span><i class="dot" style="background:var(--combined)"></i>합류식</span>
+      <span><i class="dot" style="background:var(--overflow)"></i>월류/위험</span>
+      <span><i class="dot" style="background:var(--treated)"></i>처리수</span>
+      <span><i class="dot" style="background:var(--river)"></i>하천</span>
+    </div>
+
+    <h3>합치는 방식</h3>
+    <div class="status-card">
+      <b>분류식은 두 줄로 유지</b>
+      <p>빗물은 우수관으로 가고, 생활오수는 오수관과 물재생센터로 갑니다.</p>
+    </div>
+    <div class="status-card">
+      <b>합류식은 한 줄로 합침</b>
+      <p>빗물과 생활오수가 같은 합류식 하수관거로 들어간 뒤 차집관거 또는 월류시설로 갈라집니다.</p>
+    </div>
+    <div class="status-card">
+      <b>폭우는 조건부 경로</b>
+      <p>폭우 때만 펌프장, 우수토실, 월류시설, 하천 역류 위험을 강조합니다.</p>
+    </div>
+
+    <h3>도식의 핵심</h3>
+    <p class="note">전체 배수도는 모든 시설을 한 장에 놓고, 상황별로 활성 물길을 바꾸는 구조가 가장 이해하기 쉽습니다. 이 화면은 실제 SWMM 계산용 모델이 아니라 발표와 구조 설명을 위한 전체 배수 단면도입니다.</p>
+  </aside>
+</main>
+
+<script>
+const descriptions = {
+  dry: {
+    title: "비 안 올 때",
+    desc: "우수 쪽은 거의 흐름이 없고 생활오수만 오수관, 합류식 하수관거, 차집관거를 지나 물재생센터로 이동합니다."
+  },
+  normal: {
+    title: "일반 비",
+    desc: "분류식에서는 빗물이 우수관으로, 생활오수는 오수관으로 따로 이동합니다. 합류식에서는 빗물과 생활오수가 같은 관으로 들어가 차집관거와 물재생센터 방향으로 갑니다."
+  },
+  heavy: {
+    title: "폭우",
+    desc: "우수관 유량이 급증하고 펌프장이 가동됩니다. 합류식 구간은 차집 용량을 넘으면 우수토실과 월류시설을 통해 하천으로 일부 방류될 수 있습니다."
+  }
+};
+
+document.querySelectorAll("button[data-mode]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const mode = button.dataset.mode;
+    document.body.dataset.mode = mode;
+    document.querySelectorAll("button[data-mode]").forEach((item) => {
+      item.classList.toggle("active", item === button);
+    });
+    document.getElementById("modeTitle").textContent = descriptions[mode].title;
+    document.getElementById("modeDesc").textContent = descriptions[mode].desc;
+  });
+});
+</script>
+</body>
+</html>

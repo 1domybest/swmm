@@ -10,11 +10,13 @@
 |---|---|
 | `models/seoul_pilot_base.inp` | 기본 폭우 시나리오 |
 | `models/seoul_pilot_backflow.inp` | 하천 수위 상승/역류 시나리오 |
+| `viewer/overall_drainage_diagram.html` | 전체 배수도 설명 화면 |
 | `viewer/urban_flood_network_viewer.html` | 브라우저에서 보는 시뮬레이션 플레이백 화면 |
 | `sample-results/virtual_sensor_summary.csv` | 센서별 최대 수위·유량·유속 요약 |
 | `sample-results/problem_events.csv` | 침수/역류 후보 이벤트 요약 |
 | `Run_SWMM_Base.bat` | Windows에서 기본 폭우 시나리오를 실제 계산 실행 |
 | `Run_SWMM_Backflow.bat` | Windows에서 하천 역류 시나리오를 실제 계산 실행 |
+| `Open_Overall_Drainage_Diagram.bat` | 전체 배수도 설명 화면 열기 |
 | `Open_Network_Viewer.bat` | 브라우저 플레이백 화면 열기 |
 
 ## Windows에서 SWMM GUI로 여는 방법
@@ -53,10 +55,13 @@ Run_SWMM_Backflow.bat
 브라우저 화면은 계산 엔진이 아니라 보기 화면입니다.
 
 ```text
+Open_Overall_Drainage_Diagram.bat
 Open_Network_Viewer.bat
 ```
 
-이 파일은 `sample-results/`에 저장된 SWMM 실행 결과 CSV를 시간순으로 재생해서, 물이 어디서 차고 어디서 역류 후보가 생기는지 눈으로 보기 쉽게 보여줍니다.
+`Open_Overall_Drainage_Diagram.bat`는 전체 배수 구조를 한 장으로 보여줍니다.
+
+`Open_Network_Viewer.bat`는 `sample-results/`에 저장된 SWMM 실행 결과 CSV를 시간순으로 재생해서, 물이 어디서 차고 어디서 역류 후보가 생기는지 눈으로 보기 쉽게 보여줍니다.
 
 ## import하면 어느 정도 이미지화되나?
 
@@ -119,6 +124,7 @@ models/
   seoul_pilot_backflow.inp
 
 viewer/
+  overall_drainage_diagram.html
   urban_flood_network_viewer.html
 
 sample-results/
@@ -134,5 +140,6 @@ docs/
 
 Run_SWMM_Base.bat
 Run_SWMM_Backflow.bat
+Open_Overall_Drainage_Diagram.bat
 Open_Network_Viewer.bat
 ```
