@@ -1,0 +1,5 @@
+*.out
+*.rpt
+*.tmp
+*.bak
+.DS_Store

@@ -1,0 +1,7 @@
+scenario,event_type,id,count,worst_value,time,meaning
+base,reverse_flow_candidate,STORM_TO_PUMP,1,-0.00781,2026-06-09T02:24:00,유량이 음수로 기록되어 해당 관에서 역류 가능성을 의심할 수 있음
+base,surface_flooding,CB3,55,0.0348,2026-06-09T01:20:00,노드에서 물이 넘쳐 지표 침수로 이어지는 상태
+backflow,reverse_flow_candidate,OVF_PIPE,34,-0.02035,2026-06-09T01:35:00,유량이 음수로 기록되어 해당 관에서 역류 가능성을 의심할 수 있음
+backflow,reverse_flow_candidate,PUMP_FORCE_OUT,7,-0.08585,2026-06-09T02:13:00,유량이 음수로 기록되어 해당 관에서 역류 가능성을 의심할 수 있음
+backflow,reverse_flow_candidate,STORM_TO_PUMP,1,-0.00781,2026-06-09T02:24:00,유량이 음수로 기록되어 해당 관에서 역류 가능성을 의심할 수 있음
+backflow,surface_flooding,CB3,55,0.0348,2026-06-09T01:20:00,노드에서 물이 넘쳐 지표 침수로 이어지는 상태

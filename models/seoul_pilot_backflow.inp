@@ -1,0 +1,197 @@
+[TITLE]
+;; Urban flood pilot model for virtual sensor extraction.
+;; Small synthetic network: stormwater, sanitary/combined sewer, overflow, pump, river outfall.
+
+[OPTIONS]
+FLOW_UNITS           CMS
+INFILTRATION         HORTON
+FLOW_ROUTING         DYNWAVE
+LINK_OFFSETS         DEPTH
+MIN_SLOPE            0
+ALLOW_PONDING        NO
+SKIP_STEADY_STATE    NO
+START_DATE           06/09/2026
+START_TIME           00:00:00
+REPORT_START_DATE    06/09/2026
+REPORT_START_TIME    00:00:00
+END_DATE             06/09/2026
+END_TIME             03:00:00
+SWEEP_START          01/01
+SWEEP_END            12/31
+DRY_DAYS             0
+REPORT_STEP          00:01:00
+WET_STEP             00:01:00
+DRY_STEP             00:05:00
+ROUTING_STEP         00:00:30
+VARIABLE_STEP        0.75
+LENGTHENING_STEP     0
+MIN_SURFAREA         1.167
+NORMAL_FLOW_LIMITED  BOTH
+INERTIAL_DAMPING     PARTIAL
+FORCE_MAIN_EQUATION  H-W
+SURCHARGE_METHOD     SLOT
+
+[EVAPORATION]
+CONSTANT             0.0
+DRY_ONLY             NO
+
+[JUNCTIONS]
+;;Name           Elev     MaxDepth InitDepth SurDepth Aponded
+CB1              9.80     1.20     0.00      0.50     8
+CB2              9.70     1.20     0.00      0.50     8
+CB3              9.60     1.20     0.00      0.50     8
+CB4              9.50     1.20     0.00      0.50     8
+CB5              9.40     1.20     0.00      0.50     8
+SMH1             9.00     2.50     0.00      1.00     20
+SMH2             8.70     2.50     0.00      1.00     20
+SMH3             8.40     2.50     0.00      1.00     20
+SAN1             9.20     2.00     0.20      0.50     10
+COMB1            8.80     2.80     0.10      1.00     20
+COMB2            8.50     2.80     0.10      1.00     20
+OVF_OUT          8.20     2.50     0.00      1.00     20
+PUMP_OUT         8.00     2.00     0.00      0.50     10
+
+[STORAGE]
+;;Name           Elev     MaxDepth InitDepth Shape      Curve/Params          N/A  Fevap Psi Ksat IMD
+PUMP_WETWELL     7.80     3.00     0.00      FUNCTIONAL 80      0      0      0    0
+WWTP_STORAGE     7.50     4.00     0.20      FUNCTIONAL 300     0      0      0    0
+
+[OUTFALLS]
+;;Name           Elev     Type       Stage Data       Gated  Route To
+RIVER_OVF_OUT    7.60     TIMESERIES RIVER_STAGE      NO
+RIVER_PUMP_OUT   7.60     TIMESERIES RIVER_STAGE      NO
+SEA_OUT          7.20     FREE                       NO
+
+[CONDUITS]
+;;Name           From Node     To Node       Length  Roughness InOffset OutOffset InitFlow MaxFlow
+CB1_CONN         CB1           SMH1          25      0.018     0        0         0        0
+CB2_CONN         CB2           SMH1          28      0.018     0        0         0        0
+CB3_CONN         CB3           SMH2          30      0.035     0        0         0        0
+CB4_CONN         CB4           SMH2          26      0.018     0        0         0        0
+CB5_CONN         CB5           SMH3          32      0.018     0        0         0        0
+STORM_MAIN_1     SMH1          SMH2          180     0.015     0        0         0        0
+STORM_MAIN_2     SMH2          SMH3          220     0.015     0        0         0        0
+STORM_TO_PUMP    SMH3          PUMP_WETWELL  80      0.015     0        0         0        0
+SAN_CONN         SAN1          COMB1         70      0.015     0        0         0        0
+COMB_MAIN_1      COMB1         COMB2         220     0.015     0        0         0        0
+INTERCEPTOR      COMB2         WWTP_STORAGE  350     0.016     0        0         0        1.20
+OVF_PIPE         OVF_OUT       RIVER_OVF_OUT 140     0.016     0        0         0        0
+PUMP_FORCE_OUT   PUMP_OUT      RIVER_PUMP_OUT 100    0.013     0        0         0        0
+TREATED_OUT      WWTP_STORAGE  SEA_OUT       500     0.014     0        0         0        0.80
+
+[PUMPS]
+;;Name           From Node      To Node       Pump Curve     Status  Sartup Shutoff
+PUMP_STATION     PUMP_WETWELL   PUMP_OUT      PUMP_CURVE     OFF     0      0
+
+[WEIRS]
+;;Name           From Node      To Node       Type        CrestHt Qcoeff Gated EndCon EndCoeff Surcharge RoadWidth RoadSurf
+CSO_WEIR         COMB2          OVF_OUT       TRANSVERSE  1.10    1.70   NO    0      0        YES       0         0
+
+[XSECTIONS]
+;;Link           Shape      Geom1 Geom2 Geom3 Geom4 Barrels Culvert
+CB1_CONN         CIRCULAR   0.35  0     0     0     1
+CB2_CONN         CIRCULAR   0.35  0     0     0     1
+CB3_CONN         CIRCULAR   0.20  0     0     0     1
+CB4_CONN         CIRCULAR   0.35  0     0     0     1
+CB5_CONN         CIRCULAR   0.35  0     0     0     1
+STORM_MAIN_1     CIRCULAR   1.20  0     0     0     1
+STORM_MAIN_2     CIRCULAR   1.20  0     0     0     1
+STORM_TO_PUMP    CIRCULAR   1.00  0     0     0     1
+SAN_CONN         CIRCULAR   0.45  0     0     0     1
+COMB_MAIN_1      CIRCULAR   1.20  0     0     0     1
+INTERCEPTOR      CIRCULAR   1.00  0     0     0     1
+OVF_PIPE         CIRCULAR   1.00  0     0     0     1
+PUMP_FORCE_OUT   CIRCULAR   0.80  0     0     0     1
+TREATED_OUT      CIRCULAR   0.80  0     0     0     1
+CSO_WEIR         RECT_OPEN  1.00  2.00  0     0
+
+[CURVES]
+;;Name           Type       X-Value  Y-Value
+PUMP_CURVE       PUMP4      0.00     0.00
+PUMP_CURVE                  0.50     0.25
+PUMP_CURVE                  1.00     0.55
+PUMP_CURVE                  2.00     0.90
+PUMP_CURVE                  3.00     1.10
+
+[INFLOWS]
+;;Node           Constituent Time Series     Type   Mfactor Sfactor Baseline Pattern
+CB1              FLOW        RAIN_CB         FLOW   1.00    1.00    0
+CB2              FLOW        RAIN_CB         FLOW   0.90    1.00    0
+CB3              FLOW        RAIN_CB         FLOW   1.15    1.00    0
+CB4              FLOW        RAIN_CB         FLOW   0.80    1.00    0
+CB5              FLOW        RAIN_CB         FLOW   1.05    1.00    0
+SAN1             FLOW        SAN_DWF         FLOW   1.00    1.00    0
+COMB1            FLOW        COMB_RAIN       FLOW   1.00    1.00    0
+
+[TIMESERIES]
+;;Name           Time      Value
+RAIN_CB          00:00     0.00
+RAIN_CB          00:20     0.003
+RAIN_CB          00:40     0.015
+RAIN_CB          01:00     0.040
+RAIN_CB          01:20     0.070
+RAIN_CB          01:40     0.055
+RAIN_CB          02:00     0.025
+RAIN_CB          02:20     0.008
+RAIN_CB          03:00     0.00
+COMB_RAIN        00:00     0.00
+COMB_RAIN        00:40     0.010
+COMB_RAIN        01:00     0.035
+COMB_RAIN        01:20     0.060
+COMB_RAIN        01:40     0.045
+COMB_RAIN        02:00     0.015
+COMB_RAIN        03:00     0.00
+SAN_DWF          00:00     0.08
+SAN_DWF          03:00     0.08
+RIVER_STAGE      00:00     7.60
+RIVER_STAGE      00:50     7.80
+RIVER_STAGE      01:10     8.10
+RIVER_STAGE      01:40     8.55
+RIVER_STAGE      02:10     8.30
+RIVER_STAGE      03:00     7.80
+
+[CONTROLS]
+RULE PUMP_ON
+IF NODE PUMP_WETWELL DEPTH > 0.80
+THEN PUMP PUMP_STATION STATUS = ON
+
+RULE PUMP_OFF
+IF NODE PUMP_WETWELL DEPTH < 0.25
+THEN PUMP PUMP_STATION STATUS = OFF
+
+[REPORT]
+INPUT      NO
+CONTROLS   YES
+SUBCATCHMENTS ALL
+NODES ALL
+LINKS ALL
+
+[TAGS]
+
+[MAP]
+DIMENSIONS 0 0 1000 700
+Units      Meters
+
+[COORDINATES]
+;;Node           X-Coord          Y-Coord
+CB1              80               560
+CB2              160              560
+CB3              300              520
+CB4              390              520
+CB5              520              500
+SMH1             160              420
+SMH2             350              390
+SMH3             560              360
+PUMP_WETWELL     680              340
+PUMP_OUT         770              340
+RIVER_OVF_OUT    900              260
+RIVER_PUMP_OUT   900              340
+SAN1             120              260
+COMB1            300              250
+COMB2            560              240
+OVF_OUT          700              250
+WWTP_STORAGE     760              150
+SEA_OUT          930              120
+
+[VERTICES]
+;;Link           X-Coord          Y-Coord

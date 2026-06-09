@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>도시침수 SWMM 네트워크 보기</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --ink: #17202a;
+      --muted: #697586;
+      --line: #d6dce5;
+      --blue: #2574d9;
+      --green: #18905a;
+      --orange: #d97706;
+      --red: #d8342a;
+      --purple: #7c3aed;
+      --cyan: #0891b2;
+      --shadow: 0 10px 30px rgba(22, 34, 51, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.92);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+    }
+    h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+    .sub { margin-top: 4px; color: var(--muted); font-size: 13px; }
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    button.active { background: #162033; color: #fff; border-color: #162033; }
+    main { padding: 18px; display: grid; grid-template-columns: minmax(760px, 1fr) 360px; gap: 18px; }
+    .canvas-wrap, aside {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .canvas-wrap { overflow: auto; }
+    svg { display: block; min-width: 1280px; width: 100%; height: 720px; background: #fbfcfe; }
+    aside { padding: 16px; align-self: start; position: sticky; top: 88px; max-height: calc(100vh - 106px); overflow: auto; }
+    h2 { margin: 0 0 10px; font-size: 17px; }
+    h3 { margin: 18px 0 8px; font-size: 14px; }
+    .note { color: var(--muted); line-height: 1.55; font-size: 13px; }
+    .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+    .legend span { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--muted); }
+    .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+    .stat { border: 1px solid var(--line); border-radius: 8px; padding: 9px; background: #fbfcfe; }
+    .stat b { display: block; font-size: 16px; margin-bottom: 3px; }
+    .stat span { font-size: 12px; color: var(--muted); }
+    .event { border-left: 4px solid var(--orange); padding: 8px 10px; background: #fff7ed; margin: 8px 0; font-size: 13px; line-height: 1.45; border-radius: 6px; }
+    .event.reverse { border-left-color: var(--purple); background: #f5f3ff; }
+    .node { cursor: pointer; }
+    .node rect, .node circle { stroke: #263445; stroke-width: 1.6; }
+    .node text { pointer-events: none; font-size: 12px; fill: #142033; font-weight: 650; letter-spacing: 0; }
+    .link { fill: none; stroke: #a9b4c3; stroke-width: 4; marker-end: url(#arrow); }
+    .link-label { font-size: 11px; fill: #64748b; paint-order: stroke; stroke: #fbfcfe; stroke-width: 4px; stroke-linejoin: round; }
+    .link.warning { stroke: var(--orange); stroke-width: 7; }
+    .link.danger { stroke: var(--red); stroke-width: 8; }
+    .link.reverse { stroke: var(--purple); stroke-width: 8; stroke-dasharray: 9 6; }
+    .link.ok { stroke: #91a3b8; }
+    .badge { font-size: 11px; fill: #fff; font-weight: 700; }
+    .band-label { font-size: 13px; fill: #475569; font-weight: 700; }
+    .water-bg { fill: #e0f2fe; stroke: #7dd3fc; stroke-width: 1; }
+    .sewer-bg { fill: #eef2ff; stroke: #c7d2fe; stroke-width: 1; }
+    .selected-outline { stroke: #111827 !important; stroke-width: 4 !important; }
+    .small { font-size: 12px; color: var(--muted); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+    td { padding: 6px 0; border-bottom: 1px solid #edf1f5; }
+    td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+    @media (max-width: 1100px) {
+      main { grid-template-columns: 1fr; }
+      aside { position: static; max-height: none; }
+      header { align-items: flex-start; flex-direction: column; }
+      .controls { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>도시침수 SWMM 네트워크 보기</h1>
+      <div class="sub">숫자표 대신, 지금 설계한 빗물받이·본관·펌프장·월류시설·물재생센터 흐름을 눈으로 보는 화면</div>
+    </div>
+    <div class="controls">
+      <button id="btn-base" class="active" data-scenario="base">기본 폭우</button>
+      <button id="btn-backflow" data-scenario="backflow">하천 역류</button>
+      <button id="btn-reset">전체 보기</button>
+    </div>
+  </header>
+  <main>
+    <section class="canvas-wrap">
+      <svg id="network" viewBox="0 0 1600 720" role="img" aria-label="도시침수 배수 네트워크 개념도">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#77859a"></path>
+          </marker>
+          <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#d8342a"></path>
+          </marker>
+        </defs>
+        <rect class="water-bg" x="28" y="30" width="1430" height="330" rx="8"></rect>
+        <rect class="sewer-bg" x="28" y="390" width="1430" height="250" rx="8"></rect>
+        <text class="band-label" x="44" y="52">우수 흐름: 빗물받이 → 우수 본관 → 빗물펌프장 → 하천</text>
+        <text class="band-label" x="44" y="412">오수/합류 흐름: 생활오수·빗물 → 합류식 하수관거 → 차집관거/월류시설 → 물재생센터·하천</text>
+        <g id="links"></g>
+        <g id="nodes"></g>
+      </svg>
+    </section>
+    <aside>
+      <h2 id="panel-title">기본 폭우 상황</h2>
+      <p class="note" id="panel-summary"></p>
+      <div class="legend">
+        <span><i class="dot" style="background:#18905a"></i>정상/여유</span>
+        <span><i class="dot" style="background:#d97706"></i>주의</span>
+        <span><i class="dot" style="background:#d8342a"></i>침수/병목</span>
+        <span><i class="dot" style="background:#7c3aed"></i>역류 후보</span>
+      </div>
+      <h3>선택 지점</h3>
+      <div id="selection" class="note">그림에서 빗물받이, 맨홀, 관, 펌프장, 월류시설을 클릭하면 해당 지점의 가상 센서값이 표시됩니다.</div>
+      <div id="stats"></div>
+      <h3>문제 이벤트</h3>
+      <div id="events"></div>
+      <h3>읽는 법</h3>
+      <p class="note">빨간색은 물이 넘치거나 병목이 강한 곳, 보라색 점선은 역류 후보입니다. 이번 그림은 실제 서울 지도 좌표가 아니라, 우리가 만든 시뮬레이션 네트워크를 이해하기 쉽게 배치한 개념도입니다.</p>
+    </aside>
+  </main>
+<script id="data" type="application/json">{"nodes": [{"id": "RAIN", "label": "폭우", "type": "source", "x": 60, "y": 75, "desc": "강우가 빗물받이와 합류식 구간으로 유입됨"}, {"id": "CB1", "label": "빗물받이 CB1", "type": "catch", "x": 180, "y": 55, "desc": "도로 표면 빗물이 처음 들어오는 지점"}, {"id": "CB2", "label": "빗물받이 CB2", "type": "catch", "x": 180, "y": 120, "desc": "도로 표면 빗물이 처음 들어오는 지점"}, {"id": "CB3", "label": "빗물받이 CB3", "type": "catch", "x": 180, "y": 185, "desc": "이번 결과에서 실제 침수 신호가 발생한 빗물받이"}, {"id": "CB4", "label": "빗물받이 CB4", "type": "catch", "x": 180, "y": 250, "desc": "도로 표면 빗물이 처음 들어오는 지점"}, {"id": "CB5", "label": "빗물받이 CB5", "type": "catch", "x": 180, "y": 315, "desc": "도로 표면 빗물이 처음 들어오는 지점"}, {"id": "SMH1", "label": "맨홀 SMH1", "type": "manhole", "x": 360, "y": 90, "desc": "우수 본관 상류 쪽 집수/점검 지점"}, {"id": "SMH2", "label": "맨홀 SMH2", "type": "manhole", "x": 540, "y": 170, "desc": "우수 본관 중간 지점"}, {"id": "SMH3", "label": "맨홀 SMH3", "type": "manhole", "x": 720, "y": 230, "desc": "우수 본관 하류 지점"}, {"id": "PUMP_WETWELL", "label": "펌프장 유입부", "type": "pump", "x": 910, "y": 230, "desc": "빗물펌프장으로 물이 모이는 유입 수조"}, {"id": "PUMP_STATION", "label": "빗물펌프", "type": "pump", "x": 1060, "y": 230, "desc": "수위가 올라가면 강제로 하천 방향으로 물을 밀어내는 시설"}, {"id": "RIVER_PUMP_OUT", "label": "하천 방류구", "type": "outfall", "x": 1240, "y": 230, "desc": "펌프 토출수가 하천으로 나가는 지점"}, {"id": "RIVER", "label": "하천", "type": "river", "x": 1370, "y": 295, "desc": "방류수와 역류수가 만나는 외부 수계"}, {"id": "SEA", "label": "바다", "type": "sea", "x": 1510, "y": 430, "desc": "최종 방류 방향"}, {"id": "HOUSE", "label": "가정/건물", "type": "source", "x": 80, "y": 500, "desc": "생활오수 발생 지점"}, {"id": "SAN1", "label": "생활오수 연결관", "type": "sewer", "x": 250, "y": 500, "desc": "생활오수가 본관으로 들어가는 연결부"}, {"id": "COMB1", "label": "합류식 본관 상류", "type": "combined", "x": 430, "y": 500, "desc": "생활오수와 일부 빗물이 함께 흐르는 구간"}, {"id": "COMB2", "label": "합류 맨홀/분기", "type": "combined", "x": 640, "y": 500, "desc": "차집관거와 월류시설로 갈라지는 핵심 분기점"}, {"id": "CSO_WEIR", "label": "우수토실/월류시설", "type": "overflow", "x": 830, "y": 410, "desc": "폭우 때 차집 용량을 넘는 물을 하천으로 넘겨 보내는 시설"}, {"id": "RIVER_OVF_OUT", "label": "월류 방류구", "type": "outfall", "x": 1110, "y": 410, "desc": "월류수가 하천으로 나가는 지점"}, {"id": "WWTP_STORAGE", "label": "물재생센터", "type": "wwtp", "x": 970, "y": 580, "desc": "차집된 오수/합류수를 처리하는 시설"}, {"id": "SEA_OUT", "label": "처리수 방류", "type": "outfall", "x": 1240, "y": 580, "desc": "처리수가 하천/바다 방향으로 나가는 지점"}], "links": [{"id": "rain_cb1", "from": "RAIN", "to": "CB1", "label": "빗물"}, {"id": "rain_cb2", "from": "RAIN", "to": "CB2", "label": "빗물"}, {"id": "rain_cb3", "from": "RAIN", "to": "CB3", "label": "빗물"}, {"id": "rain_cb4", "from": "RAIN", "to": "CB4", "label": "빗물"}, {"id": "rain_cb5", "from": "RAIN", "to": "CB5", "label": "빗물"}, {"id": "CB1_CONN", "from": "CB1", "to": "SMH1", "label": "우수 연결관"}, {"id": "CB2_CONN", "from": "CB2", "to": "SMH1", "label": "우수 연결관"}, {"id": "CB3_CONN", "from": "CB3", "to": "SMH2", "label": "문제 연결관"}, {"id": "CB4_CONN", "from": "CB4", "to": "SMH2", "label": "우수 연결관"}, {"id": "CB5_CONN", "from": "CB5", "to": "SMH3", "label": "우수 연결관"}, {"id": "STORM_MAIN_1", "from": "SMH1", "to": "SMH2", "label": "우수 본관 상류"}, {"id": "STORM_MAIN_2", "from": "SMH2", "to": "SMH3", "label": "우수 본관 하류"}, {"id": "STORM_TO_PUMP", "from": "SMH3", "to": "PUMP_WETWELL", "label": "펌프장 유입관"}, {"id": "PUMP_STATION", "from": "PUMP_WETWELL", "to": "PUMP_STATION", "label": "펌프 작동"}, {"id": "PUMP_FORCE_OUT", "from": "PUMP_STATION", "to": "RIVER_PUMP_OUT", "label": "펌프 토출관"}, {"id": "pump_river", "from": "RIVER_PUMP_OUT", "to": "RIVER", "label": "하천"}, {"id": "SAN_CONN", "from": "HOUSE", "to": "SAN1", "label": "생활오수"}, {"id": "san_comb", "from": "SAN1", "to": "COMB1", "label": "오수 본관"}, {"id": "COMB_MAIN_1", "from": "COMB1", "to": "COMB2", "label": "합류식 하수관거"}, {"id": "CSO_WEIR", "from": "COMB2", "to": "CSO_WEIR", "label": "월류 조건"}, {"id": "OVF_PIPE", "from": "CSO_WEIR", "to": "RIVER_OVF_OUT", "label": "월류 방류관"}, {"id": "ovf_river", "from": "RIVER_OVF_OUT", "to": "RIVER", "label": "하천 방류"}, {"id": "INTERCEPTOR", "from": "COMB2", "to": "WWTP_STORAGE", "label": "차집관거"}, {"id": "TREATED_OUT", "from": "WWTP_STORAGE", "to": "SEA_OUT", "label": "처리수 방류관"}, {"id": "treated_sea", "from": "SEA_OUT", "to": "SEA", "label": "바다 방향"}, {"id": "river_sea", "from": "RIVER", "to": "SEA", "label": "흐름 방향"}], "metrics": {"base": {"CB1_CONN": {"scenario": "base", "sensor_type": "link", "id": "CB1_CONN", "max_depth_m": 0.2012, "time_of_max_depth": "2026-06-09T01:21:00", "max_flow_cms": 0.0697, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 1.2237, "time_of_max_velocity": "2026-06-09T01:20:00", "max_fullness_ratio": 0.5948, "time_of_max_fullness": "2026-06-09T01:21:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CB2_CONN": {"scenario": "base", "sensor_type": "link", "id": "CB2_CONN", "max_depth_m": 0.2065, "time_of_max_depth": "2026-06-09T01:21:00", "max_flow_cms": 0.0697, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 1.1852, "time_of_max_velocity": "2026-06-09T01:20:00", "max_fullness_ratio": 0.6138, "time_of_max_fullness": "2026-06-09T01:21:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CB3_CONN": {"scenario": "base", "sensor_type": "link", "id": "CB3_CONN", "max_depth_m": 0.2, "time_of_max_depth": "2026-06-09T00:47:00", "max_flow_cms": 0.0355, "time_of_max_flow": "2026-06-09T00:59:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 1.1314, "time_of_max_velocity": "2026-06-09T00:59:00", "max_fullness_ratio": 1.0, "time_of_max_fullness": "2026-06-09T00:47:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CB4_CONN": {"scenario": "base", "sensor_type": "link", "id": "CB4_CONN", "max_depth_m": 0.2621, "time_of_max_depth": "2026-06-09T01:23:00", "max_flow_cms": 0.0697, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.9106, "time_of_max_velocity": "2026-06-09T01:20:00", "max_fullness_ratio": 0.803, "time_of_max_fullness": "2026-06-09T01:23:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CB5_CONN": {"scenario": "base", "sensor_type": "link", "id": "CB5_CONN", "max_depth_m": 0.2115, "time_of_max_depth": "2026-06-09T01:23:00", "max_flow_cms": 0.0697, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 1.1586, "time_of_max_velocity": "2026-06-09T01:20:00", "max_fullness_ratio": 0.6319, "time_of_max_fullness": "2026-06-09T01:23:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "STORM_MAIN_1": {"scenario": "base", "sensor_type": "link", "id": "STORM_MAIN_1", "max_depth_m": 0.3164, "time_of_max_depth": "2026-06-09T01:23:00", "max_flow_cms": 0.1375, "time_of_max_flow": "2026-06-09T01:22:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.5794, "time_of_max_velocity": "2026-06-09T01:21:00", "max_fullness_ratio": 0.2108, "time_of_max_fullness": "2026-06-09T01:23:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "STORM_MAIN_2": {"scenario": "base", "sensor_type": "link", "id": "STORM_MAIN_2", "max_depth_m": 0.328, "time_of_max_depth": "2026-06-09T01:25:00", "max_flow_cms": 0.2379, "time_of_max_flow": "2026-06-09T01:25:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.949, "time_of_max_velocity": "2026-06-09T01:25:00", "max_fullness_ratio": 0.2217, "time_of_max_fullness": "2026-06-09T01:25:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "STORM_TO_PUMP": {"scenario": "base", "sensor_type": "link", "id": "STORM_TO_PUMP", "max_depth_m": 0.4873, "time_of_max_depth": "2026-06-09T02:27:00", "max_flow_cms": 0.3042, "time_of_max_flow": "2026-06-09T01:25:00", "min_flow_cms": -0.0078, "time_of_min_flow": "2026-06-09T02:24:00", "max_velocity_mps": 1.0187, "time_of_max_velocity": "2026-06-09T01:09:00", "max_fullness_ratio": 0.4838, "time_of_max_fullness": "2026-06-09T02:27:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "COMB_MAIN_1": {"scenario": "base", "sensor_type": "link", "id": "COMB_MAIN_1", "max_depth_m": 0.2629, "time_of_max_depth": "2026-06-09T01:23:00", "max_flow_cms": 0.1391, "time_of_max_flow": "2026-06-09T01:23:00", "min_flow_cms": 0.0246, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.7585, "time_of_max_velocity": "2026-06-09T01:22:00", "max_fullness_ratio": 0.1622, "time_of_max_fullness": "2026-06-09T01:23:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "INTERCEPTOR": {"scenario": "base", "sensor_type": "link", "id": "INTERCEPTOR", "max_depth_m": 0.3319, "time_of_max_depth": "2026-06-09T01:38:00", "max_flow_cms": 0.1372, "time_of_max_flow": "2026-06-09T01:27:00", "min_flow_cms": 0.0214, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.6559, "time_of_max_velocity": "2026-06-09T00:16:00", "max_fullness_ratio": 0.2901, "time_of_max_fullness": "2026-06-09T01:38:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CSO_WEIR": {"scenario": "base", "sensor_type": "link", "id": "CSO_WEIR", "max_depth_m": 0.0, "time_of_max_depth": "2026-06-09T00:01:00", "max_flow_cms": 0.0, "time_of_max_flow": "2026-06-09T00:01:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 1.0, "time_of_max_fullness": "2026-06-09T00:01:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "OVF_PIPE": {"scenario": "base", "sensor_type": "link", "id": "OVF_PIPE", "max_depth_m": 0.475, "time_of_max_depth": "2026-06-09T01:40:00", "max_flow_cms": 0.0, "time_of_max_flow": "2026-06-09T00:01:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.4681, "time_of_max_fullness": "2026-06-09T01:40:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "PUMP_STATION": {"scenario": "base", "sensor_type": "link", "id": "PUMP_STATION", "max_depth_m": 0.0, "time_of_max_depth": "2026-06-09T00:01:00", "max_flow_cms": 0.3852, "time_of_max_flow": "2026-06-09T00:54:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 1.0, "time_of_max_fullness": "2026-06-09T00:54:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "PUMP_FORCE_OUT": {"scenario": "base", "sensor_type": "link", "id": "PUMP_FORCE_OUT", "max_depth_m": 0.7633, "time_of_max_depth": "2026-06-09T01:40:00", "max_flow_cms": 0.3701, "time_of_max_flow": "2026-06-09T00:55:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 1.627, "time_of_max_velocity": "2026-06-09T00:55:00", "max_fullness_ratio": 0.9833, "time_of_max_fullness": "2026-06-09T01:40:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "TREATED_OUT": {"scenario": "base", "sensor_type": "link", "id": "TREATED_OUT", "max_depth_m": 0.317, "time_of_max_depth": "2026-06-09T01:45:00", "max_flow_cms": 0.1255, "time_of_max_flow": "2026-06-09T01:45:00", "min_flow_cms": 0.0215, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.6768, "time_of_max_velocity": "2026-06-09T01:45:00", "max_fullness_ratio": 0.369, "time_of_max_fullness": "2026-06-09T01:45:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CB1": {"scenario": "base", "sensor_type": "node", "id": "CB1", "max_depth_m": 0.1474, "time_of_max_depth": "2026-06-09T01:20:00", "max_flow_cms": 0.0698, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T03:00:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.1228, "time_of_max_fullness": "2026-06-09T01:20:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CB2": {"scenario": "base", "sensor_type": "node", "id": "CB2", "max_depth_m": 0.158, "time_of_max_depth": "2026-06-09T01:20:00", "max_flow_cms": 0.0698, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T03:00:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.1317, "time_of_max_fullness": "2026-06-09T01:20:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CB3": {"scenario": "base", "sensor_type": "node", "id": "CB3", "max_depth_m": 1.7, "time_of_max_depth": "2026-06-09T00:59:00", "max_flow_cms": 0.0698, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T03:00:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 1.4167, "time_of_max_fullness": "2026-06-09T00:59:00", "max_flooding_cms": 0.0348, "time_of_max_flooding": "2026-06-09T01:20:00"}, "CB4": {"scenario": "base", "sensor_type": "node", "id": "CB4", "max_depth_m": 0.149, "time_of_max_depth": "2026-06-09T01:20:00", "max_flow_cms": 0.0698, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T03:00:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.1242, "time_of_max_fullness": "2026-06-09T01:20:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CB5": {"scenario": "base", "sensor_type": "node", "id": "CB5", "max_depth_m": 0.1483, "time_of_max_depth": "2026-06-09T01:20:00", "max_flow_cms": 0.0698, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T03:00:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.1236, "time_of_max_fullness": "2026-06-09T01:20:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "SMH1": {"scenario": "base", "sensor_type": "node", "id": "SMH1", "max_depth_m": 0.2559, "time_of_max_depth": "2026-06-09T01:22:00", "max_flow_cms": 0.1394, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0001, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.1024, "time_of_max_fullness": "2026-06-09T01:22:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "SMH2": {"scenario": "base", "sensor_type": "node", "id": "SMH2", "max_depth_m": 0.378, "time_of_max_depth": "2026-06-09T01:24:00", "max_flow_cms": 0.2414, "time_of_max_flow": "2026-06-09T01:21:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.1512, "time_of_max_fullness": "2026-06-09T01:24:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "SMH3": {"scenario": "base", "sensor_type": "node", "id": "SMH3", "max_depth_m": 0.2782, "time_of_max_depth": "2026-06-09T01:25:00", "max_flow_cms": 0.3049, "time_of_max_flow": "2026-06-09T01:24:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.1113, "time_of_max_fullness": "2026-06-09T01:25:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "COMB2": {"scenario": "base", "sensor_type": "node", "id": "COMB2", "max_depth_m": 0.2451, "time_of_max_depth": "2026-06-09T01:27:00", "max_flow_cms": 0.1391, "time_of_max_flow": "2026-06-09T01:23:00", "min_flow_cms": 0.0246, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.0875, "time_of_max_fullness": "2026-06-09T01:27:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "PUMP_WETWELL": {"scenario": "base", "sensor_type": "node", "id": "PUMP_WETWELL", "max_depth_m": 0.8002, "time_of_max_depth": "2026-06-09T02:27:00", "max_flow_cms": 0.3042, "time_of_max_flow": "2026-06-09T01:25:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T02:24:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.2667, "time_of_max_fullness": "2026-06-09T02:27:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "WWTP_STORAGE": {"scenario": "base", "sensor_type": "node", "id": "WWTP_STORAGE", "max_depth_m": 0.4263, "time_of_max_depth": "2026-06-09T01:45:00", "max_flow_cms": 0.1372, "time_of_max_flow": "2026-06-09T01:27:00", "min_flow_cms": 0.0214, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.1066, "time_of_max_fullness": "2026-06-09T01:45:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}}, "backflow": {"CB1_CONN": {"scenario": "backflow", "sensor_type": "link", "id": "CB1_CONN", "max_depth_m": 0.2012, "time_of_max_depth": "2026-06-09T01:21:00", "max_flow_cms": 0.0697, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 1.2237, "time_of_max_velocity": "2026-06-09T01:20:00", "max_fullness_ratio": 0.5948, "time_of_max_fullness": "2026-06-09T01:21:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CB2_CONN": {"scenario": "backflow", "sensor_type": "link", "id": "CB2_CONN", "max_depth_m": 0.2065, "time_of_max_depth": "2026-06-09T01:21:00", "max_flow_cms": 0.0697, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 1.1852, "time_of_max_velocity": "2026-06-09T01:20:00", "max_fullness_ratio": 0.6138, "time_of_max_fullness": "2026-06-09T01:21:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CB3_CONN": {"scenario": "backflow", "sensor_type": "link", "id": "CB3_CONN", "max_depth_m": 0.2, "time_of_max_depth": "2026-06-09T00:47:00", "max_flow_cms": 0.0355, "time_of_max_flow": "2026-06-09T00:59:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 1.1314, "time_of_max_velocity": "2026-06-09T00:59:00", "max_fullness_ratio": 1.0, "time_of_max_fullness": "2026-06-09T00:47:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CB4_CONN": {"scenario": "backflow", "sensor_type": "link", "id": "CB4_CONN", "max_depth_m": 0.2621, "time_of_max_depth": "2026-06-09T01:23:00", "max_flow_cms": 0.0697, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.9106, "time_of_max_velocity": "2026-06-09T01:20:00", "max_fullness_ratio": 0.803, "time_of_max_fullness": "2026-06-09T01:23:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CB5_CONN": {"scenario": "backflow", "sensor_type": "link", "id": "CB5_CONN", "max_depth_m": 0.2115, "time_of_max_depth": "2026-06-09T01:23:00", "max_flow_cms": 0.0697, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 1.1586, "time_of_max_velocity": "2026-06-09T01:20:00", "max_fullness_ratio": 0.6319, "time_of_max_fullness": "2026-06-09T01:23:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "STORM_MAIN_1": {"scenario": "backflow", "sensor_type": "link", "id": "STORM_MAIN_1", "max_depth_m": 0.3164, "time_of_max_depth": "2026-06-09T01:23:00", "max_flow_cms": 0.1375, "time_of_max_flow": "2026-06-09T01:22:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.5794, "time_of_max_velocity": "2026-06-09T01:21:00", "max_fullness_ratio": 0.2108, "time_of_max_fullness": "2026-06-09T01:23:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "STORM_MAIN_2": {"scenario": "backflow", "sensor_type": "link", "id": "STORM_MAIN_2", "max_depth_m": 0.328, "time_of_max_depth": "2026-06-09T01:25:00", "max_flow_cms": 0.2379, "time_of_max_flow": "2026-06-09T01:25:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.949, "time_of_max_velocity": "2026-06-09T01:25:00", "max_fullness_ratio": 0.2217, "time_of_max_fullness": "2026-06-09T01:25:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "STORM_TO_PUMP": {"scenario": "backflow", "sensor_type": "link", "id": "STORM_TO_PUMP", "max_depth_m": 0.4873, "time_of_max_depth": "2026-06-09T02:27:00", "max_flow_cms": 0.3042, "time_of_max_flow": "2026-06-09T01:25:00", "min_flow_cms": -0.0078, "time_of_min_flow": "2026-06-09T02:24:00", "max_velocity_mps": 1.0187, "time_of_max_velocity": "2026-06-09T01:09:00", "max_fullness_ratio": 0.4838, "time_of_max_fullness": "2026-06-09T02:27:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "COMB_MAIN_1": {"scenario": "backflow", "sensor_type": "link", "id": "COMB_MAIN_1", "max_depth_m": 0.2629, "time_of_max_depth": "2026-06-09T01:23:00", "max_flow_cms": 0.1391, "time_of_max_flow": "2026-06-09T01:23:00", "min_flow_cms": 0.0246, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.7585, "time_of_max_velocity": "2026-06-09T01:22:00", "max_fullness_ratio": 0.1622, "time_of_max_fullness": "2026-06-09T01:23:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "INTERCEPTOR": {"scenario": "backflow", "sensor_type": "link", "id": "INTERCEPTOR", "max_depth_m": 0.3319, "time_of_max_depth": "2026-06-09T01:38:00", "max_flow_cms": 0.1372, "time_of_max_flow": "2026-06-09T01:27:00", "min_flow_cms": 0.0214, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.6559, "time_of_max_velocity": "2026-06-09T00:16:00", "max_fullness_ratio": 0.2901, "time_of_max_fullness": "2026-06-09T01:38:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CSO_WEIR": {"scenario": "backflow", "sensor_type": "link", "id": "CSO_WEIR", "max_depth_m": 0.0, "time_of_max_depth": "2026-06-09T00:01:00", "max_flow_cms": 0.0, "time_of_max_flow": "2026-06-09T00:01:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 1.0, "time_of_max_fullness": "2026-06-09T00:01:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "OVF_PIPE": {"scenario": "backflow", "sensor_type": "link", "id": "OVF_PIPE", "max_depth_m": 0.6507, "time_of_max_depth": "2026-06-09T01:41:00", "max_flow_cms": 0.0362, "time_of_max_flow": "2026-06-09T01:42:00", "min_flow_cms": -0.0204, "time_of_min_flow": "2026-06-09T01:35:00", "max_velocity_mps": 0.0686, "time_of_max_velocity": "2026-06-09T01:42:00", "max_fullness_ratio": 0.6888, "time_of_max_fullness": "2026-06-09T01:41:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "PUMP_STATION": {"scenario": "backflow", "sensor_type": "link", "id": "PUMP_STATION", "max_depth_m": 0.0, "time_of_max_depth": "2026-06-09T00:01:00", "max_flow_cms": 0.3852, "time_of_max_flow": "2026-06-09T00:54:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 1.0, "time_of_max_fullness": "2026-06-09T00:54:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "PUMP_FORCE_OUT": {"scenario": "backflow", "sensor_type": "link", "id": "PUMP_FORCE_OUT", "max_depth_m": 0.7633, "time_of_max_depth": "2026-06-09T01:40:00", "max_flow_cms": 0.3701, "time_of_max_flow": "2026-06-09T00:55:00", "min_flow_cms": -0.0858, "time_of_min_flow": "2026-06-09T02:13:00", "max_velocity_mps": 1.627, "time_of_max_velocity": "2026-06-09T00:55:00", "max_fullness_ratio": 0.9833, "time_of_max_fullness": "2026-06-09T01:40:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "TREATED_OUT": {"scenario": "backflow", "sensor_type": "link", "id": "TREATED_OUT", "max_depth_m": 0.317, "time_of_max_depth": "2026-06-09T01:45:00", "max_flow_cms": 0.1255, "time_of_max_flow": "2026-06-09T01:45:00", "min_flow_cms": 0.0215, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.6768, "time_of_max_velocity": "2026-06-09T01:45:00", "max_fullness_ratio": 0.369, "time_of_max_fullness": "2026-06-09T01:45:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CB1": {"scenario": "backflow", "sensor_type": "node", "id": "CB1", "max_depth_m": 0.1474, "time_of_max_depth": "2026-06-09T01:20:00", "max_flow_cms": 0.0698, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T03:00:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.1228, "time_of_max_fullness": "2026-06-09T01:20:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CB2": {"scenario": "backflow", "sensor_type": "node", "id": "CB2", "max_depth_m": 0.158, "time_of_max_depth": "2026-06-09T01:20:00", "max_flow_cms": 0.0698, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T03:00:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.1317, "time_of_max_fullness": "2026-06-09T01:20:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CB3": {"scenario": "backflow", "sensor_type": "node", "id": "CB3", "max_depth_m": 1.7, "time_of_max_depth": "2026-06-09T00:59:00", "max_flow_cms": 0.0698, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T03:00:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 1.4167, "time_of_max_fullness": "2026-06-09T00:59:00", "max_flooding_cms": 0.0348, "time_of_max_flooding": "2026-06-09T01:20:00"}, "CB4": {"scenario": "backflow", "sensor_type": "node", "id": "CB4", "max_depth_m": 0.149, "time_of_max_depth": "2026-06-09T01:20:00", "max_flow_cms": 0.0698, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T03:00:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.1242, "time_of_max_fullness": "2026-06-09T01:20:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "CB5": {"scenario": "backflow", "sensor_type": "node", "id": "CB5", "max_depth_m": 0.1483, "time_of_max_depth": "2026-06-09T01:20:00", "max_flow_cms": 0.0698, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T03:00:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.1236, "time_of_max_fullness": "2026-06-09T01:20:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "SMH1": {"scenario": "backflow", "sensor_type": "node", "id": "SMH1", "max_depth_m": 0.2559, "time_of_max_depth": "2026-06-09T01:22:00", "max_flow_cms": 0.1394, "time_of_max_flow": "2026-06-09T01:20:00", "min_flow_cms": 0.0001, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.1024, "time_of_max_fullness": "2026-06-09T01:22:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "SMH2": {"scenario": "backflow", "sensor_type": "node", "id": "SMH2", "max_depth_m": 0.378, "time_of_max_depth": "2026-06-09T01:24:00", "max_flow_cms": 0.2414, "time_of_max_flow": "2026-06-09T01:21:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.1512, "time_of_max_fullness": "2026-06-09T01:24:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "SMH3": {"scenario": "backflow", "sensor_type": "node", "id": "SMH3", "max_depth_m": 0.2782, "time_of_max_depth": "2026-06-09T01:25:00", "max_flow_cms": 0.3049, "time_of_max_flow": "2026-06-09T01:24:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.1113, "time_of_max_fullness": "2026-06-09T01:25:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "COMB2": {"scenario": "backflow", "sensor_type": "node", "id": "COMB2", "max_depth_m": 0.2451, "time_of_max_depth": "2026-06-09T01:27:00", "max_flow_cms": 0.1391, "time_of_max_flow": "2026-06-09T01:23:00", "min_flow_cms": 0.0246, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.0875, "time_of_max_fullness": "2026-06-09T01:27:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "PUMP_WETWELL": {"scenario": "backflow", "sensor_type": "node", "id": "PUMP_WETWELL", "max_depth_m": 0.8002, "time_of_max_depth": "2026-06-09T02:27:00", "max_flow_cms": 0.3042, "time_of_max_flow": "2026-06-09T01:25:00", "min_flow_cms": 0.0, "time_of_min_flow": "2026-06-09T02:24:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.2667, "time_of_max_fullness": "2026-06-09T02:27:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}, "WWTP_STORAGE": {"scenario": "backflow", "sensor_type": "node", "id": "WWTP_STORAGE", "max_depth_m": 0.4263, "time_of_max_depth": "2026-06-09T01:45:00", "max_flow_cms": 0.1372, "time_of_max_flow": "2026-06-09T01:27:00", "min_flow_cms": 0.0214, "time_of_min_flow": "2026-06-09T00:01:00", "max_velocity_mps": 0.0, "time_of_max_velocity": "2026-06-09T00:01:00", "max_fullness_ratio": 0.1066, "time_of_max_fullness": "2026-06-09T01:45:00", "max_flooding_cms": 0.0, "time_of_max_flooding": "2026-06-09T00:01:00"}}}, "events": [{"scenario": "base", "event_type": "reverse_flow_candidate", "id": "STORM_TO_PUMP", "count": 1.0, "worst_value": -0.0078, "time": "2026-06-09T02:24:00", "meaning": "유량이 음수로 기록되어 해당 관에서 역류 가능성을 의심할 수 있음"}, {"scenario": "base", "event_type": "surface_flooding", "id": "CB3", "count": 55.0, "worst_value": 0.0348, "time": "2026-06-09T01:20:00", "meaning": "노드에서 물이 넘쳐 지표 침수로 이어지는 상태"}, {"scenario": "backflow", "event_type": "reverse_flow_candidate", "id": "OVF_PIPE", "count": 34.0, "worst_value": -0.0204, "time": "2026-06-09T01:35:00", "meaning": "유량이 음수로 기록되어 해당 관에서 역류 가능성을 의심할 수 있음"}, {"scenario": "backflow", "event_type": "reverse_flow_candidate", "id": "PUMP_FORCE_OUT", "count": 7.0, "worst_value": -0.0858, "time": "2026-06-09T02:13:00", "meaning": "유량이 음수로 기록되어 해당 관에서 역류 가능성을 의심할 수 있음"}, {"scenario": "backflow", "event_type": "reverse_flow_candidate", "id": "STORM_TO_PUMP", "count": 1.0, "worst_value": -0.0078, "time": "2026-06-09T02:24:00", "meaning": "유량이 음수로 기록되어 해당 관에서 역류 가능성을 의심할 수 있음"}, {"scenario": "backflow", "event_type": "surface_flooding", "id": "CB3", "count": 55.0, "worst_value": 0.0348, "time": "2026-06-09T01:20:00", "meaning": "노드에서 물이 넘쳐 지표 침수로 이어지는 상태"}]}</script>
+<script>
+const DATA = JSON.parse(document.getElementById('data').textContent);
+let scenario = 'base';
+let selectedId = null;
+const nodeById = Object.fromEntries(DATA.nodes.map(n => [n.id, n]));
+const linkById = Object.fromEntries(DATA.links.map(l => [l.id, l]));
+const colors = {
+  source: '#eab308', catch: '#38bdf8', manhole: '#60a5fa', pump: '#f59e0b', outfall: '#14b8a6', river: '#0ea5e9', sea: '#2563eb', sewer: '#a78bfa', combined: '#8b5cf6', overflow: '#ef4444', wwtp: '#22c55e'
+};
+function metric(id) { return DATA.metrics[scenario][id]; }
+function num(v) { return typeof v === 'number' ? v : Number(v || 0); }
+function fmt(v, unit='') {
+  if (v === undefined || v === null || v === '') return '-';
+  const n = Number(v);
+  if (!Number.isFinite(n)) return String(v);
+  return `${n.toFixed(3)}${unit}`;
+}
+function statusForId(id) {
+  const m = metric(id);
+  if (!m) return 'ok';
+  if (num(m.max_flooding_cms) > 0 || num(m.max_fullness_ratio) >= 1.05) return 'danger';
+  if (num(m.min_flow_cms) < -0.001 && scenario === 'backflow') return 'reverse';
+  if (num(m.max_fullness_ratio) >= 0.75) return 'warning';
+  return 'ok';
+}
+function linkPath(l) {
+  const a = nodeById[l.from], b = nodeById[l.to];
+  const dx = Math.abs(b.x - a.x), dy = Math.abs(b.y - a.y);
+  const curve = Math.max(28, Math.min(90, (dx + dy) * 0.18));
+  if (Math.abs(a.y - b.y) < 18) return `M ${a.x} ${a.y} C ${a.x + curve} ${a.y}, ${b.x - curve} ${b.y}, ${b.x} ${b.y}`;
+  return `M ${a.x} ${a.y} C ${a.x + curve} ${a.y}, ${b.x - curve} ${b.y}, ${b.x} ${b.y}`;
+}
+function linkMid(l) {
+  const a = nodeById[l.from], b = nodeById[l.to];
+  return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 - 8 };
+}
+function render() {
+  const linksG = document.getElementById('links');
+  const nodesG = document.getElementById('nodes');
+  linksG.innerHTML = '';
+  nodesG.innerHTML = '';
+  for (const l of DATA.links) {
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d', linkPath(l));
+    const st = statusForId(l.id);
+    p.setAttribute('class', `link ${st}`);
+    p.dataset.id = l.id;
+    p.addEventListener('click', () => select(l.id));
+    linksG.appendChild(p);
+    const mid = linkMid(l);
+    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('class', 'link-label');
+    label.setAttribute('x', mid.x);
+    label.setAttribute('y', mid.y);
+    label.setAttribute('text-anchor', 'middle');
+    label.textContent = l.label;
+    linksG.appendChild(label);
+  }
+  for (const n of DATA.nodes) {
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'node');
+    g.dataset.id = n.id;
+    const st = statusForId(n.id);
+    const fill = st === 'danger' ? '#fecaca' : st === 'warning' ? '#fed7aa' : st === 'reverse' ? '#ddd6fe' : colors[n.type] || '#cbd5e1';
+    if (['RAIN','RIVER','SEA'].includes(n.id)) {
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', n.x); c.setAttribute('cy', n.y); c.setAttribute('r', 36); c.setAttribute('fill', fill);
+      if (selectedId === n.id) c.setAttribute('class', 'selected-outline');
+      g.appendChild(c);
+    } else {
+      const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      r.setAttribute('x', n.x - 58); r.setAttribute('y', n.y - 23); r.setAttribute('width', 116); r.setAttribute('height', 46); r.setAttribute('rx', 8); r.setAttribute('fill', fill);
+      if (selectedId === n.id) r.setAttribute('class', 'selected-outline');
+      g.appendChild(r);
+    }
+    const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t.setAttribute('x', n.x); t.setAttribute('y', n.y + 4); t.setAttribute('text-anchor', 'middle');
+    t.textContent = n.label;
+    g.appendChild(t);
+    const stLabel = st === 'danger' ? '침수' : st === 'warning' ? '주의' : st === 'reverse' ? '역류' : '';
+    if (stLabel) {
+      const badge = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      const br = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      br.setAttribute('x', n.x + 34); br.setAttribute('y', n.y - 37); br.setAttribute('width', 42); br.setAttribute('height', 20); br.setAttribute('rx', 8);
+      br.setAttribute('fill', st === 'reverse' ? '#7c3aed' : st === 'danger' ? '#d8342a' : '#d97706');
+      const bt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      bt.setAttribute('class', 'badge'); bt.setAttribute('x', n.x + 55); bt.setAttribute('y', n.y - 23); bt.setAttribute('text-anchor', 'middle'); bt.textContent = stLabel;
+      badge.appendChild(br); badge.appendChild(bt); g.appendChild(badge);
+    }
+    g.addEventListener('click', () => select(n.id));
+    nodesG.appendChild(g);
+  }
+  updatePanel();
+}
+function select(id) { selectedId = id; render(); }
+function scenarioSummary() {
+  if (scenario === 'base') return '기본 폭우에서는 CB3 빗물받이와 CB3 연결관에서 병목이 먼저 나타납니다. 우수 본관 하류는 아직 여유가 있어, 첫 조치 대상은 본관 전체가 아니라 해당 빗물받이/연결관입니다.';
+  return '하천 역류에서는 월류 방류관과 펌프 토출관에서 역방향 유량 후보가 늘어납니다. 같은 폭우라도 하천 수위가 높으면 방류구와 토출부가 배수를 방해할 수 있습니다.';
+}
+function updatePanel() {
+  document.getElementById('panel-title').textContent = scenario === 'base' ? '기본 폭우 상황' : '하천 역류 상황';
+  document.getElementById('panel-summary').textContent = scenarioSummary();
+  const events = DATA.events.filter(e => e.scenario === scenario);
+  const ev = document.getElementById('events');
+  ev.innerHTML = events.length ? events.map(e => `<div class="event ${e.event_type.includes('reverse') ? 'reverse' : ''}"><b>${e.id}</b><br>${e.meaning}<br><span class="small">${e.count}건, 최악값 ${e.worst_value}, 시각 ${e.time}</span></div>`).join('') : '<p class="note">현재 시나리오에서 따로 잡힌 문제 이벤트가 없습니다.</p>';
+  const selected = selectedId || (scenario === 'base' ? 'CB3' : 'OVF_PIPE');
+  const n = nodeById[selected] || linkById[selected];
+  const m = metric(selected);
+  document.getElementById('selection').innerHTML = `<b>${n ? n.label : selected}</b><br>${n?.desc || '관 또는 시설 연결부입니다.'}`;
+  const stats = document.getElementById('stats');
+  if (!m) {
+    stats.innerHTML = '<p class="note">이 지점은 개념 흐름 표시용이라 직접 센서값은 없습니다.</p>';
+    return;
+  }
+  stats.innerHTML = `
+    <div class="stat-grid">
+      <div class="stat"><b>${fmt(m.max_depth_m, ' m')}</b><span>최대 수위</span></div>
+      <div class="stat"><b>${fmt(m.max_flow_cms, ' m3/s')}</b><span>최대 유량</span></div>
+      <div class="stat"><b>${fmt(m.min_flow_cms, ' m3/s')}</b><span>최소 유량</span></div>
+      <div class="stat"><b>${fmt(m.max_velocity_mps, ' m/s')}</b><span>최대 유속</span></div>
+      <div class="stat"><b>${fmt(m.max_fullness_ratio, '')}</b><span>최대 만관비</span></div>
+      <div class="stat"><b>${fmt(m.max_flooding_cms, ' m3/s')}</b><span>침수 유량</span></div>
+    </div>
+    <table>
+      <tr><td>최대수위 시각</td><td>${m.time_of_max_depth}</td></tr>
+      <tr><td>최저유량 시각</td><td>${m.time_of_min_flow}</td></tr>
+      <tr><td>센서 종류</td><td>${m.sensor_type}</td></tr>
+    </table>`;
+}
+document.querySelectorAll('button[data-scenario]').forEach(btn => btn.addEventListener('click', () => {
+  scenario = btn.dataset.scenario;
+  selectedId = scenario === 'base' ? 'CB3' : 'OVF_PIPE';
+  document.querySelectorAll('button[data-scenario]').forEach(b => b.classList.toggle('active', b === btn));
+  render();
+}));
+document.getElementById('btn-reset').addEventListener('click', () => { selectedId = null; render(); });
+selectedId = 'CB3';
+render();
+</script>
+</body>
+</html>
