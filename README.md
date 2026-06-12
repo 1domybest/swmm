@@ -10,7 +10,7 @@
 |---|---|
 | `models/seoul_pilot_base.inp` | 기본 폭우 시나리오 |
 | `models/seoul_pilot_backflow.inp` | 하천 수위 상승/역류 시나리오 |
-| `viewer/overall_drainage_diagram.html` | 전체 배수도 지상 배치 초안 화면 |
+| `viewer/overall_drainage_diagram.html` | 전체 배수도 레일형 설명 화면 |
 | `viewer/urban_flood_network_viewer.html` | 브라우저에서 보는 시뮬레이션 플레이백 화면 |
 | `sample-results/virtual_sensor_summary.csv` | 센서별 최대 수위·유량·유속 요약 |
 | `sample-results/problem_events.csv` | 침수/역류 후보 이벤트 요약 |
@@ -59,7 +59,7 @@ Open_Overall_Drainage_Diagram.bat
 Open_Network_Viewer.bat
 ```
 
-`Open_Overall_Drainage_Diagram.bat`는 전체 배수도의 지상 배치 초안을 보여줍니다. 지하 관은 지상 배치 확정 후 추가합니다.
+`Open_Overall_Drainage_Diagram.bat`는 전체 배수도의 지상 시설과 3개 주요 지하 레일(합류식, 분류식 빗물/우수, 분류식 생활오수)을 보여줍니다.
 
 `Open_Network_Viewer.bat`는 `sample-results/`에 저장된 SWMM 실행 결과 CSV를 시간순으로 재생해서, 물이 어디서 차고 어디서 역류 후보가 생기는지 눈으로 보기 쉽게 보여줍니다.
 

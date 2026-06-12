@@ -3,23 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>전체 도시 배수도 - 지상 배치 초안</title>
+<title>전체 도시 배수도 - 분류식 합류식 하천</title>
 <style>
 :root {
-  --bg: #f5f7fb;
-  --surface: #ffffff;
+  --bg: #f3f6fb;
+  --panel: #ffffff;
   --ink: #172033;
   --muted: #667085;
-  --line: #d7dee9;
-  --sky: #eaf6ff;
-  --ground: #8f5a34;
-  --ground-line: #654024;
+  --line: #d8e0ec;
+  --sky: #eaf7ff;
+  --soil: #8d5935;
+  --soil-line: #b77a4e;
+  --ground-edge: #59351f;
+  --storm: #2388f6;
+  --storm-soft: #e2f1ff;
+  --sewer: #a4672b;
+  --sewer-soft: #fff0dc;
+  --combined: #7657d7;
+  --combined-soft: #eee8ff;
+  --river: #25b8c3;
+  --river-soft: #d8fbfb;
   --road: #111827;
-  --storm: #1686f7;
-  --sewer: #9a5a20;
-  --combined: #7756d6;
-  --river: #23b7bd;
-  --shadow: 0 14px 32px rgba(16, 24, 40, .10);
+  --shadow: 0 14px 34px rgba(16, 24, 40, .10);
 }
 * { box-sizing: border-box; }
 body {
@@ -33,116 +38,634 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 16px 20px;
-  background: rgba(255,255,255,.94);
+  gap: 18px;
+  padding: 18px 24px;
+  background: rgba(255, 255, 255, .95);
   border-bottom: 1px solid var(--line);
   position: sticky;
   top: 0;
   z-index: 10;
   backdrop-filter: blur(10px);
 }
-h1 { margin: 0 0 4px; font-size: 22px; }
-.sub { color: var(--muted); font-size: 13px; }
-.pill {
-  border: 1px solid #b7cdf7;
-  background: #eef5ff;
-  color: #174ea6;
-  border-radius: 999px;
-  padding: 8px 12px;
-  font-size: 13px;
-  font-weight: 800;
-}
-main {
-  display: grid;
-  grid-template-columns: minmax(920px, 1fr) 360px;
-  gap: 18px;
-  padding: 18px;
-}
-.stage, aside {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-}
-.stage { overflow: auto; }
-svg {
-  display: block;
-  min-width: 1120px;
-  width: 100%;
-  height: 680px;
-}
-aside {
-  align-self: start;
-  padding: 16px;
-  position: sticky;
-  top: 86px;
-  max-height: calc(100vh - 104px);
-  overflow: auto;
-}
-h2 { margin: 0 0 8px; font-size: 18px; }
-h3 { margin: 18px 0 8px; font-size: 14px; }
-.note { color: var(--muted); line-height: 1.55; font-size: 13px; }
-.status-card {
-  border: 1px solid var(--line);
-  background: #fbfdff;
-  border-radius: 8px;
-  padding: 10px;
-  margin: 8px 0;
-}
-.status-card b { display: block; margin-bottom: 4px; font-size: 13px; }
-.status-card p { margin: 0; color: var(--muted); line-height: 1.45; font-size: 13px; }
-.legend {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+h1 { margin: 0 0 6px; font-size: 23px; }
+.sub { color: var(--muted); font-size: 13px; line-height: 1.45; }
+.flow-mode-controls {
+  display: flex;
+  align-items: center;
   gap: 8px;
-  margin-top: 12px;
+  flex: 0 0 auto;
 }
-.legend span {
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+}
+.playback-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #d8e0ec;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+.playback-control {
   display: flex;
   align-items: center;
   gap: 7px;
-  color: var(--muted);
+  color: #334155;
   font-size: 12px;
+  font-weight: 850;
+  white-space: nowrap;
 }
-.dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
-.label {
-  fill: #172033;
+.playback-control select,
+.playback-controls button {
+  height: 34px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #172033;
+  font-size: 12px;
+  font-weight: 850;
+}
+.playback-control select {
+  padding: 0 28px 0 10px;
+}
+.playback-controls button {
+  padding: 0 12px;
+  cursor: pointer;
+}
+.playback-controls button.is-playing {
+  border-color: #172033;
+  background: #172033;
+  color: #fff;
+}
+.playback-time {
+  width: 170px;
+  accent-color: #2388f6;
+}
+.playback-output {
+  min-width: 138px;
+  color: #172033;
+  font-size: 12px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.hydraulic-controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #d8e0ec;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+.hydraulic-control {
+  display: grid;
+  grid-template-columns: 92px 150px 48px;
+  align-items: center;
+  gap: 8px;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+.hydraulic-control input {
+  width: 150px;
+  accent-color: #2388f6;
+}
+.hydraulic-control output {
+  color: #172033;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.weather-controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #d8e0ec;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+.weather-control {
+  display: grid;
+  grid-template-columns: 56px 150px 42px;
+  align-items: center;
+  gap: 8px;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+.weather-control input {
+  width: 150px;
+  accent-color: #2388f6;
+}
+.weather-control output {
+  color: #172033;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.flow-mode-controls button {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #334155;
+  border-radius: 8px;
+  padding: 9px 14px;
   font-size: 13px;
   font-weight: 850;
+  cursor: pointer;
+}
+.flow-mode-controls button.is-active {
+  border-color: #172033;
+  background: #172033;
+  color: #fff;
+}
+main { padding: 18px; }
+.workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 16px;
+  align-items: start;
+}
+.stage {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  overflow: auto;
+  max-height: calc(100vh - 104px);
+}
+.object-panel {
+  position: sticky;
+  top: 104px;
+  max-height: calc(100vh - 122px);
+  overflow: auto;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 18px;
+}
+.object-panel-kicker {
+  margin: 0 0 8px;
+  color: #2388f6;
+  font-size: 12px;
+  font-weight: 950;
+}
+.object-panel h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+.object-panel p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.object-meta {
+  display: grid;
+  grid-template-columns: 82px 1fr;
+  gap: 8px 10px;
+  margin: 16px 0 0;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+.object-meta dt {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 900;
+}
+.object-meta dd {
+  margin: 0;
+  color: #172033;
+  font-size: 12px;
+  font-weight: 850;
+  word-break: break-all;
+}
+.object-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 14px;
+}
+.object-metric {
+  min-height: 74px;
+  border: 1px solid #d8e0ec;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fbfdff;
+}
+.object-metric strong {
+  display: block;
+  color: #111827;
+  font-size: 19px;
+  font-weight: 950;
+  line-height: 1.15;
+}
+.object-metric span {
+  display: block;
+  margin-top: 5px;
+  color: #667085;
+  font-size: 12px;
+  font-weight: 850;
+}
+.exception-controls {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid #d8e0ec;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+.exception-control-row {
+  display: grid;
+  grid-template-columns: 1fr 58px;
+  align-items: center;
+  gap: 10px;
+  color: #172033;
+  font-size: 13px;
+  font-weight: 950;
+}
+.exception-control-row input {
+  grid-column: 1 / -1;
+  width: 100%;
+  accent-color: #ef4444;
+}
+.exception-control-row output {
+  color: #b91c1c;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.payload-preview {
+  margin-top: 14px;
+}
+.payload-preview pre {
+  max-height: 156px;
+  overflow: auto;
+  margin: 8px 0 0;
+  padding: 10px;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #dbeafe;
+  font-size: 11px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+.object-empty .object-metrics,
+.object-empty .exception-controls,
+.object-empty .payload-preview {
+  display: none;
+}
+svg {
+  display: block;
+  width: 7600px;
+  height: 1870px;
+  max-width: none;
+}
+.page-title {
+  fill: #172033;
+  font-size: 42px;
+  font-weight: 950;
+  paint-order: stroke;
+  stroke: rgba(255,255,255,.92);
+  stroke-width: 7px;
+  stroke-linejoin: round;
+}
+.label {
+  fill: #172033;
+  font-size: 22px;
+  font-weight: 900;
+  paint-order: stroke;
+  stroke: rgba(255,255,255,.92);
+  stroke-width: 6px;
+  stroke-linejoin: round;
+}
+.small-label {
+  fill: #4d5d70;
+  font-size: 15px;
+  font-weight: 800;
+  paint-order: stroke;
+  stroke: rgba(255,255,255,.92);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+.flow-gate {
+  transform-box: view-box;
+  transform-origin: 4724px 840px;
+  transform: rotate(var(--gate-rotation, 0deg));
+  transition: transform .45s ease;
+}
+.pump-blades {
+  transform-box: view-box;
+  transform-origin: 5095px 1152px;
+  animation: pumpSpin 1.1s linear infinite;
+  animation-play-state: paused;
+  opacity: .35;
+  transition: opacity .25s ease;
+}
+.water-flow {
+  fill: none;
+  stroke: var(--flow-color, #91a4b8);
+  stroke-width: var(--flow-width, 14);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: var(--flow-dash, 24 22);
+  stroke-dashoffset: 0;
+  animation: waterFlow var(--flow-duration, 2.3s) linear infinite;
+  opacity: .82;
+  pointer-events: stroke;
+  cursor: pointer;
+  will-change: stroke-dashoffset;
+}
+.pipe-hit-area {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 62;
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+  pointer-events: stroke;
+  cursor: pointer;
+}
+.pipe-hit-area.medium { stroke-width: 84; }
+.pipe-hit-area.large { stroke-width: 116; }
+.water-flow.small {
+  --flow-width: 10;
+  --flow-dash: 18 18;
+  --flow-offset: -36;
+  --flow-duration: 1.8s;
+}
+.water-flow.medium {
+  --flow-width: 14;
+  --flow-dash: 24 22;
+  --flow-offset: -46;
+  --flow-duration: 2.3s;
+}
+.water-flow.large {
+  --flow-width: 18;
+  --flow-dash: 30 26;
+  --flow-offset: -56;
+  --flow-duration: 2.8s;
+}
+.water-flow.backflow {
+  --flow-color: #b91c1c;
+  animation-name: waterBackflow;
+  opacity: .86;
+  stroke-width: var(--flow-width, 14);
+  stroke-dasharray: var(--flow-dash, 24 22);
+}
+.water-flow.backflow.small { --backflow-offset: 36; }
+.water-flow.backflow.medium { --backflow-offset: 46; }
+.water-flow.backflow.large { --backflow-offset: 56; }
+.water-flow.is-hidden-flow {
+  display: none;
+}
+.pipe-fullness {
+  pointer-events: none;
+  opacity: .68;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: pipeFullLevel 9s ease-in-out infinite;
+  will-change: transform;
+}
+.pipe-fullness[data-pipe-level-for] {
+  pointer-events: auto;
+  cursor: pointer;
+}
+[data-asset-id] {
+  cursor: pointer;
+}
+.water-flow.is-selected,
+.pipe-fullness.is-selected,
+.pipe-hit-area.is-selected,
+[data-asset-id].is-selected {
+  filter: drop-shadow(0 0 10px rgba(37, 99, 235, .72));
+}
+.water-flow.has-exception,
+.pipe-fullness.has-exception,
+.pipe-hit-area.has-exception,
+[data-asset-id].has-exception {
+  filter: drop-shadow(0 0 10px rgba(239, 68, 68, .65));
+}
+.water-flow.is-selected.has-exception,
+.pipe-fullness.is-selected.has-exception,
+.pipe-hit-area.is-selected.has-exception,
+[data-asset-id].is-selected.has-exception {
+  filter: drop-shadow(0 0 10px rgba(37, 99, 235, .72)) drop-shadow(0 0 8px rgba(239, 68, 68, .65));
+}
+.catch-basin-fullness {
+  fill: var(--fullness-color, #38bdf8);
+  pointer-events: none;
+  opacity: .86;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: catchBasinFullLevel 7s ease-in-out infinite;
+  will-change: transform;
+}
+.pipe-wave-base {
+  fill: var(--fullness-color, #38bdf8);
+  animation: pipeFullColor 9s ease-in-out infinite;
+}
+.pipe-wave-line {
+  animation: pipeWaveHide 9s ease-in-out infinite;
+}
+@keyframes flowGateOpenClose {
+  0%, 42% { transform: rotate(0deg); }
+  58%, 82% { transform: rotate(42deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes waterFlow {
+  to { stroke-dashoffset: var(--flow-offset, -56); }
+}
+@keyframes waterBackflow {
+  to { stroke-dashoffset: var(--backflow-offset, 56); }
+}
+@keyframes pipeFullLevel {
+  0%, 12% { transform: scaleY(.12); }
+  58%, 78% { transform: scaleY(1); }
+  100% { transform: scaleY(.12); }
+}
+@keyframes catchBasinFullLevel {
+  0%, 12% { transform: scaleY(.18); }
+  58%, 78% { transform: scaleY(1); }
+  100% { transform: scaleY(.18); }
+}
+@keyframes pipeFullColor {
+  0%, 24% { fill: #38bdf8; }
+  58%, 78% { fill: #ef4444; }
+  100% { fill: #38bdf8; }
+}
+@keyframes pipeWaveHide {
+  0%, 50% { opacity: .72; }
+  60%, 82% { opacity: 0; }
+  100% { opacity: .72; }
+}
+@keyframes pumpSpin {
+  to { transform: rotate(360deg); }
+}
+.weather-layer {
+  pointer-events: none;
+}
+.weather-sun {
+  opacity: var(--weather-sun-opacity, 1);
+  transform-box: view-box;
+  transform-origin: 170px 42px;
+  transition: opacity .25s ease;
+}
+.weather-sun-core {
+  fill: #facc15;
+  stroke: #f59e0b;
+  stroke-width: 4;
+}
+.weather-sun-ray {
+  stroke: #f59e0b;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+.weather-cloud {
+  fill: var(--weather-cloud-fill, #ffffff);
+  stroke: var(--weather-cloud-stroke, #d8e0ec);
+  stroke-width: 3;
+  filter: url(#softShadow);
+  transition: fill .25s ease, stroke .25s ease, opacity .25s ease;
+}
+.weather-cloud-1 { opacity: var(--weather-cloud-1-opacity, 0); }
+.weather-cloud-2 { opacity: var(--weather-cloud-2-opacity, 0); }
+.weather-cloud-3 { opacity: var(--weather-cloud-3-opacity, 0); }
+.weather-cloud-4 { opacity: var(--weather-cloud-4-opacity, 0); }
+.weather-cloud-5 { opacity: var(--weather-cloud-5-opacity, 0); }
+.weather-rain-field {
+  opacity: var(--weather-rain-opacity, 0);
+  transition: opacity .2s ease;
+}
+.weather-raindrop {
+  stroke: #2388f6;
+  stroke-width: 7;
+  stroke-linecap: round;
+  opacity: .92;
+  transform-box: view-box;
+  animation: weatherRainFall var(--weather-rain-duration, 1.6s) linear infinite;
+  will-change: transform;
+}
+.weather-raindrop:nth-child(3n) { animation-delay: -.22s; }
+.weather-raindrop:nth-child(3n + 1) { animation-delay: -.58s; }
+.weather-raindrop:nth-child(4n) { animation-delay: -.92s; }
+@keyframes weatherRainFall {
+  from { transform: translateY(-90px); }
+  to { transform: translateY(220px); }
+}
+body[data-fullness-state="manual"] .pipe-fullness,
+body[data-fullness-state="manual"] .catch-basin-fullness,
+body[data-fullness-state="manual"] .pipe-wave-base {
+  animation: none;
+}
+body[data-fullness-level="full"] .pipe-wave-line {
+  animation: none;
+  opacity: 0;
+}
+body[data-playback-paused="true"] .flow-gate,
+body[data-playback-paused="true"] .pump-blades,
+body[data-playback-paused="true"] .water-flow,
+body[data-playback-paused="true"] .weather-raindrop,
+body[data-playback-paused="true"] .catch-basin-fullness,
+body[data-playback-paused="true"] .pipe-fullness,
+body[data-playback-paused="true"] .pipe-wave-base,
+body[data-playback-paused="true"] .pipe-wave-line {
+  animation-play-state: paused !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .flow-gate,
+  .pump-blades,
+  .water-flow,
+  .weather-raindrop,
+  .catch-basin-fullness,
+  .pipe-fullness,
+  .pipe-wave-base,
+  .pipe-wave-line { animation: none; }
+}
+@media (max-width: 1100px) {
+  .workbench {
+    grid-template-columns: 1fr;
+  }
+  .object-panel {
+    position: static;
+    max-height: none;
+  }
+}
+.rail-title {
+  fill: #172033;
+  font-size: 36px;
+  font-weight: 950;
+}
+.main-title {
+  fill: #172033;
+  font-size: 29px;
+  font-weight: 950;
+}
+.rail-desc {
+  fill: #3f4e62;
+  font-size: 22px;
+  font-weight: 850;
+  paint-order: stroke;
+  stroke: rgba(255,255,255,.9);
+  stroke-width: 6px;
+  stroke-linejoin: round;
+}
+.surface-item { stroke: #334155; stroke-width: 2.2; }
+.cover { fill: #cbd5e1; stroke: #475467; stroke-width: 3; }
+.shaft {
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 16 16;
+  opacity: .52;
+}
+.rain {
+  stroke: var(--storm);
+  stroke-width: 7;
+  stroke-linecap: round;
+  opacity: .86;
+}
+.divider {
+  stroke: rgba(23, 32, 51, .22);
+  stroke-width: 3;
+  stroke-dasharray: 16 16;
+}
+.hint {
+  fill: #5c6b7d;
+  font-size: 16px;
+  font-weight: 850;
+}
+.object-label {
+  fill: #f8fafc;
+  font-size: 24px;
+  font-weight: 950;
+  paint-order: stroke;
+  stroke: rgba(15, 23, 42, .88);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+.pipe-label {
+  fill: #ffffff;
+  font-size: 18px;
+  font-weight: 950;
+  paint-order: stroke;
+  stroke: rgba(15, 23, 42, .82);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+.building-label {
+  fill: #172033;
+  font-size: 14px;
+  font-weight: 950;
   paint-order: stroke;
   stroke: rgba(255,255,255,.9);
   stroke-width: 4px;
   stroke-linejoin: round;
-}
-.small-label {
-  fill: #475467;
-  font-size: 11px;
-  font-weight: 750;
-  paint-order: stroke;
-  stroke: rgba(255,255,255,.92);
-  stroke-width: 4px;
-  stroke-linejoin: round;
-}
-.zone-title { fill: #344054; font-size: 16px; font-weight: 900; }
-.surface-item { stroke: #334155; stroke-width: 1.4; }
-.cover { fill: #cbd5e1; stroke: #475467; stroke-width: 2; }
-.shaft-preview {
-  stroke-width: 5;
-  stroke-linecap: round;
-  stroke-dasharray: 7 8;
-  opacity: .32;
-}
-.draft-box {
-  fill: rgba(255,255,255,.64);
-  stroke: #cbd5e1;
-  stroke-width: 1.4;
-  stroke-dasharray: 8 8;
-}
-.rain {
-  stroke: var(--storm);
-  stroke-width: 4;
-  stroke-linecap: round;
 }
 </style>
 </head>
@@ -150,140 +673,2374 @@ h3 { margin: 18px 0 8px; font-size: 14px; }
 <header>
   <div>
     <h1>전체 도시 배수도</h1>
-    <div class="sub">1단계: 지상 배치만 먼저 정리했습니다. 지하 관은 다음 단계에서 아래 레이어에 배치합니다.</div>
+    <div class="sub">분류식, 합류식, 하천을 각각 약 1200px 이상 폭으로 잡았습니다. 가로로 스크롤하면서 한 영역씩 크게 볼 수 있습니다.</div>
   </div>
-  <div class="pill">지상 배치 검토 단계</div>
+  <div class="header-controls">
+    <div class="playback-controls" aria-label="시나리오 플레이백">
+      <label class="playback-control">
+        <span>시나리오</span>
+        <select data-playback-scenario>
+          <option value="base">기본 폭우</option>
+          <option value="overflow">폭우 월류</option>
+          <option value="backflow">하천 역류</option>
+        </select>
+      </label>
+      <button type="button" data-playback-toggle>재생</button>
+      <button type="button" data-playback-step="-1">-1분</button>
+      <button type="button" data-playback-step="1">+1분</button>
+      <label class="playback-control">
+        <span>시간</span>
+        <input class="playback-time" type="range" min="0" max="0" step="1" value="0" data-playback-time>
+      </label>
+      <label class="playback-control">
+        <span>속도</span>
+        <select data-playback-speed>
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="2">2x</option>
+          <option value="4">4x</option>
+        </select>
+      </label>
+      <output class="playback-output" data-playback-output>데이터 대기</output>
+    </div>
+    <div class="hydraulic-controls" aria-label="화면 프리뷰용 전체 유속과 유량 조절">
+      <label class="hydraulic-control">
+        <span>프리뷰 유속</span>
+        <input type="range" min="0.2" max="4" step="0.1" value="1" data-global-hydraulic-control="velocity">
+        <output data-global-hydraulic-output="velocity">1.0x</output>
+      </label>
+      <label class="hydraulic-control">
+        <span>프리뷰 차오름</span>
+        <input type="range" min="0" max="100" step="1" value="42" data-global-hydraulic-control="waterLevel">
+        <output data-global-hydraulic-output="waterLevel">42%</output>
+      </label>
+    </div>
+    <div class="weather-controls" aria-label="강수량 조절">
+      <label class="weather-control">
+        <span>강수량</span>
+        <input type="range" min="0" max="100" step="1" value="0" data-weather-control="rainfall">
+        <output data-weather-output="rainfall">0%</output>
+      </label>
+    </div>
+    <div class="flow-mode-controls" aria-label="물 흐름 방향 선택">
+      <button type="button" data-flow-mode-button="forward">정방향</button>
+      <button type="button" data-flow-mode-button="backflow">역류</button>
+    </div>
+  </div>
 </header>
 
 <main>
-  <section class="stage">
-    <svg viewBox="0 0 1320 680" role="img" aria-label="전체 도시 배수도 지상 배치 초안">
+  <div class="workbench">
+  <section class="stage" aria-label="분류식 합류식 하천 기본 배수도">
+    <svg viewBox="0 0 7600 1870" role="img" aria-label="분류식, 합류식, 하천으로 구분된 전체 도시 배수도">
       <defs>
-        <pattern id="soilPattern" width="34" height="22" patternUnits="userSpaceOnUse">
-          <rect width="34" height="22" fill="#8f5a34"></rect>
-          <path d="M0 8 C8 2 18 14 34 7 M0 18 C10 13 22 24 34 17" fill="none" stroke="#b77a4e" stroke-width="1" opacity=".52"></path>
+        <pattern id="soilPattern" width="38" height="24" patternUnits="userSpaceOnUse">
+          <rect width="38" height="24" fill="var(--soil)"></rect>
+          <path d="M0 8 C8 2 20 15 38 7 M0 19 C10 13 24 25 38 17" fill="none" stroke="var(--soil-line)" stroke-width="1" opacity=".50"></path>
         </pattern>
-        <pattern id="waterPattern" width="42" height="18" patternUnits="userSpaceOnUse">
-          <rect width="42" height="18" fill="#23b7bd"></rect>
-          <path d="M0 9 C8 2 14 16 22 9 C30 2 36 16 42 9" fill="none" stroke="#c8fbfb" stroke-width="1.5" opacity=".68"></path>
+        <pattern id="waterPattern" width="54" height="22" patternUnits="userSpaceOnUse">
+          <rect width="54" height="22" fill="var(--river)"></rect>
+          <path d="M0 11 C10 3 18 19 28 11 C38 3 46 19 54 11" fill="none" stroke="#c8fbfb" stroke-width="1.8" opacity=".75"></path>
         </pattern>
+        <pattern id="pipeFullWavePattern" width="72" height="22" patternUnits="userSpaceOnUse">
+          <rect class="pipe-wave-base" width="72" height="22" fill="#38bdf8"></rect>
+          <path class="pipe-wave-line" d="M0 11 C12 3 24 19 36 11 S60 3 72 11" fill="none" stroke="#e0f7ff" stroke-width="2.4" opacity=".72"></path>
+          <animateTransform attributeName="patternTransform" type="translate" from="0 0" to="72 0" dur="2.4s" repeatCount="indefinite"></animateTransform>
+        </pattern>
+        <filter id="softShadow" x="-20%" y="-30%" width="140%" height="160%">
+          <feDropShadow dx="0" dy="9" stdDeviation="8" flood-color="#111827" flood-opacity=".14"></feDropShadow>
+        </filter>
+        <!-- Pipe size objects:
+             small + bend=true  -> pipeSmallDropRight/Left, pipeSmallBendDropRight
+             small + bend=false -> pipeSmallStraightH/V
+             medium             -> pipeMediumH
+             large              -> pipeLargeH/V
+             Placement changes should mostly edit x/y plus width for horizontal pipes or height for vertical pipes. -->
+        <symbol id="pipeMediumH" viewBox="0 0 1 70" preserveAspectRatio="none">
+          <rect x="0" y="0" width="1" height="70" rx="0" fill="var(--pipe-fill)" stroke="var(--pipe-stroke)" stroke-width="4" vector-effect="non-scaling-stroke"></rect>
+        </symbol>
+        <symbol id="pipeMediumStraightV" viewBox="0 0 70 1" preserveAspectRatio="none">
+          <rect x="0" y="0" width="70" height="1" rx="0" fill="var(--pipe-fill)" stroke="var(--pipe-stroke)" stroke-width="4" vector-effect="non-scaling-stroke"></rect>
+        </symbol>
+        <symbol id="pipeMediumBendDropRight" viewBox="0 0 100 100" preserveAspectRatio="none" overflow="visible">
+          <path d="M0 0 H65 Q85 0 85 20 V100" fill="none" stroke="var(--pipe-stroke)" stroke-width="78" stroke-linecap="butt" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
+          <path d="M0 0 H65 Q85 0 85 20 V100" fill="none" stroke="var(--pipe-fill)" stroke-width="70" stroke-linecap="butt" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
+        </symbol>
+        <symbol id="pipeLargeH" viewBox="0 0 1 98" preserveAspectRatio="none">
+          <rect x="0" y="0" width="1" height="98" rx="0" fill="var(--pipe-fill)" stroke="var(--pipe-stroke)" stroke-width="5" vector-effect="non-scaling-stroke"></rect>
+        </symbol>
+        <symbol id="pipeLargeV" viewBox="0 0 98 1" preserveAspectRatio="none">
+          <rect x="0" y="0" width="98" height="1" rx="0" fill="var(--pipe-fill)" stroke="var(--pipe-stroke)" stroke-width="5" vector-effect="non-scaling-stroke"></rect>
+        </symbol>
+        <symbol id="pipeSmallStraightH" viewBox="0 0 1 58" preserveAspectRatio="none">
+          <rect x="0" y="0" width="1" height="58" rx="0" fill="var(--small-pipe-fill, #516071)" stroke="var(--small-pipe-edge, #111827)" stroke-width="5" vector-effect="non-scaling-stroke"></rect>
+        </symbol>
+        <symbol id="pipeSmallStraightV" viewBox="0 0 58 1" preserveAspectRatio="none">
+          <rect x="0" y="0" width="58" height="1" rx="0" fill="var(--small-pipe-fill, #516071)" stroke="var(--small-pipe-edge, #111827)" stroke-width="5" vector-effect="non-scaling-stroke"></rect>
+        </symbol>
+        <symbol id="pipeSmallDropRight" viewBox="0 0 120 100" preserveAspectRatio="none" overflow="visible">
+          <path d="M0 0 H120 V100" fill="none" stroke="var(--small-pipe-edge, #111827)" stroke-width="45" stroke-linecap="butt" stroke-linejoin="miter" vector-effect="non-scaling-stroke"></path>
+          <path d="M0 0 H120 V100" fill="none" stroke="var(--small-pipe-fill, #566270)" stroke-width="30" stroke-linecap="butt" stroke-linejoin="miter" vector-effect="non-scaling-stroke"></path>
+        </symbol>
+        <symbol id="pipeSmallDropLeft" viewBox="0 0 120 100" preserveAspectRatio="none" overflow="visible">
+          <path d="M120 0 H0 V100" fill="none" stroke="var(--small-pipe-edge, #111827)" stroke-width="45" stroke-linecap="butt" stroke-linejoin="miter" vector-effect="non-scaling-stroke"></path>
+          <path d="M120 0 H0 V100" fill="none" stroke="var(--small-pipe-fill, #566270)" stroke-width="30" stroke-linecap="butt" stroke-linejoin="miter" vector-effect="non-scaling-stroke"></path>
+        </symbol>
+        <symbol id="pipeSmallDropConnector" viewBox="0 0 62 78" preserveAspectRatio="none">
+          <rect x="0" y="0" width="62" height="78" rx="0" fill="var(--small-pipe-fill, #566270)" stroke="var(--small-pipe-edge, #111827)" stroke-width="5" vector-effect="non-scaling-stroke"></rect>
+          <path d="M18 8 V70 M31 8 V70 M44 8 V70" stroke="rgba(255,255,255,.46)" stroke-width="5" vector-effect="non-scaling-stroke"></path>
+        </symbol>
+        <symbol id="pipeSmallDropConnectorH" viewBox="0 0 92 46" preserveAspectRatio="none">
+          <rect x="0" y="0" width="92" height="46" rx="0" fill="var(--small-pipe-fill, #566270)" stroke="var(--small-pipe-edge, #111827)" stroke-width="5" vector-effect="non-scaling-stroke"></rect>
+          <path d="M20 7 V39 M46 7 V39 M72 7 V39" stroke="rgba(255,255,255,.50)" stroke-width="5" vector-effect="non-scaling-stroke"></path>
+        </symbol>
+        <symbol id="pipeSmallBendDropRight" viewBox="0 0 100 100" preserveAspectRatio="none" overflow="visible">
+          <path d="M0 0 H65 Q85 0 85 20 V100" fill="none" stroke="var(--small-pipe-edge, #111827)" stroke-width="45" stroke-linecap="butt" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
+          <path d="M0 0 H65 Q85 0 85 20 V100" fill="none" stroke="var(--small-pipe-fill, #516071)" stroke-width="30" stroke-linecap="butt" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
+        </symbol>
+        <g id="pipeSmallBentRight">
+          <path d="M0 0 H120 V58" fill="none" stroke="var(--small-pipe-edge, #111827)" stroke-width="45" stroke-linecap="butt" stroke-linejoin="miter"></path>
+          <path d="M0 0 H120 V58" fill="none" stroke="var(--small-pipe-fill, #516071)" stroke-width="30" stroke-linecap="butt" stroke-linejoin="miter"></path>
+          <ellipse cx="120" cy="64" rx="47" ry="35" fill="#1f2937" stroke="var(--small-pipe-edge, #111827)" stroke-width="6"></ellipse>
+          <ellipse cx="120" cy="64" rx="26" ry="18" fill="#0b1220"></ellipse>
+        </g>
+        <g id="pipeSmallBentLeft">
+          <path d="M0 0 H-120 V58" fill="none" stroke="var(--small-pipe-edge, #111827)" stroke-width="45" stroke-linecap="butt" stroke-linejoin="miter"></path>
+          <path d="M0 0 H-120 V58" fill="none" stroke="var(--small-pipe-fill, #516071)" stroke-width="30" stroke-linecap="butt" stroke-linejoin="miter"></path>
+          <ellipse cx="-120" cy="64" rx="47" ry="35" fill="#1f2937" stroke="var(--small-pipe-edge, #111827)" stroke-width="6"></ellipse>
+          <ellipse cx="-120" cy="64" rx="26" ry="18" fill="#0b1220"></ellipse>
+        </g>
+        <g id="manholeStormShort">
+          <rect x="-57" y="0" width="114" height="332" rx="12" fill="#aeb8c2" stroke="#475467" stroke-width="6" opacity=".92"></rect>
+          <rect class="pipe-fullness" data-asset-level-for="sep_storm_manhole" x="-49" y="8" width="98" height="316" rx="8" fill="url(#pipeFullWavePattern)"></rect>
+          <path d="M-36 132 H36 M-36 260 H36" stroke="#7b8794" stroke-width="4" opacity=".75"></path>
+          <circle cx="0" cy="0" r="57" fill="#bfdbfe" stroke="var(--storm)" stroke-width="8"></circle>
+          <circle cx="0" cy="0" r="38" fill="#1d4ed8" stroke="#0f2f6f" stroke-width="6"></circle>
+          <path d="M-24 -18 H24 M-30 0 H30 M-24 18 H24" stroke="#d7dee9" stroke-width="6" stroke-linecap="round"></path>
+          <text x="0" y="162" class="small-label" text-anchor="middle" style="font-size:30px; stroke-width:7px;">우수 맨홀</text>
+        </g>
+        <g id="manholeSewerTall">
+          <rect x="-57" y="0" width="114" height="650" rx="12" fill="#b9c0c7" stroke="#7a828a" stroke-width="6" opacity=".94"></rect>
+          <rect class="pipe-fullness" data-asset-level-for="sep_sewer_manhole" x="-49" y="8" width="98" height="634" rx="8" fill="url(#pipeFullWavePattern)"></rect>
+          <path d="M-36 320 H36 M-36 500 H36" stroke="#8c98a5" stroke-width="4" opacity=".75"></path>
+          <circle cx="0" cy="0" r="57" fill="#fed7aa" stroke="var(--sewer)" stroke-width="8"></circle>
+          <circle cx="0" cy="0" r="38" fill="#c56a1a" stroke="#7c3f12" stroke-width="6"></circle>
+          <path d="M-24 -18 H24 M-30 0 H30 M-24 18 H24" stroke="#d7dee9" stroke-width="6" stroke-linecap="round"></path>
+          <text x="0" y="162" class="small-label" text-anchor="middle" style="font-size:30px; stroke-width:7px;">오수 맨홀</text>
+        </g>
+        <g id="manholeCombinedTall">
+          <rect x="-57" y="0" width="114" height="498" rx="12" fill="#aeb8c2" stroke="#475467" stroke-width="6" opacity=".94"></rect>
+          <rect class="pipe-fullness" data-asset-level-for="combined_manhole" x="-49" y="8" width="98" height="482" rx="8" fill="url(#pipeFullWavePattern)"></rect>
+          <path d="M-36 320 H36" stroke="#7b8794" stroke-width="4" opacity=".78"></path>
+          <circle cx="0" cy="0" r="57" fill="#eee8ff" stroke="var(--combined)" stroke-width="8"></circle>
+          <circle cx="0" cy="0" r="38" fill="#6d4ed8" stroke="#4432a8" stroke-width="6"></circle>
+          <path d="M-24 -18 H24 M-30 0 H30 M-24 18 H24" stroke="#e8e5ff" stroke-width="6" stroke-linecap="round"></path>
+          <text x="0" y="162" class="small-label" text-anchor="middle" style="font-size:30px; stroke-width:7px;">합류식 맨홀</text>
+        </g>
       </defs>
 
-      <rect x="0" y="0" width="1320" height="300" fill="var(--sky)"></rect>
-      <rect x="0" y="300" width="1120" height="380" fill="url(#soilPattern)"></rect>
-      <rect x="1120" y="300" width="200" height="380" fill="url(#waterPattern)"></rect>
-      <rect x="0" y="288" width="1120" height="12" fill="var(--ground-line)"></rect>
-      <text x="28" y="326" class="label" fill="#fff">지하 배관 배치 예정 영역</text>
-      <text x="1170" y="326" class="label" fill="#fff">하천</text>
+      <rect x="0" y="0" width="7600" height="340" fill="var(--sky)"></rect>
+      <g id="drainage-world" transform="translate(0 70)">
+      <rect x="0" y="0" width="7600" height="270" fill="var(--sky)"></rect>
+      <rect x="0" y="270" width="6100" height="1530" fill="url(#soilPattern)"></rect>
+      <rect x="6100" y="0" width="1500" height="1800" fill="url(#waterPattern)"></rect>
+      <rect x="0" y="258" width="6100" height="12" fill="var(--ground-edge)"></rect>
 
-      <rect x="40" y="340" width="1040" height="86" rx="10" class="draft-box"></rect>
-      <text x="62" y="374" class="zone-title">다음 단계에서 우수관거 / 오수관거 / 합류식 하수관거를 이 영역 안에 배치</text>
-      <text x="62" y="402" class="small-label">현재는 물 흐름선을 제거했습니다. 먼저 지상 시설 위치부터 픽스합니다.</text>
+      <line x1="2450" y1="0" x2="2450" y2="1800" class="divider"></line>
+      <line x1="6100" y1="0" x2="6100" y2="1800" class="divider"></line>
 
-      <text x="96" y="70" class="zone-title">주거/생활오수 발생</text>
-      <text x="452" y="70" class="zone-title">도로/빗물 유입</text>
-      <text x="826" y="70" class="zone-title">합류식 구역</text>
+      <text x="1225" y="64" class="page-title" text-anchor="middle">분류식</text>
+      <text x="3675" y="64" class="page-title" text-anchor="middle">합류식</text>
+      <text x="6850" y="64" class="page-title" text-anchor="middle">하천</text>
 
+      <!-- 분류식 지상: 아파트 + 도로/빗물받이 -->
       <g>
-        <rect x="86" y="118" width="96" height="64" rx="8" fill="#fff1d6" class="surface-item"></rect>
-        <polygon points="74,118 134,80 194,118" fill="#e16f2f" class="surface-item"></polygon>
-        <rect x="110" y="140" width="16" height="20" fill="#bfe3ff" stroke="#5b9bd5"></rect>
-        <rect x="148" y="140" width="16" height="20" fill="#bfe3ff" stroke="#5b9bd5"></rect>
-        <text x="134" y="208" class="label" text-anchor="middle">가정</text>
-        <text x="134" y="230" class="small-label" text-anchor="middle">생활오수 발생</text>
+        <g transform="translate(75,68)">
+          <rect x="0" y="0" width="170" height="190" rx="10" fill="#d9ecff" class="surface-item"></rect>
+          <rect x="26" y="30" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="78" y="30" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="130" y="30" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="26" y="78" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="78" y="78" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="130" y="78" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="26" y="126" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="78" y="126" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="130" y="126" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="70" y="166" width="36" height="24" fill="#8b5e34"></rect>
+          <text x="85" y="-10" class="building-label" text-anchor="middle" style="font-size:21px; stroke-width:5px;">아파트 생활오수 발생</text>
+        </g>
 
-        <rect x="268" y="118" width="96" height="64" rx="8" fill="#fff1d6" class="surface-item"></rect>
-        <polygon points="256,118 316,80 376,118" fill="#e16f2f" class="surface-item"></polygon>
-        <rect x="292" y="140" width="16" height="20" fill="#bfe3ff" stroke="#5b9bd5"></rect>
-        <rect x="330" y="140" width="16" height="20" fill="#bfe3ff" stroke="#5b9bd5"></rect>
-        <text x="316" y="208" class="label" text-anchor="middle">분류식 구역</text>
-        <text x="316" y="230" class="small-label" text-anchor="middle">빗물/오수 분리</text>
+        <g transform="translate(847,68)">
+          <rect x="0" y="0" width="170" height="190" rx="10" fill="#d9ecff" class="surface-item"></rect>
+          <rect x="26" y="30" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="78" y="30" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="130" y="30" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="26" y="78" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="78" y="78" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="130" y="78" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="26" y="126" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="78" y="126" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="130" y="126" width="24" height="28" fill="#fff8dc" stroke="#5b9bd5" stroke-width="1.6"></rect>
+          <rect x="70" y="166" width="36" height="24" fill="#8b5e34"></rect>
+          <text x="85" y="-10" class="building-label" text-anchor="middle" style="font-size:21px; stroke-width:5px;">아파트 생활오수 발생</text>
+        </g>
+
+        <use href="#pipeSmallDropRight" x="245" y="218" width="120" height="572" style="--small-pipe-fill:#5e5a54;"></use>
+        <rect class="pipe-fullness" x="245" y="208" width="120" height="20" fill="url(#pipeFullWavePattern)"></rect>
+        <rect class="pipe-fullness" x="355" y="218" width="20" height="572" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M245 218 H365 V790" class="water-flow small"></path>
+        <text x="306" y="223" class="pipe-label" text-anchor="middle" style="font-size:18px; stroke-width:4px;">오수연결관</text>
+
+        <use href="#pipeSmallDropLeft" x="727" y="218" width="120" height="572" style="--small-pipe-fill:#5e5a54;"></use>
+        <rect class="pipe-fullness" x="727" y="208" width="120" height="20" fill="url(#pipeFullWavePattern)"></rect>
+        <rect class="pipe-fullness" x="717" y="218" width="20" height="572" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M847 218 H727 V790" class="water-flow small"></path>
+        <text x="787" y="223" class="pipe-label" text-anchor="middle" style="font-size:18px; stroke-width:4px;">오수연결관</text>
       </g>
 
       <g>
-        <rect x="438" y="100" width="250" height="88" rx="10" fill="var(--road)" class="surface-item"></rect>
-        <path d="M460 134 H668 M460 154 H668" stroke="#facc15" stroke-width="2" stroke-dasharray="11 14"></path>
-        <text x="563" y="212" class="label" text-anchor="middle">도로</text>
-        <text x="563" y="234" class="small-label" text-anchor="middle">빗물이 도로 표면으로 모임</text>
+        <rect x="1037" y="140" width="1413" height="118" rx="0" fill="var(--road)" class="surface-item"></rect>
+        <path d="M1087 178 H2402 M1087 218 H2402" stroke="#facc15" stroke-width="4" stroke-dasharray="26 30"></path>
+        <path d="M1057 158 H2430 M1057 198 H2430 M1057 238 H2430" stroke="#263244" stroke-width="2" opacity=".8"></path>
+        <text x="2340" y="292" class="label" text-anchor="middle">도로</text>
+      </g>
 
-        <rect x="506" y="246" width="70" height="38" rx="8" fill="#bfe3ff" stroke="#5b9bd5" stroke-width="2"></rect>
-        <text x="541" y="265" class="small-label" text-anchor="middle">빗물받이</text>
-        <rect x="602" y="246" width="70" height="38" rx="8" fill="#bfe3ff" stroke="#5b9bd5" stroke-width="2"></rect>
-        <text x="637" y="265" class="small-label" text-anchor="middle">빗물받이</text>
+      <g id="asset-sep-catch-basin-1" data-asset-id="sep_catch_basin_1" transform="translate(1120,232) scale(1)">
+        <rect x="-10" y="0" width="170" height="28" rx="4" fill="#3f4a55" stroke="#111827" stroke-width="2.4"></rect>
+        <path d="M10 0 V28 M40 0 V28 M70 0 V28 M100 0 V28 M130 0 V28 M150 0 V28 M-10 9 H160 M-10 19 H160" stroke="#d7dee9" stroke-width="2"></path>
+        <rect x="20" y="28" width="110" height="116" rx="6" fill="#172033" stroke="#0b1220" stroke-width="3"></rect>
+        <path d="M36 46 H114 M36 70 H114 M36 94 H114 M36 118 H114" stroke="#334155" stroke-width="2" opacity=".9"></path>
+        <rect class="catch-basin-fullness" data-asset-level-for="sep_catch_basin_1" x="23" y="46" width="104" height="95" rx="5"></rect>
+        <text x="75" y="92" class="object-label" text-anchor="middle">빗물받이</text>
+        <use href="#pipeSmallDropRight" x="130" y="82" width="120" height="181" style="--small-pipe-fill:#586a78;"></use>
+        <rect class="pipe-fullness" x="130" y="72" width="120" height="20" fill="url(#pipeFullWavePattern)"></rect>
+        <rect class="pipe-fullness" x="240" y="82" width="20" height="181" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M130 82 H250 V263" class="water-flow small"></path>
+        <text x="190" y="88" class="pipe-label" text-anchor="middle">우수연결관</text>
+      </g>
 
-        <path class="rain" d="M410 82 L398 144 M720 82 L708 144 M752 82 L740 144"></path>
-        <path class="rain" d="M390 82 L378 144 M740 82 L728 144"></path>
-        <text x="574" y="72" class="small-label" text-anchor="middle">강우</text>
+      <g id="asset-sep-catch-basin-2" data-asset-id="sep_catch_basin_2" transform="translate(1910,232) scale(1)">
+        <rect x="-10" y="0" width="170" height="28" rx="4" fill="#3f4a55" stroke="#111827" stroke-width="2.4"></rect>
+        <path d="M10 0 V28 M40 0 V28 M70 0 V28 M100 0 V28 M130 0 V28 M150 0 V28 M-10 9 H160 M-10 19 H160" stroke="#d7dee9" stroke-width="2"></path>
+        <rect x="20" y="28" width="110" height="116" rx="6" fill="#172033" stroke="#0b1220" stroke-width="3"></rect>
+        <path d="M36 46 H114 M36 70 H114 M36 94 H114 M36 118 H114" stroke="#334155" stroke-width="2" opacity=".9"></path>
+        <rect class="catch-basin-fullness" data-asset-level-for="sep_catch_basin_2" x="23" y="46" width="104" height="95" rx="5"></rect>
+        <text x="75" y="92" class="object-label" text-anchor="middle">빗물받이</text>
+        <use href="#pipeSmallDropRight" x="130" y="82" width="120" height="181" style="--small-pipe-fill:#586a78;"></use>
+        <rect class="pipe-fullness" x="130" y="72" width="120" height="20" fill="url(#pipeFullWavePattern)"></rect>
+        <rect class="pipe-fullness" x="240" y="82" width="20" height="181" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M130 82 H250 V263" class="water-flow small"></path>
+        <text x="190" y="88" class="pipe-label" text-anchor="middle">우수연결관</text>
       </g>
 
       <g>
-        <rect x="812" y="118" width="96" height="64" rx="8" fill="#fff1d6" class="surface-item"></rect>
-        <polygon points="800,118 860,80 920,118" fill="#e16f2f" class="surface-item"></polygon>
-        <rect x="836" y="140" width="16" height="20" fill="#bfe3ff" stroke="#5b9bd5"></rect>
-        <rect x="874" y="140" width="16" height="20" fill="#bfe3ff" stroke="#5b9bd5"></rect>
-        <text x="860" y="208" class="label" text-anchor="middle">합류식 구역</text>
-        <text x="860" y="230" class="small-label" text-anchor="middle">빗물+생활오수</text>
-
-        <rect x="968" y="246" width="70" height="38" rx="8" fill="#bfe3ff" stroke="#5b9bd5" stroke-width="2"></rect>
-        <text x="1003" y="265" class="small-label" text-anchor="middle">빗물받이</text>
-        <circle cx="936" cy="294" r="10" class="cover"></circle>
-        <text x="936" y="276" class="small-label" text-anchor="middle">맨홀뚜껑</text>
+        <use href="#pipeLargeH" x="0" y="1085" width="4800" height="98" style="--pipe-fill:#c7e3ff; --pipe-stroke:#0f5fc7;" filter="url(#softShadow)"></use>
+        <rect class="pipe-fullness" x="6" y="1091" width="4788" height="86" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M0 1134 H4800" class="water-flow large"></path>
+        <text x="2400" y="1146" class="rail-title" text-anchor="middle">우수 간선관거</text>
+        <use href="#pipeLargeH" x="0" y="1620" width="4978" height="98" style="--pipe-fill:#f2c28f; --pipe-stroke:#7c3f12;" filter="url(#softShadow)"></use>
+        <rect class="pipe-fullness" x="6" y="1626" width="4966" height="86" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M0 1669 H4978" class="water-flow large"></path>
+        <text x="2489" y="1681" class="rail-title" text-anchor="middle">차집관거</text>
       </g>
 
       <g>
-        <circle cx="222" cy="294" r="10" class="cover"></circle>
-        <text x="222" y="276" class="small-label" text-anchor="middle">맨홀뚜껑</text>
-        <circle cx="706" cy="294" r="10" class="cover"></circle>
-        <text x="706" y="276" class="small-label" text-anchor="middle">맨홀뚜껑</text>
+        <use href="#pipeMediumH" x="0" y="495" width="1647" height="70" style="--pipe-fill:#e9f5ff; --pipe-stroke:var(--storm);" filter="url(#softShadow)"></use>
+        <rect class="pipe-fullness" x="5" y="500" width="1637" height="60" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M0 530 H1647" class="water-flow medium"></path>
+        <text x="817" y="540" class="main-title" text-anchor="middle">우수 본관 1</text>
+        <use href="#pipeMediumH" x="1761" y="495" width="479" height="70" style="--pipe-fill:#e9f5ff; --pipe-stroke:var(--storm);" filter="url(#softShadow)"></use>
+        <rect class="pipe-fullness" x="1766" y="500" width="469" height="60" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M1761 530 H2240" class="water-flow medium"></path>
+        <text x="2000" y="540" class="main-title" text-anchor="middle">우수 본관 2</text>
+        <rect x="1617" y="491" width="30" height="78" rx="0" fill="#e9f5ff" stroke="var(--storm)" stroke-width="4"></rect>
+        <path d="M1629 495 V565 M1637 495 V565" stroke="#9fcfff" stroke-width="3"></path>
+        <rect x="1761" y="491" width="30" height="78" rx="0" fill="#e9f5ff" stroke="var(--storm)" stroke-width="4"></rect>
+        <path d="M1771 495 V565 M1779 495 V565" stroke="#9fcfff" stroke-width="3"></path>
+        <use href="#pipeMediumBendDropRight" x="2240" y="530" width="135" height="555" style="--pipe-fill:#bfdbfe; --pipe-stroke:#0f2f6f;"></use>
+        <rect class="pipe-fullness" x="2245" y="500" width="100" height="60" fill="url(#pipeFullWavePattern)"></rect>
+        <rect class="pipe-fullness" x="2324" y="535" width="62" height="544" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M2240 530 H2328 Q2355 530 2355 641 V1085" class="water-flow medium"></path>
+        <rect x="2240" y="488" width="42" height="84" rx="0" fill="#e9f5ff" stroke="var(--storm)" stroke-width="4"></rect>
+        <path d="M2252 492 V568 M2266 492 V568 M2280 492 V568" stroke="#9fcfff" stroke-width="5"></path>
+        <rect x="2296" y="1039" width="116" height="46" rx="0" fill="#c7e3ff" stroke="#0f5fc7" stroke-width="5"></rect>
+        <path d="M2326 1046 V1078 M2354 1046 V1078 M2382 1046 V1078" stroke="#75b9ff" stroke-width="5"></path>
       </g>
 
       <g>
-        <line x1="134" y1="182" x2="134" y2="340" class="shaft-preview" stroke="var(--sewer)"></line>
-        <line x1="316" y1="182" x2="316" y2="340" class="shaft-preview" stroke="var(--sewer)"></line>
-        <line x1="541" y1="284" x2="541" y2="340" class="shaft-preview" stroke="var(--storm)"></line>
-        <line x1="637" y1="284" x2="637" y2="340" class="shaft-preview" stroke="var(--storm)"></line>
-        <line x1="860" y1="182" x2="860" y2="340" class="shaft-preview" stroke="var(--combined)"></line>
-        <line x1="1003" y1="284" x2="1003" y2="340" class="shaft-preview" stroke="var(--combined)"></line>
+        <use href="#pipeMediumH" x="0" y="790" width="489" height="70" style="--pipe-fill:#fff4e3; --pipe-stroke:var(--sewer);" filter="url(#softShadow)"></use>
+        <rect class="pipe-fullness" x="5" y="795" width="479" height="60" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M0 825 H489" class="water-flow medium"></path>
+        <text x="238" y="835" class="main-title" text-anchor="middle">오수 본관 1</text>
+        <use href="#pipeMediumH" x="603" y="790" width="1567" height="70" style="--pipe-fill:#fff4e3; --pipe-stroke:var(--sewer);" filter="url(#softShadow)"></use>
+        <rect class="pipe-fullness" x="608" y="795" width="1557" height="60" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M603 825 H2170" class="water-flow medium"></path>
+        <text x="1386" y="835" class="main-title" text-anchor="middle">오수 본관 2</text>
+        <rect x="459" y="786" width="30" height="78" rx="0" fill="#fff4e3" stroke="var(--sewer)" stroke-width="4"></rect>
+        <path d="M471 790 V860 M479 790 V860" stroke="#d3a06d" stroke-width="3"></path>
+        <rect x="603" y="786" width="30" height="78" rx="0" fill="#fff4e3" stroke="var(--sewer)" stroke-width="4"></rect>
+        <path d="M613 790 V860 M621 790 V860" stroke="#d3a06d" stroke-width="3"></path>
+        <use href="#pipeMediumBendDropRight" x="2170" y="825" width="110" height="795" style="--pipe-fill:#fed7aa; --pipe-stroke:#7c3f12;"></use>
+        <rect class="pipe-fullness" x="2175" y="795" width="88" height="60" fill="url(#pipeFullWavePattern)"></rect>
+        <rect class="pipe-fullness" x="2233" y="830" width="62" height="784" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M2170 825 H2242 Q2264 825 2264 984 V1620" class="water-flow medium"></path>
+        <rect x="2170" y="783" width="42" height="84" rx="0" fill="#fff4e3" stroke="var(--sewer)" stroke-width="4"></rect>
+        <path d="M2182 787 V863 M2196 787 V863 M2210 787 V863" stroke="#d3a06d" stroke-width="5"></path>
+        <rect x="2206" y="1574" width="116" height="46" rx="0" fill="#f2c28f" stroke="#7c3f12" stroke-width="5"></rect>
+        <path d="M2236 1581 V1613 M2264 1581 V1613 M2292 1581 V1613" stroke="#a9672d" stroke-width="5"></path>
       </g>
 
       <g>
-        <rect x="1138" y="112" width="130" height="56" rx="10" fill="#dff9f9" stroke="#38bdf8" stroke-width="2"></rect>
-        <text x="1203" y="140" class="label" text-anchor="middle">하천</text>
-        <text x="1203" y="198" class="small-label" text-anchor="middle">방류구는 다음 단계에서 연결</text>
+        <rect x="4800" y="1072" width="42" height="132" rx="0" fill="#c7e3ff" stroke="#0f5fc7" stroke-width="5"></rect>
+        <path d="M4812 1082 V1194 M4826 1082 V1194 M4840 1082 V1194" stroke="#75b9ff" stroke-width="5"></path>
+        <rect id="asset-storm-pump-station" data-asset-id="storm_pump_station" x="4842" y="1035" width="500" height="205" rx="18" fill="#dbeafe" stroke="var(--storm)" stroke-width="4" filter="url(#softShadow)"></rect>
+        <rect class="pipe-fullness" data-asset-level-for="storm_pump_station" x="4850" y="1043" width="484" height="189" rx="14" fill="url(#pipeFullWavePattern)"></rect>
+        <text x="5092" y="1077" class="label" text-anchor="middle">빗물펌프장</text>
+        <rect x="4877" y="1130" width="138" height="44" rx="12" fill="#f8fbff" stroke="#8cc7ff" stroke-width="3"></rect>
+        <rect x="5172" y="1130" width="136" height="44" rx="22" fill="#f8fbff" stroke="#8cc7ff" stroke-width="3"></rect>
+        <circle cx="5095" cy="1152" r="38" fill="#bfdbfe" stroke="var(--storm)" stroke-width="6"></circle>
+        <circle cx="5095" cy="1152" r="16" fill="#1d4ed8"></circle>
+        <g class="pump-blades">
+          <path d="M5095 1152 L5123 1139 M5095 1152 L5113 1176 M5095 1152 L5067 1165 M5095 1152 L5075 1128" stroke="#e9f5ff" stroke-width="8" stroke-linecap="round"></path>
+        </g>
+        <path d="M5015 1152 H5053 M5137 1152 H5172" stroke="var(--storm)" stroke-width="12" stroke-linecap="round"></path>
+        <text x="5092" y="1028" class="small-label" text-anchor="middle">우수 간선관거 유입</text>
       </g>
 
-      <text x="48" y="628" class="small-label">주의: 이 화면은 지상 배치 검토용입니다. 관, 펌프장, 우수토실, 물재생센터는 지상 배치 확정 후 아래 영역에 넣습니다.</text>
+      <g>
+        <rect x="4978" y="1607" width="42" height="132" rx="0" fill="#f2c28f" stroke="#7c3f12" stroke-width="5"></rect>
+        <path d="M4990 1617 V1729 M5004 1617 V1729 M5018 1617 V1729" stroke="#a9672d" stroke-width="5"></path>
+        <rect id="asset-water-reclamation-center" data-asset-id="water_reclamation_center" x="5020" y="1587" width="500" height="170" rx="18" fill="#d8f8dd" stroke="#2f9e5b" stroke-width="4" filter="url(#softShadow)"></rect>
+        <rect class="pipe-fullness" data-asset-level-for="water_reclamation_center" x="5030" y="1597" width="480" height="150" rx="14" fill="url(#pipeFullWavePattern)"></rect>
+        <text x="5270" y="1629" class="label" text-anchor="middle">물재생센터</text>
+        <rect x="5108" y="1680" width="70" height="44" rx="7" fill="#f8fff9" stroke="#80d99b" stroke-width="3"></rect>
+        <rect x="5193" y="1680" width="70" height="44" rx="7" fill="#f8fff9" stroke="#80d99b" stroke-width="3"></rect>
+        <rect x="5278" y="1680" width="70" height="44" rx="7" fill="#f8fff9" stroke="#80d99b" stroke-width="3"></rect>
+        <rect x="5363" y="1680" width="70" height="44" rx="7" fill="#f8fff9" stroke="#80d99b" stroke-width="3"></rect>
+        <path d="M5178 1702 H5193 M5263 1702 H5278 M5348 1702 H5363" stroke="#2f9e5b" stroke-width="9" stroke-linecap="round"></path>
+        <text x="5270" y="1580" class="small-label" text-anchor="middle">차집관거 유입</text>
+      </g>
+
+      <g>
+        <rect x="5342" y="1075" width="58" height="128" rx="0" fill="#dbeafe" stroke="var(--storm)" stroke-width="5"></rect>
+        <path d="M5358 1087 V1191 M5376 1087 V1191 M5394 1087 V1191" stroke="#75b9ff" stroke-width="5"></path>
+        <use href="#pipeLargeH" x="5400" y="1090" width="470" height="98" style="--pipe-fill:#ccd8df; --pipe-stroke:#4b83b8;" filter="url(#softShadow)"></use>
+        <rect class="pipe-fullness" x="5406" y="1096" width="458" height="86" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M5400 1139 H5870" class="water-flow large"></path>
+        <text x="5635" y="1151" class="main-title" text-anchor="middle" style="font-size:30px;">펌프 토출관</text>
+
+        <rect id="asset-pump-outfall" data-asset-id="pump_outfall" x="5928" y="1044" width="252" height="190" rx="20" fill="#d8fbfb" stroke="#118c94" stroke-width="5" filter="url(#softShadow)"></rect>
+        <rect class="pipe-fullness" data-asset-level-for="pump_outfall" x="5938" y="1054" width="232" height="170" rx="16" fill="url(#pipeFullWavePattern)"></rect>
+        <rect x="5870" y="1075" width="58" height="128" rx="0" fill="#ccd8df" stroke="#4b83b8" stroke-width="5"></rect>
+        <path d="M5886 1087 V1191 M5904 1087 V1191 M5922 1087 V1191" stroke="#8fb5d0" stroke-width="5"></path>
+        <rect x="6078" y="1072" width="90" height="134" rx="14" fill="#d6dce2" stroke="#6b7280" stroke-width="4"></rect>
+        <path d="M6098 1102 H6148 M6098 1138 H6148 M6098 1174 H6148" stroke="#6b7280" stroke-width="8" stroke-linecap="round"></path>
+        <text x="6028" y="1131" class="label" text-anchor="middle">펌프</text>
+        <text x="6028" y="1164" class="label" text-anchor="middle">방류구</text>
+        <text x="6048" y="1016" class="small-label" text-anchor="middle">빗물펌프장 배출</text>
+
+        <rect x="5520" y="1613" width="58" height="128" rx="0" fill="#d8f8dd" stroke="#2f9e5b" stroke-width="5"></rect>
+        <path d="M5536 1625 V1729 M5554 1625 V1729 M5572 1625 V1729" stroke="#80d99b" stroke-width="5"></path>
+        <use href="#pipeLargeH" x="5578" y="1628" width="292" height="98" style="--pipe-fill:#d4ded6; --pipe-stroke:#51936b;" filter="url(#softShadow)"></use>
+        <rect class="pipe-fullness" x="5584" y="1634" width="280" height="86" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M5578 1677 H5870" class="water-flow large"></path>
+        <text x="5724" y="1689" class="main-title" text-anchor="middle" style="font-size:30px;">처리수 방류관</text>
+
+        <rect id="asset-treated-outfall" data-asset-id="treated_outfall" x="5928" y="1582" width="252" height="190" rx="20" fill="#d8fbfb" stroke="#118c94" stroke-width="5" filter="url(#softShadow)"></rect>
+        <rect class="pipe-fullness" data-asset-level-for="treated_outfall" x="5938" y="1592" width="232" height="170" rx="16" fill="url(#pipeFullWavePattern)"></rect>
+        <rect x="5870" y="1613" width="58" height="128" rx="0" fill="#d4ded6" stroke="#51936b" stroke-width="5"></rect>
+        <path d="M5886 1625 V1729 M5904 1625 V1729 M5922 1625 V1729" stroke="#8fc5a1" stroke-width="5"></path>
+        <rect x="6078" y="1610" width="90" height="134" rx="14" fill="#d6dce2" stroke="#6b7280" stroke-width="4"></rect>
+        <path d="M6098 1640 H6148 M6098 1676 H6148 M6098 1712 H6148" stroke="#6b7280" stroke-width="8" stroke-linecap="round"></path>
+        <text x="6028" y="1669" class="label" text-anchor="middle">처리수</text>
+        <text x="6028" y="1702" class="label" text-anchor="middle">방류구</text>
+        <text x="6048" y="1554" class="small-label" text-anchor="middle">물재생센터 처리수 배출</text>
+      </g>
+
+      <!-- 합류식 지상 배치: 도로, 빗물받이, 대표 맨홀 1개만 먼저 배치 -->
+      <g>
+        <rect x="2560" y="156" width="170" height="102" rx="12" fill="#fff2d7" class="surface-item"></rect>
+        <polygon points="2536,156 2645,92 2754,156" fill="#e4722e" class="surface-item"></polygon>
+        <rect x="2600" y="190" width="28" height="32" fill="#bfe3ff" stroke="#5b9bd5" stroke-width="1.8"></rect>
+        <rect x="2666" y="190" width="28" height="32" fill="#bfe3ff" stroke="#5b9bd5" stroke-width="1.8"></rect>
+        <text x="2645" y="84" class="building-label" text-anchor="middle" style="font-size:21px; stroke-width:5px;">주거지 생활오수 발생</text>
+        <use href="#pipeSmallDropRight" x="2730" y="218" width="120" height="424" style="--small-pipe-fill:#5e5a54;"></use>
+        <rect class="pipe-fullness" x="2730" y="208" width="120" height="20" fill="url(#pipeFullWavePattern)"></rect>
+        <rect class="pipe-fullness" x="2840" y="218" width="20" height="424" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M2730 218 H2850 V642" class="water-flow small"></path>
+        <text x="2790" y="223" class="pipe-label" text-anchor="middle" style="font-size:18px; stroke-width:4px;">오수연결관</text>
+      </g>
+
+      <g>
+        <rect x="2990" y="156" width="170" height="102" rx="12" fill="#fff2d7" class="surface-item"></rect>
+        <polygon points="2966,156 3075,92 3184,156" fill="#e4722e" class="surface-item"></polygon>
+        <rect x="3030" y="190" width="28" height="32" fill="#bfe3ff" stroke="#5b9bd5" stroke-width="1.8"></rect>
+        <rect x="3096" y="190" width="28" height="32" fill="#bfe3ff" stroke="#5b9bd5" stroke-width="1.8"></rect>
+        <text x="3075" y="84" class="building-label" text-anchor="middle" style="font-size:21px; stroke-width:5px;">주거지 생활오수 발생</text>
+        <use href="#pipeSmallDropRight" x="3160" y="218" width="120" height="424" style="--small-pipe-fill:#5e5a54;"></use>
+        <rect class="pipe-fullness" x="3160" y="208" width="120" height="20" fill="url(#pipeFullWavePattern)"></rect>
+        <rect class="pipe-fullness" x="3270" y="218" width="20" height="424" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M3160 218 H3280 V642" class="water-flow small"></path>
+        <text x="3220" y="223" class="pipe-label" text-anchor="middle" style="font-size:18px; stroke-width:4px;">오수연결관</text>
+      </g>
+
+      <g>
+        <rect x="3350" y="140" width="2750" height="118" rx="0" fill="var(--road)" class="surface-item"></rect>
+        <path d="M3400 178 H6052 M3400 218 H6052" stroke="#facc15" stroke-width="4" stroke-dasharray="26 30"></path>
+        <path d="M3370 158 H6080 M3370 198 H6080 M3370 238 H6080" stroke="#263244" stroke-width="2" opacity=".8"></path>
+        <text x="5990" y="292" class="label" text-anchor="middle">도로</text>
+      </g>
+
+      <g id="asset-comb-catch-basin-1" data-asset-id="comb_catch_basin_1" transform="translate(3400,232) scale(1)">
+        <rect x="-10" y="0" width="170" height="28" rx="4" fill="#3f4a55" stroke="#111827" stroke-width="2.4"></rect>
+        <path d="M10 0 V28 M40 0 V28 M70 0 V28 M100 0 V28 M130 0 V28 M150 0 V28 M-10 9 H160 M-10 19 H160" stroke="#d7dee9" stroke-width="2"></path>
+        <rect x="20" y="28" width="110" height="116" rx="6" fill="#172033" stroke="#0b1220" stroke-width="3"></rect>
+        <path d="M36 46 H114 M36 70 H114 M36 94 H114 M36 118 H114" stroke="#334155" stroke-width="2" opacity=".9"></path>
+        <rect class="catch-basin-fullness" data-asset-level-for="comb_catch_basin_1" x="23" y="46" width="104" height="95" rx="5"></rect>
+        <text x="75" y="92" class="object-label" text-anchor="middle">빗물받이</text>
+        <use href="#pipeSmallDropRight" x="130" y="82" width="120" height="328" style="--small-pipe-fill:#586a78;"></use>
+        <rect class="pipe-fullness" x="130" y="72" width="120" height="20" fill="url(#pipeFullWavePattern)"></rect>
+        <rect class="pipe-fullness" x="240" y="82" width="20" height="328" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M130 82 H250 V410" class="water-flow small"></path>
+        <text x="190" y="88" class="pipe-label" text-anchor="middle">우수연결관</text>
+      </g>
+
+      <g>
+        <use href="#pipeMediumH" x="0" y="642" width="3843" height="70" style="--pipe-fill:#f5f1ff; --pipe-stroke:var(--combined);" filter="url(#softShadow)"></use>
+        <rect class="pipe-fullness" x="5" y="647" width="3833" height="60" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M0 677 H3843" class="water-flow medium"></path>
+        <text x="1921" y="687" class="main-title" text-anchor="middle">합류식 본관 1</text>
+        <use href="#pipeMediumH" x="3957" y="642" width="493" height="70" style="--pipe-fill:#f5f1ff; --pipe-stroke:var(--combined);" filter="url(#softShadow)"></use>
+        <rect class="pipe-fullness" x="3962" y="647" width="483" height="60" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M3957 677 H4450" class="water-flow medium"></path>
+        <text x="4204" y="687" class="main-title" text-anchor="middle">합류식 본관 2</text>
+        <rect x="3813" y="638" width="30" height="78" rx="0" fill="#f5f1ff" stroke="var(--combined)" stroke-width="4"></rect>
+        <path d="M3823 642 V712 M3831 642 V712" stroke="#c9bfff" stroke-width="3"></path>
+        <rect x="3957" y="638" width="30" height="78" rx="0" fill="#f5f1ff" stroke="var(--combined)" stroke-width="4"></rect>
+        <path d="M3967 642 V712 M3975 642 V712" stroke="#c9bfff" stroke-width="3"></path>
+        <rect x="4450" y="635" width="42" height="84" rx="0" fill="#f5f1ff" stroke="var(--combined)" stroke-width="4"></rect>
+        <path d="M4462 639 V715 M4476 639 V715 M4490 639 V715" stroke="#c9bfff" stroke-width="5"></path>
+        <rect id="asset-overflow-chamber" data-asset-id="overflow_chamber" x="4492" y="560" width="520" height="240" rx="18" fill="#d8dde3" stroke="#475467" stroke-width="5" filter="url(#softShadow)"></rect>
+        <rect x="4518" y="592" width="468" height="178" rx="8" fill="#f8fafc" stroke="#94a3b8" stroke-width="3"></rect>
+        <path d="M4518 592 H4986 V770 H4518 Z" fill="#ffffff" opacity=".42"></path>
+        <rect class="pipe-fullness" data-asset-level-for="overflow_chamber" x="4524" y="598" width="456" height="166" rx="6" fill="url(#pipeFullWavePattern)"></rect>
+        <rect x="4528" y="570" width="448" height="24" rx="4" fill="#687383" stroke="#475467" stroke-width="3"></rect>
+        <path d="M4560 570 V594 M4598 570 V594 M4636 570 V594 M4674 570 V594 M4712 570 V594 M4750 570 V594 M4788 570 V594 M4826 570 V594 M4864 570 V594 M4902 570 V594 M4940 570 V594" stroke="#cbd5e1" stroke-width="4"></path>
+        <text x="4752" y="622" class="label" text-anchor="middle">우수토실-월류시설</text>
+
+        <text x="4602" y="753" class="small-label" text-anchor="middle">일반 유량</text>
+
+        <g class="flow-gate">
+          <polygon points="4692,770 4838,638 4870,638 4724,770" fill="#9ca3af" stroke="#475467" stroke-width="4"></polygon>
+        </g>
+        <text x="4868" y="632" class="small-label" text-anchor="middle">유량조절판</text>
+        <text x="4892" y="730" class="small-label" text-anchor="middle">폭우 초과분</text>
+
+        <use href="#pipeMediumStraightV" x="4718" y="846" width="70" height="774" style="--pipe-fill:#ded7ff; --pipe-stroke:#4432a8;"></use>
+        <rect class="pipe-fullness" x="4723" y="851" width="60" height="764" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M4753 846 V1620" class="water-flow medium"></path>
+        <rect x="4695" y="800" width="116" height="46" rx="0" fill="#f8fafc" stroke="#475467" stroke-width="5"></rect>
+        <path d="M4725 807 V839 M4753 807 V839 M4781 807 V839" stroke="#cbd5e1" stroke-width="5"></path>
+        <rect x="4695" y="1574" width="116" height="46" rx="0" fill="#ded7ff" stroke="#4432a8" stroke-width="5"></rect>
+        <path d="M4725 1581 V1613 M4753 1581 V1613 M4781 1581 V1613" stroke="#a99bff" stroke-width="5"></path>
+
+        <rect x="5012" y="613" width="58" height="128" rx="0" fill="#f8fafc" stroke="#475467" stroke-width="5"></rect>
+        <path d="M5028 625 V729 M5046 625 V729 M5064 625 V729" stroke="#cbd5e1" stroke-width="5"></path>
+        <use href="#pipeLargeH" x="5070" y="628" width="800" height="98" style="--pipe-fill:#e8d9d7; --pipe-stroke:#a54f4f;" filter="url(#softShadow)"></use>
+        <rect class="pipe-fullness" x="5076" y="634" width="788" height="86" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M5070 677 H5870" class="water-flow large"></path>
+        <text x="5500" y="688" class="main-title" text-anchor="middle" style="font-size:30px;">월류관</text>
+
+        <rect id="asset-overflow-outfall" data-asset-id="overflow_outfall" x="5928" y="582" width="252" height="190" rx="20" fill="#d8fbfb" stroke="#118c94" stroke-width="5" filter="url(#softShadow)"></rect>
+        <rect class="pipe-fullness" data-asset-level-for="overflow_outfall" x="5938" y="592" width="232" height="170" rx="16" fill="url(#pipeFullWavePattern)"></rect>
+        <rect x="5870" y="613" width="58" height="128" rx="0" fill="#e8d9d7" stroke="#a54f4f" stroke-width="5"></rect>
+        <path d="M5886 625 V729 M5904 625 V729 M5922 625 V729" stroke="#c8938e" stroke-width="5"></path>
+        <rect x="6078" y="610" width="90" height="134" rx="14" fill="#d6dce2" stroke="#6b7280" stroke-width="4"></rect>
+        <path d="M6098 640 H6148 M6098 676 H6148 M6098 712 H6148" stroke="#6b7280" stroke-width="8" stroke-linecap="round"></path>
+        <text x="6028" y="669" class="label" text-anchor="middle">월류</text>
+        <text x="6028" y="702" class="label" text-anchor="middle">방류구</text>
+        <text x="6048" y="554" class="small-label" text-anchor="middle">폭우 초과분 배출</text>
+      </g>
+
+      <g id="asset-comb-catch-basin-2" data-asset-id="comb_catch_basin_2" transform="translate(4150,232) scale(1)">
+        <rect x="-10" y="0" width="170" height="28" rx="4" fill="#3f4a55" stroke="#111827" stroke-width="2.4"></rect>
+        <path d="M10 0 V28 M40 0 V28 M70 0 V28 M100 0 V28 M130 0 V28 M150 0 V28 M-10 9 H160 M-10 19 H160" stroke="#d7dee9" stroke-width="2"></path>
+        <rect x="20" y="28" width="110" height="116" rx="6" fill="#172033" stroke="#0b1220" stroke-width="3"></rect>
+        <path d="M36 46 H114 M36 70 H114 M36 94 H114 M36 118 H114" stroke="#334155" stroke-width="2" opacity=".9"></path>
+        <rect class="catch-basin-fullness" data-asset-level-for="comb_catch_basin_2" x="23" y="46" width="104" height="95" rx="5"></rect>
+        <text x="75" y="92" class="object-label" text-anchor="middle">빗물받이</text>
+        <use href="#pipeSmallDropRight" x="130" y="82" width="120" height="328" style="--small-pipe-fill:#586a78;"></use>
+        <rect class="pipe-fullness" x="130" y="72" width="120" height="20" fill="url(#pipeFullWavePattern)"></rect>
+        <rect class="pipe-fullness" x="240" y="82" width="20" height="328" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M130 82 H250 V410" class="water-flow small"></path>
+        <text x="190" y="88" class="pipe-label" text-anchor="middle">우수연결관</text>
+      </g>
+
+      <g id="small-pipe-connector-layer">
+        <use href="#pipeSmallDropConnectorH" x="319" y="744" width="92" height="46" style="--small-pipe-fill:#5e5a54;"></use>
+        <use href="#pipeSmallDropConnectorH" x="681" y="744" width="92" height="46" style="--small-pipe-fill:#5e5a54;"></use>
+        <use href="#pipeSmallDropConnectorH" x="1324" y="449" width="92" height="46" style="--small-pipe-fill:#586a78;"></use>
+        <use href="#pipeSmallDropConnectorH" x="2114" y="449" width="92" height="46" style="--small-pipe-fill:#586a78;"></use>
+        <use href="#pipeSmallDropConnectorH" x="2804" y="596" width="92" height="46" style="--small-pipe-fill:#5e5a54;"></use>
+        <use href="#pipeSmallDropConnectorH" x="3234" y="596" width="92" height="46" style="--small-pipe-fill:#5e5a54;"></use>
+        <use href="#pipeSmallDropConnectorH" x="3604" y="596" width="92" height="46" style="--small-pipe-fill:#586a78;"></use>
+        <use href="#pipeSmallDropConnectorH" x="4354" y="596" width="92" height="46" style="--small-pipe-fill:#586a78;"></use>
+      </g>
+
+      <g id="manhole-layer">
+        <use id="asset-sep-sewer-manhole" data-asset-id="sep_sewer_manhole" href="#manholeSewerTall" transform="translate(546 258)"></use>
+        <use id="asset-sep-storm-manhole" data-asset-id="sep_storm_manhole" href="#manholeStormShort" transform="translate(1704 258)"></use>
+        <use id="asset-combined-manhole" data-asset-id="combined_manhole" href="#manholeCombinedTall" transform="translate(3900 258)"></use>
+      </g>
+
+      <!-- 하천 -->
+      <g transform="translate(3600,0)">
+        <rect x="2760" y="214" width="500" height="150" rx="26" fill="rgba(255,255,255,.38)" stroke="rgba(255,255,255,.72)" stroke-width="2.5"></rect>
+        <text x="3010" y="282" class="label" text-anchor="middle">방류되는 물이 모이는 곳</text>
+        <text x="3010" y="320" class="small-label" text-anchor="middle">폭우 때는 하천 수위가 역류 조건이 될 수 있음</text>
+
+        <rect x="3110" y="510" width="560" height="120" rx="28" fill="rgba(216,251,251,.75)" stroke="#118c94" stroke-width="3" filter="url(#softShadow)"></rect>
+        <text x="3390" y="583" class="rail-title" text-anchor="middle">하천</text>
+
+      </g>
+      </g>
+
+      <g id="weather-layer" class="weather-layer" aria-label="강수량 날씨 표현">
+        <g class="weather-sun" transform="translate(170 42)">
+          <circle class="weather-sun-core" cx="0" cy="0" r="28"></circle>
+          <path class="weather-sun-ray" d="M0 -50 V-38 M0 38 V50 M-50 0 H-38 M38 0 H50 M-36 -36 L-27 -27 M27 27 L36 36 M36 -36 L27 -27 M-27 27 L-36 36"></path>
+        </g>
+
+        <g class="weather-cloud weather-cloud-1" transform="translate(520 25) scale(1.12)">
+          <path d="M18 64 C4 64 -6 54 4 42 C10 34 20 33 28 38 C34 20 58 14 74 29 C84 22 102 25 110 39 C126 39 136 49 136 61 C136 74 124 82 108 82 H20 C8 82 -2 74 18 64 Z"></path>
+        </g>
+        <g class="weather-cloud weather-cloud-2" transform="translate(1640 28) scale(1.05)">
+          <path d="M18 64 C4 64 -6 54 4 42 C10 34 20 33 28 38 C34 20 58 14 74 29 C84 22 102 25 110 39 C126 39 136 49 136 61 C136 74 124 82 108 82 H20 C8 82 -2 74 18 64 Z"></path>
+        </g>
+        <g class="weather-cloud weather-cloud-3" transform="translate(2930 24) scale(1.18)">
+          <path d="M18 64 C4 64 -6 54 4 42 C10 34 20 33 28 38 C34 20 58 14 74 29 C84 22 102 25 110 39 C126 39 136 49 136 61 C136 74 124 82 108 82 H20 C8 82 -2 74 18 64 Z"></path>
+        </g>
+        <g class="weather-cloud weather-cloud-4" transform="translate(4280 28) scale(1.08)">
+          <path d="M18 64 C4 64 -6 54 4 42 C10 34 20 33 28 38 C34 20 58 14 74 29 C84 22 102 25 110 39 C126 39 136 49 136 61 C136 74 124 82 108 82 H20 C8 82 -2 74 18 64 Z"></path>
+        </g>
+        <g class="weather-cloud weather-cloud-5" transform="translate(5480 24) scale(1.15)">
+          <path d="M18 64 C4 64 -6 54 4 42 C10 34 20 33 28 38 C34 20 58 14 74 29 C84 22 102 25 110 39 C126 39 136 49 136 61 C136 74 124 82 108 82 H20 C8 82 -2 74 18 64 Z"></path>
+        </g>
+
+        <g class="weather-rain-field">
+          <line class="weather-raindrop" x1="360" y1="88" x2="338" y2="165"></line>
+          <line class="weather-raindrop" x1="530" y1="62" x2="508" y2="139"></line>
+          <line class="weather-raindrop" x1="720" y1="104" x2="698" y2="181"></line>
+          <line class="weather-raindrop" x1="990" y1="78" x2="968" y2="155"></line>
+          <line class="weather-raindrop" x1="1180" y1="112" x2="1158" y2="189"></line>
+          <line class="weather-raindrop" x1="1460" y1="84" x2="1438" y2="161"></line>
+          <line class="weather-raindrop" x1="1710" y1="108" x2="1688" y2="185"></line>
+          <line class="weather-raindrop" x1="1970" y1="70" x2="1948" y2="147"></line>
+          <line class="weather-raindrop" x1="2240" y1="102" x2="2218" y2="179"></line>
+          <line class="weather-raindrop" x1="2510" y1="86" x2="2488" y2="163"></line>
+          <line class="weather-raindrop" x1="2780" y1="116" x2="2758" y2="193"></line>
+          <line class="weather-raindrop" x1="3050" y1="74" x2="3028" y2="151"></line>
+          <line class="weather-raindrop" x1="3320" y1="104" x2="3298" y2="181"></line>
+          <line class="weather-raindrop" x1="3585" y1="82" x2="3563" y2="159"></line>
+          <line class="weather-raindrop" x1="3850" y1="114" x2="3828" y2="191"></line>
+          <line class="weather-raindrop" x1="4130" y1="78" x2="4108" y2="155"></line>
+          <line class="weather-raindrop" x1="4410" y1="110" x2="4388" y2="187"></line>
+          <line class="weather-raindrop" x1="4680" y1="88" x2="4658" y2="165"></line>
+          <line class="weather-raindrop" x1="4950" y1="116" x2="4928" y2="193"></line>
+          <line class="weather-raindrop" x1="5220" y1="80" x2="5198" y2="157"></line>
+          <line class="weather-raindrop" x1="5490" y1="106" x2="5468" y2="183"></line>
+          <line class="weather-raindrop" x1="5760" y1="90" x2="5738" y2="167"></line>
+        </g>
+      </g>
     </svg>
   </section>
-
-  <aside>
-    <h2>지상 배치 초안</h2>
-    <p class="note">지금은 집, 도로, 빗물받이, 맨홀뚜껑, 하천만 먼저 배치했습니다. 지하 관과 물 흐름선은 의도적으로 제거했습니다.</p>
-
-    <div class="legend">
-      <span><i class="dot" style="background:var(--storm)"></i>빗물 유입</span>
-      <span><i class="dot" style="background:var(--sewer)"></i>생활오수</span>
-      <span><i class="dot" style="background:var(--combined)"></i>합류식 유입</span>
-      <span><i class="dot" style="background:var(--river)"></i>하천</span>
+  <aside class="object-panel object-empty" aria-label="선택 객체 상태와 예외상황 제어">
+    <div class="object-panel-kicker">객체 제어</div>
+    <h2 data-selected-title>배관이나 시설을 선택하세요</h2>
+    <p data-selected-description>선택한 객체의 SWMM ID, 현재 상태, 막힘 정도를 여기에서 확인하고 조절합니다.</p>
+    <dl class="object-meta">
+      <dt>화면 ID</dt>
+      <dd data-selected-id>-</dd>
+      <dt>SWMM ID</dt>
+      <dd data-selected-swmm-id>-</dd>
+      <dt>구분</dt>
+      <dd data-selected-type>-</dd>
+      <dt>흐름</dt>
+      <dd data-selected-water-type>-</dd>
+    </dl>
+    <div class="object-metrics">
+      <div class="object-metric">
+        <strong data-selected-level>-</strong>
+        <span>수위/차오름</span>
+      </div>
+      <div class="object-metric">
+        <strong data-selected-flow>-</strong>
+        <span>유량</span>
+      </div>
+      <div class="object-metric">
+        <strong data-selected-velocity>-</strong>
+        <span>유속</span>
+      </div>
+      <div class="object-metric">
+        <strong data-selected-direction>-</strong>
+        <span>흐름 방향</span>
+      </div>
     </div>
-
-    <h3>이번 수정 기준</h3>
-    <div class="status-card">
-      <b>집은 지상에만 배치</b>
-      <p>집이 지하에 들어가 보이지 않도록 지상 레이어에 고정했습니다.</p>
+    <div class="exception-controls">
+      <label class="exception-control-row">
+        <span data-exception-label>막힘 정도</span>
+        <output data-exception-output="blockage">0%</output>
+        <input type="range" min="0" max="100" step="1" value="0" data-exception-control="blockage">
+      </label>
+      <p data-exception-note>이 값은 다음 단계에서 PySWMM 제어값으로 전달될 예외상황입니다.</p>
     </div>
-    <div class="status-card">
-      <b>맨홀은 맨홀뚜껑으로 표시</b>
-      <p>지하의 맨홀이 아니라 지상에서 보이는 맨홀뚜껑만 먼저 표시했습니다.</p>
+    <div class="payload-preview">
+      <p>SWMM 전송 대기값</p>
+      <pre data-control-payload>{}</pre>
     </div>
-    <div class="status-card">
-      <b>관과 흐름선은 다음 단계</b>
-      <p>상자와 선이 겹치는 문제를 없애기 위해 지하 관은 아직 넣지 않았습니다.</p>
-    </div>
-
-    <h3>다음 단계</h3>
-    <p class="note">이 지상 배치를 먼저 확정하면, 그 아래에 우수관거·오수관거·합류식 하수관거를 레인별로 배치하고 마지막에 물 흐름 애니메이션을 얹으면 됩니다.</p>
   </aside>
+  </div>
 </main>
+<script src="network_registry.js"></script>
+<script src="design_scenario_data.js"></script>
+<script>
+  const PIPE_DEFINITIONS = Object.freeze((window.NETWORK_REGISTRY?.pipes || [
+    {
+      id: 'sep_sewer_lateral_apartment_1',
+      label: '분류식 아파트 1 오수연결관',
+      system: 'separate',
+      waterType: 'sewer',
+      size: 'small',
+      direction: 'right-down',
+    },
+    {
+      id: 'sep_sewer_lateral_apartment_2',
+      label: '분류식 아파트 2 오수연결관',
+      system: 'separate',
+      waterType: 'sewer',
+      size: 'small',
+      direction: 'left-down',
+    },
+    {
+      id: 'sep_storm_lateral_catch_basin_1',
+      label: '분류식 빗물받이 1 우수연결관',
+      system: 'separate',
+      waterType: 'storm',
+      size: 'small',
+      direction: 'right-down',
+    },
+    {
+      id: 'sep_storm_lateral_catch_basin_2',
+      label: '분류식 빗물받이 2 우수연결관',
+      system: 'separate',
+      waterType: 'storm',
+      size: 'small',
+      direction: 'right-down',
+    },
+    {
+      id: 'sep_storm_trunk',
+      label: '우수 간선관거',
+      system: 'separate',
+      waterType: 'storm',
+      size: 'large',
+      direction: 'right',
+      alwaysFlow: true,
+    },
+    {
+      id: 'sep_interceptor',
+      label: '차집관거',
+      system: 'separate',
+      waterType: 'sewer',
+      size: 'large',
+      direction: 'right',
+      alwaysFlow: true,
+    },
+    {
+      id: 'sep_storm_main_1',
+      label: '우수 본관 1',
+      system: 'separate',
+      waterType: 'storm',
+      size: 'medium',
+      direction: 'right',
+      alwaysFlow: true,
+    },
+    {
+      id: 'sep_storm_main_2',
+      label: '우수 본관 2',
+      system: 'separate',
+      waterType: 'storm',
+      size: 'medium',
+      direction: 'right',
+      alwaysFlow: true,
+    },
+    {
+      id: 'sep_storm_main_to_trunk',
+      label: '우수 본관 2에서 우수 간선관거로 내려가는 연결관',
+      system: 'separate',
+      waterType: 'storm',
+      size: 'medium',
+      direction: 'right-down',
+      alwaysFlow: true,
+    },
+    {
+      id: 'sep_sewer_main_1',
+      label: '오수 본관 1',
+      system: 'separate',
+      waterType: 'sewer',
+      size: 'medium',
+      direction: 'right',
+      alwaysFlow: true,
+    },
+    {
+      id: 'sep_sewer_main_2',
+      label: '오수 본관 2',
+      system: 'separate',
+      waterType: 'sewer',
+      size: 'medium',
+      direction: 'right',
+      alwaysFlow: true,
+    },
+    {
+      id: 'sep_sewer_main_to_interceptor',
+      label: '오수 본관 2에서 차집관거로 내려가는 연결관',
+      system: 'separate',
+      waterType: 'sewer',
+      size: 'medium',
+      direction: 'right-down',
+      alwaysFlow: true,
+    },
+    {
+      id: 'storm_pump_discharge_pipe',
+      label: '펌프 토출관',
+      system: 'separate',
+      waterType: 'storm',
+      size: 'large',
+      direction: 'right',
+      alwaysFlow: true,
+    },
+    {
+      id: 'treatment_effluent_pipe',
+      label: '처리수 방류관',
+      system: 'treatment',
+      waterType: 'treated',
+      size: 'large',
+      direction: 'right',
+      alwaysFlow: true,
+    },
+    {
+      id: 'comb_sewer_lateral_house_1',
+      label: '합류식 주거지 1 오수연결관',
+      system: 'combined',
+      waterType: 'sewer',
+      size: 'small',
+      direction: 'right-down',
+    },
+    {
+      id: 'comb_sewer_lateral_house_2',
+      label: '합류식 주거지 2 오수연결관',
+      system: 'combined',
+      waterType: 'sewer',
+      size: 'small',
+      direction: 'right-down',
+    },
+    {
+      id: 'comb_storm_lateral_catch_basin_1',
+      label: '합류식 빗물받이 1 우수연결관',
+      system: 'combined',
+      waterType: 'storm',
+      size: 'small',
+      direction: 'right-down',
+    },
+    {
+      id: 'comb_main_1',
+      label: '합류식 본관 1',
+      system: 'combined',
+      waterType: 'combined',
+      size: 'medium',
+      direction: 'right',
+      alwaysFlow: true,
+    },
+    {
+      id: 'comb_main_2',
+      label: '합류식 본관 2',
+      system: 'combined',
+      waterType: 'combined',
+      size: 'medium',
+      direction: 'right',
+      alwaysFlow: true,
+    },
+    {
+      id: 'overflow_to_interceptor_drop',
+      label: '우수토실 일반 유량에서 차집관거로 내려가는 관',
+      system: 'combined',
+      waterType: 'combined',
+      size: 'medium',
+      direction: 'down',
+      alwaysFlow: true,
+    },
+    {
+      id: 'overflow_pipe',
+      label: '월류관',
+      system: 'combined',
+      waterType: 'overflow',
+      size: 'large',
+      direction: 'right',
+    },
+    {
+      id: 'comb_storm_lateral_catch_basin_2',
+      label: '합류식 빗물받이 2 우수연결관',
+      system: 'combined',
+      waterType: 'storm',
+      size: 'small',
+      direction: 'right-down',
+    },
+  ]).map((pipe) => ({
+    ...pipe,
+    swmmId: pipe.swmmId || pipe.id,
+    htmlId: pipe.htmlId || pipe.id,
+    alwaysFlow: Boolean(pipe.alwaysFlow),
+  })));
+
+  const ASSET_DEFINITIONS = Object.freeze((window.NETWORK_REGISTRY?.assets || [
+    {
+      id: 'sep_catch_basin_1',
+      label: '분류식 빗물받이 1',
+      type: 'catch_basin',
+      system: 'separate',
+      waterType: 'storm',
+      domId: 'asset-sep-catch-basin-1',
+    },
+    {
+      id: 'sep_catch_basin_2',
+      label: '분류식 빗물받이 2',
+      type: 'catch_basin',
+      system: 'separate',
+      waterType: 'storm',
+      domId: 'asset-sep-catch-basin-2',
+    },
+    {
+      id: 'comb_catch_basin_1',
+      label: '합류식 빗물받이 1',
+      type: 'catch_basin',
+      system: 'combined',
+      waterType: 'storm',
+      domId: 'asset-comb-catch-basin-1',
+    },
+    {
+      id: 'comb_catch_basin_2',
+      label: '합류식 빗물받이 2',
+      type: 'catch_basin',
+      system: 'combined',
+      waterType: 'storm',
+      domId: 'asset-comb-catch-basin-2',
+    },
+    {
+      id: 'sep_sewer_manhole',
+      label: '분류식 오수 맨홀',
+      type: 'manhole',
+      system: 'separate',
+      waterType: 'sewer',
+      domId: 'asset-sep-sewer-manhole',
+    },
+    {
+      id: 'sep_storm_manhole',
+      label: '분류식 우수 맨홀',
+      type: 'manhole',
+      system: 'separate',
+      waterType: 'storm',
+      domId: 'asset-sep-storm-manhole',
+    },
+    {
+      id: 'combined_manhole',
+      label: '합류식 맨홀',
+      type: 'manhole',
+      system: 'combined',
+      waterType: 'combined',
+      domId: 'asset-combined-manhole',
+    },
+    {
+      id: 'overflow_chamber',
+      label: '우수토실-월류시설',
+      type: 'overflow_facility',
+      system: 'combined',
+      waterType: 'combined',
+      domId: 'asset-overflow-chamber',
+    },
+    {
+      id: 'storm_pump_station',
+      label: '빗물펌프장',
+      type: 'pump_station',
+      system: 'separate',
+      waterType: 'storm',
+      domId: 'asset-storm-pump-station',
+    },
+    {
+      id: 'water_reclamation_center',
+      label: '물재생센터',
+      type: 'treatment_facility',
+      system: 'treatment',
+      waterType: 'treated',
+      domId: 'asset-water-reclamation-center',
+    },
+    {
+      id: 'overflow_outfall',
+      label: '월류 방류구',
+      type: 'outfall',
+      system: 'combined',
+      waterType: 'overflow',
+      domId: 'asset-overflow-outfall',
+    },
+    {
+      id: 'pump_outfall',
+      label: '펌프 방류구',
+      type: 'outfall',
+      system: 'separate',
+      waterType: 'storm',
+      domId: 'asset-pump-outfall',
+    },
+    {
+      id: 'treated_outfall',
+      label: '처리수 방류구',
+      type: 'outfall',
+      system: 'treatment',
+      waterType: 'treated',
+      domId: 'asset-treated-outfall',
+    },
+  ]).map((asset) => ({
+    ...asset,
+    swmmId: asset.swmmId || asset.id,
+    htmlId: asset.htmlId || asset.domId || asset.id,
+    domId: asset.domId || asset.htmlId || asset.id,
+  })));
+
+  const NETWORK_REGISTRY = window.NETWORK_REGISTRY || null;
+
+  function collectDuplicateIds(items) {
+    const seen = new Set();
+    const duplicates = new Set();
+    items.forEach((item) => {
+      if (seen.has(item.id)) duplicates.add(item.id);
+      seen.add(item.id);
+    });
+    return [...duplicates];
+  }
+
+  function validateNetworkRegistry() {
+    const duplicatePipeIds = collectDuplicateIds(PIPE_DEFINITIONS);
+    const duplicateAssetIds = collectDuplicateIds(ASSET_DEFINITIONS);
+    const pipesWithoutSwmmId = PIPE_DEFINITIONS.filter((pipe) => !pipe.swmmId).map((pipe) => pipe.id);
+    const assetsWithoutSwmmId = ASSET_DEFINITIONS.filter((asset) => !asset.swmmId).map((asset) => asset.id);
+
+    if (!NETWORK_REGISTRY) {
+      console.warn('NETWORK_REGISTRY was not loaded. Falling back to inline diagram definitions.');
+      return;
+    }
+    if (duplicatePipeIds.length || duplicateAssetIds.length || pipesWithoutSwmmId.length || assetsWithoutSwmmId.length) {
+      console.warn('Network registry validation warning', {
+        duplicatePipeIds,
+        duplicateAssetIds,
+        pipesWithoutSwmmId,
+        assetsWithoutSwmmId,
+      });
+    }
+  }
+
+  validateNetworkRegistry();
+
+  const flowModes = new Set(['forward', 'backflow']);
+  const params = new URLSearchParams(window.location.search);
+  const initialFlowMode = flowModes.has(params.get('flow')) ? params.get('flow') : 'forward';
+  let currentFlowMode = initialFlowMode;
+  const HYDRAULIC_LIMITS = Object.freeze({
+    velocity: { min: 0.2, max: 4 },
+    waterLevel: { min: 0, max: 1 },
+  });
+  const WEATHER_LIMITS = Object.freeze({
+    rainfall: { min: 0, max: 1 },
+  });
+
+  const PIPE_STATE = Object.fromEntries(PIPE_DEFINITIONS.map((pipe) => [
+    pipe.id,
+    {
+      velocity: 1,
+      flowRate: 1,
+      waterLevel: 0.42,
+      backflow: false,
+      active: true,
+    },
+  ]));
+
+  const PIPE_BY_ID = Object.fromEntries(PIPE_DEFINITIONS.map((pipe) => [pipe.id, pipe]));
+  const ASSET_BY_ID = Object.fromEntries(ASSET_DEFINITIONS.map((asset) => [asset.id, asset]));
+
+  const ASSET_STATE = Object.fromEntries(ASSET_DEFINITIONS.map((asset) => [
+    asset.id,
+    {
+      waterLevel: null,
+      flowRate: 1,
+	      backflow: false,
+	      active: asset.id === 'storm_pump_station' ? false : true,
+	      status: 'normal',
+	      controlSetting: 1,
+    },
+  ]));
+
+  const OBJECT_CONTROL_STATE = {
+    rainfall: 0,
+    selected: null,
+    exceptions: Object.fromEntries([
+      ...PIPE_DEFINITIONS.map((pipe) => [
+        pipe.id,
+        {
+          id: pipe.id,
+          swmmId: pipe.swmmId,
+          objectType: 'pipe',
+          blockage: 0,
+        },
+      ]),
+      ...ASSET_DEFINITIONS.map((asset) => [
+        asset.id,
+        {
+          id: asset.id,
+          swmmId: asset.swmmId,
+          objectType: 'asset',
+          blockage: 0,
+        },
+      ]),
+    ]),
+    lastPayload: null,
+    updatedAt: null,
+  };
+
+  const GLOBAL_HYDRAULIC_STATE = {
+    velocity: 1,
+    waterLevel: 0.42,
+  };
+
+  const WEATHER_STATE = {
+    rainfall: 0,
+  };
+
+  const PLAYBACK_DATA = window.DESIGN_SCENARIO_DATA || null;
+  const PLAYBACK_STATE = {
+    scenario: PLAYBACK_DATA?.scenarioOrder?.[0] || 'base',
+    frameIndex: 0,
+    playing: false,
+    speed: 1,
+    timerId: null,
+  };
+
+  const ASSET_OUTLET_PIPE_MAP = Object.freeze({
+    sep_catch_basin_1: 'sep_storm_lateral_catch_basin_1',
+    sep_catch_basin_2: 'sep_storm_lateral_catch_basin_2',
+    comb_catch_basin_1: 'comb_storm_lateral_catch_basin_1',
+    comb_catch_basin_2: 'comb_storm_lateral_catch_basin_2',
+  });
+
+  const PIPE_BACKUP_TARGETS = Object.freeze({
+    overflow_to_interceptor_drop: {
+      pipes: ['comb_main_2'],
+      assets: ['overflow_chamber'],
+    },
+    sep_sewer_main_to_interceptor: {
+      pipes: ['sep_sewer_main_2'],
+      assets: ['sep_sewer_manhole'],
+    },
+    sep_storm_main_to_trunk: {
+      pipes: ['sep_storm_main_2'],
+      assets: ['sep_storm_manhole'],
+    },
+  });
+
+  const DOWNSTREAM_INPUT_PIPE_MAP = Object.freeze({
+    sep_storm_trunk: ['sep_storm_main_to_trunk'],
+    sep_interceptor: ['sep_sewer_main_to_interceptor', 'overflow_to_interceptor_drop'],
+    storm_pump_discharge_pipe: ['sep_storm_trunk'],
+    treatment_effluent_pipe: ['sep_interceptor'],
+  });
+
+  const BLOCKED_BACKFLOW_RULES = Object.freeze({
+    fullLevel: 0.98,
+    upstreamInflow: 0.025,
+    blockage: 0.85,
+  });
+
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function clampNumber(value, min, max, fallback) {
+    const numericValue = Number(value);
+    if (!Number.isFinite(numericValue)) return fallback;
+    return clamp(numericValue, min, max);
+  }
+
+  function mixChannel(from, to, ratio) {
+    return Math.round(from + (to - from) * ratio);
+  }
+
+  function mixRgb(from, to, ratio) {
+    const safeRatio = clamp(Number(ratio) || 0, 0, 1);
+    return `rgb(${mixChannel(from[0], to[0], safeRatio)}, ${mixChannel(from[1], to[1], safeRatio)}, ${mixChannel(from[2], to[2], safeRatio)})`;
+  }
+
+  function updateWeatherOutputs() {
+    const rainfallOutput = document.querySelector('[data-weather-output="rainfall"]');
+    if (rainfallOutput) rainfallOutput.textContent = `${Math.round(WEATHER_STATE.rainfall * 100)}%`;
+  }
+
+  function syncWeatherControls() {
+    const rainfallControl = document.querySelector('[data-weather-control="rainfall"]');
+    if (rainfallControl) rainfallControl.value = String(Math.round(WEATHER_STATE.rainfall * 100));
+    updateWeatherOutputs();
+  }
+
+	  function setWeatherState(nextState = {}) {
+	    if (Object.prototype.hasOwnProperty.call(nextState, 'rainfall')) {
+	      WEATHER_STATE.rainfall = clamp(
+	        clampNumber(nextState.rainfall, WEATHER_LIMITS.rainfall.min, WEATHER_LIMITS.rainfall.max, WEATHER_STATE.rainfall),
+        WEATHER_LIMITS.rainfall.min,
+        WEATHER_LIMITS.rainfall.max
+      );
+    }
+
+    const rainfall = WEATHER_STATE.rainfall;
+    const root = document.documentElement;
+    const cloudFill = mixRgb([255, 255, 255], [100, 116, 139], rainfall);
+    const cloudStroke = mixRgb([216, 224, 236], [71, 85, 105], rainfall);
+
+    root.style.setProperty('--weather-sun-opacity', String(clamp(1 - rainfall * 1.7, 0, 1)));
+    root.style.setProperty('--weather-cloud-fill', cloudFill);
+    root.style.setProperty('--weather-cloud-stroke', cloudStroke);
+    root.style.setProperty('--weather-rain-opacity', rainfall <= 0.01 ? '0' : String(clamp(0.18 + rainfall * 0.78, 0, 0.96)));
+    root.style.setProperty('--weather-rain-duration', `${(1.75 - rainfall * 1.22).toFixed(2)}s`);
+    root.style.setProperty('--weather-cloud-1-opacity', rainfall > 0.02 ? String(clamp(0.25 + rainfall * 0.65, 0, 0.9)) : '0');
+    root.style.setProperty('--weather-cloud-2-opacity', rainfall > 0.18 ? String(clamp((rainfall - 0.18) * 1.1, 0, 0.85)) : '0');
+    root.style.setProperty('--weather-cloud-3-opacity', rainfall > 0.34 ? String(clamp((rainfall - 0.34) * 1.25, 0, 0.9)) : '0');
+    root.style.setProperty('--weather-cloud-4-opacity', rainfall > 0.52 ? String(clamp((rainfall - 0.52) * 1.45, 0, 0.9)) : '0');
+    root.style.setProperty('--weather-cloud-5-opacity', rainfall > 0.72 ? String(clamp((rainfall - 0.72) * 2.2, 0, 0.88)) : '0');
+    syncWeatherControls();
+    return { ...WEATHER_STATE };
+  }
+
+  function formatPercent(value) {
+    if (!Number.isFinite(Number(value))) return '-';
+    return `${Math.round(Number(value) * 100)}%`;
+  }
+
+  function formatRate(value, unit = '') {
+    if (!Number.isFinite(Number(value))) return '-';
+    const safeValue = Number(value);
+    return `${safeValue.toFixed(Math.abs(safeValue) >= 10 ? 1 : 3)}${unit}`;
+  }
+
+  function getObjectDefinition(objectType, objectId) {
+    if (objectType === 'pipe') return PIPE_BY_ID[objectId] || null;
+    if (objectType === 'asset') return ASSET_BY_ID[objectId] || null;
+    return null;
+  }
+
+  function getObjectRuntimeState(objectType, objectId) {
+    if (objectType === 'pipe') return getPipeState(objectId);
+    if (objectType === 'asset') return getAssetState(objectId);
+    return null;
+  }
+
+  function getObjectControlState(objectId) {
+    return OBJECT_CONTROL_STATE.exceptions[objectId] || null;
+  }
+
+  function buildSwmmControlPayload(reason = 'manual') {
+    const exceptions = Object.values(OBJECT_CONTROL_STATE.exceptions)
+      .filter((item) => Number(item.blockage) > 0)
+      .map((item) => ({
+        id: item.id,
+        swmmId: item.swmmId,
+        objectType: item.objectType,
+        blockage: Number(item.blockage),
+      }));
+    const blockagesById = Object.fromEntries(exceptions.map((item) => [item.id, {
+      swmmId: item.swmmId,
+      objectType: item.objectType,
+      blockageRatio: item.blockage,
+    }]));
+
+	    return {
+	      version: NETWORK_REGISTRY?.version || 'inline-fallback',
+	      reason,
+	      stepSeconds: 1,
+	      rainfall: WEATHER_STATE.rainfall,
+	      rainfallRatio: WEATHER_STATE.rainfall,
+	      exceptions,
+	      blockagesById,
+	      physicsMode: 'swmm-step',
+	      selected: OBJECT_CONTROL_STATE.selected,
+	      updatedAt: new Date().toISOString(),
+	    };
+	  }
+
+	  function renderControlPayload(reason = 'manual') {
+	    const payload = buildSwmmControlPayload(reason);
+	    OBJECT_CONTROL_STATE.lastPayload = payload;
+	    OBJECT_CONTROL_STATE.updatedAt = payload.updatedAt;
+	    const preview = document.querySelector('[data-control-payload]');
+	    if (preview) {
+	      preview.textContent = JSON.stringify(payload, null, 2);
+	    }
+	    return payload;
+	  }
+
+	  function notifySwmmControlChange(reason = 'manual') {
+	    const payload = renderControlPayload(reason);
+	    window.LAST_SWMM_CONTROL_PAYLOAD = payload;
+	    window.dispatchEvent(new CustomEvent('swmm-control-change', { detail: payload }));
+	    return payload;
+	  }
+
+	  function setRainfallControl(rainfall, options = {}) {
+	    const shouldNotify = options.notify !== false;
+	    setWeatherState({ rainfall });
+	    OBJECT_CONTROL_STATE.rainfall = WEATHER_STATE.rainfall;
+	    if (shouldNotify) {
+	      notifySwmmControlChange(options.reason || 'rainfall');
+	    } else {
+	      renderControlPayload(options.reason || 'rainfall-sync');
+	    }
+	    return WEATHER_STATE.rainfall;
+	  }
+
+	  function setObjectException(objectType, objectId, nextState = {}, options = {}) {
+	    const controlState = getObjectControlState(objectId);
+	    if (!controlState) return null;
+	    if (Object.prototype.hasOwnProperty.call(nextState, 'blockage')) {
+	      controlState.blockage = clampNumber(nextState.blockage, 0, 1, controlState.blockage);
+	    }
+	    controlState.objectType = objectType;
+	    controlState.swmmId = getObjectDefinition(objectType, objectId)?.swmmId || controlState.swmmId || objectId;
+	    if (getPlaybackFrames().length > 0) {
+	      applyPlaybackFrame(PLAYBACK_STATE.frameIndex);
+	    } else {
+	      applyExceptionHydraulicOverlay();
+	    }
+	    applyExceptionVisuals();
+	    updateSelectedObjectPanel();
+	    if (options.notify !== false) {
+	      notifySwmmControlChange(options.reason || 'exception');
+	    } else {
+	      renderControlPayload(options.reason || 'exception-sync');
+	    }
+	    return { ...controlState };
+	  }
+
+	  function clearSelectedHighlights() {
+	    document.querySelectorAll('.is-selected').forEach((element) => {
+	      element.classList.remove('is-selected');
+	    });
+	  }
+
+	  function markSelectedObject() {
+	    clearSelectedHighlights();
+	    const selected = OBJECT_CONTROL_STATE.selected;
+	    if (!selected) return;
+	    if (selected.objectType === 'asset') {
+	      document.querySelectorAll(`[data-asset-id="${selected.id}"], [data-asset-level-for="${selected.id}"]`).forEach((element) => {
+	        element.classList.add('is-selected');
+	      });
+	    }
+	    if (selected.objectType === 'pipe') {
+	      document.querySelectorAll(`[data-pipe-id="${selected.id}"], [data-pipe-level-for="${selected.id}"]`).forEach((element) => {
+	        element.classList.add('is-selected');
+	      });
+	    }
+	  }
+
+	  function applyExceptionVisuals() {
+	    document.querySelectorAll('.has-exception').forEach((element) => {
+	      element.classList.remove('has-exception');
+	    });
+	    Object.values(OBJECT_CONTROL_STATE.exceptions).forEach((state) => {
+	      if (Number(state.blockage) <= 0) return;
+	      const selector = state.objectType === 'asset'
+	        ? `[data-asset-id="${state.id}"], [data-asset-level-for="${state.id}"]`
+	        : `[data-pipe-id="${state.id}"], [data-pipe-level-for="${state.id}"]`;
+	      document.querySelectorAll(selector).forEach((element) => {
+	        element.classList.add('has-exception');
+	      });
+	    });
+	    markSelectedObject();
+	  }
+
+  function getBlockageRatio(objectId) {
+    return clampNumber(OBJECT_CONTROL_STATE.exceptions[objectId]?.blockage, 0, 1, 0);
+  }
+
+  function patchPipeStateForException(pipeId, nextState, touchedPipes) {
+    if (!PIPE_STATE[pipeId]) return;
+    const state = PIPE_STATE[pipeId];
+    if (Object.prototype.hasOwnProperty.call(nextState, 'velocity')) state.velocity = Number(nextState.velocity);
+    if (Object.prototype.hasOwnProperty.call(nextState, 'flowRate')) state.flowRate = Number(nextState.flowRate);
+    if (Object.prototype.hasOwnProperty.call(nextState, 'waterLevel')) state.waterLevel = Number(nextState.waterLevel);
+    if (Object.prototype.hasOwnProperty.call(nextState, 'backflow')) state.backflow = Boolean(nextState.backflow);
+    if (Object.prototype.hasOwnProperty.call(nextState, 'active')) state.active = Boolean(nextState.active);
+    touchedPipes.add(pipeId);
+  }
+
+  function patchAssetStateForException(assetId, nextState, touchedAssets) {
+    if (!ASSET_STATE[assetId]) return;
+    const state = ASSET_STATE[assetId];
+    if (Object.prototype.hasOwnProperty.call(nextState, 'waterLevel')) state.waterLevel = Number(nextState.waterLevel);
+    if (Object.prototype.hasOwnProperty.call(nextState, 'flowRate')) state.flowRate = Number(nextState.flowRate);
+    if (Object.prototype.hasOwnProperty.call(nextState, 'backflow')) state.backflow = Boolean(nextState.backflow);
+    if (Object.prototype.hasOwnProperty.call(nextState, 'active')) state.active = Boolean(nextState.active);
+    if (Object.prototype.hasOwnProperty.call(nextState, 'status')) state.status = String(nextState.status);
+    if (Object.prototype.hasOwnProperty.call(nextState, 'controlSetting')) state.controlSetting = Number(nextState.controlSetting);
+    touchedAssets.add(assetId);
+  }
+
+  function getPipeOpenness(pipeId) {
+    const directOpenness = 1 - getBlockageRatio(pipeId);
+    const state = PIPE_STATE[pipeId];
+    if (!state) return directOpenness;
+    if (state.active === false && Number(state.flowRate) <= 0.025 && !state.backflow) return 0;
+    return directOpenness;
+  }
+
+  function getInputOpenRatio(inputPipeIds) {
+    if (!inputPipeIds?.length) return 1;
+    const total = inputPipeIds.reduce((sum, pipeId) => sum + getPipeOpenness(pipeId), 0);
+    return clamp(total / inputPipeIds.length, 0, 1);
+  }
+
+  function getPositivePipeFlow(pipeId) {
+    const state = PIPE_STATE[pipeId];
+    if (!state) return 0;
+    return Math.max(0, Number(state.flowRate) || 0);
+  }
+
+  function getUpstreamInflowForBlockedPipe(pipeId) {
+    const upstreamPipeIds = PIPE_BACKUP_TARGETS[pipeId]?.pipes || [];
+    return upstreamPipeIds.reduce((sum, upstreamPipeId) => sum + getPositivePipeFlow(upstreamPipeId), 0);
+  }
+
+  function getBlockedPipeBackflowCondition(pipeId, blockage) {
+    const state = PIPE_STATE[pipeId];
+    const waterLevel = clamp(Number(state?.waterLevel) || 0, 0, 1.18);
+    const upstreamInflow = getUpstreamInflowForBlockedPipe(pipeId);
+    const isBlocked = blockage >= BLOCKED_BACKFLOW_RULES.blockage;
+    const isFull = waterLevel >= BLOCKED_BACKFLOW_RULES.fullLevel;
+    const hasUpstreamInflow = upstreamInflow > BLOCKED_BACKFLOW_RULES.upstreamInflow;
+    return {
+      isBlocked,
+      isFull,
+      hasUpstreamInflow,
+      upstreamInflow,
+      shouldBackflow: isBlocked && isFull && hasUpstreamInflow,
+    };
+  }
+
+  function applyBlockedPipeOverlay(pipeId, blockage, touchedPipes, touchedAssets) {
+    const state = PIPE_STATE[pipeId];
+    if (!state || blockage <= 0) return;
+    const openRatio = 1 - blockage;
+    const condition = getBlockedPipeBackflowCondition(pipeId, blockage);
+    const currentLevel = clamp(Number(state.waterLevel) || 0, 0, 1);
+    const shouldBackflow = condition.shouldBackflow;
+    const reducedFlow = clamp((Number(state.flowRate) || 0) * openRatio, 0, 1.5);
+    const reducedVelocity = clamp((Number(state.velocity) || 0) * Math.max(openRatio, 0.03), 0, 5);
+
+    patchPipeStateForException(pipeId, {
+      waterLevel: currentLevel,
+      flowRate: shouldBackflow ? condition.upstreamInflow : (condition.isBlocked ? Math.min(reducedFlow, 0.02) : reducedFlow),
+      velocity: shouldBackflow ? Math.max(reducedVelocity, 0.12) : (condition.isBlocked ? Math.min(reducedVelocity, 0.04) : reducedVelocity),
+      backflow: shouldBackflow,
+      active: currentLevel > 0.02 || reducedFlow > 0.025 || shouldBackflow,
+    }, touchedPipes);
+
+    const backupTargets = PIPE_BACKUP_TARGETS[pipeId];
+    if (!backupTargets || !shouldBackflow) return;
+    const backupFlow = clamp(condition.upstreamInflow, 0, 1.5);
+    const backupLevel = clamp(0.52 + backupFlow * 0.38, 0, 1);
+
+    backupTargets.pipes?.forEach((backupPipeId) => {
+      const backupState = PIPE_STATE[backupPipeId];
+      if (!backupState) return;
+      patchPipeStateForException(backupPipeId, {
+        waterLevel: clamp(Math.max(Number(backupState.waterLevel) || 0, backupLevel), 0, 1),
+        flowRate: Math.max(Number(backupState.flowRate) || 0, backupFlow),
+        velocity: Math.max(Number(backupState.velocity) || 0, 0.3),
+        backflow: true,
+        active: true,
+      }, touchedPipes);
+    });
+
+    backupTargets.assets?.forEach((backupAssetId) => {
+      const backupState = ASSET_STATE[backupAssetId];
+      if (!backupState) return;
+      patchAssetStateForException(backupAssetId, {
+        waterLevel: clamp(Math.max(Number(backupState.waterLevel) || 0, backupLevel), 0, 1),
+        flowRate: Math.max(Number(backupState.flowRate) || 0, backupFlow),
+        active: true,
+        status: 'backflow',
+        controlSetting: backupAssetId === 'overflow_chamber'
+          ? Math.min(Number(backupState.controlSetting ?? 1), Math.max(0, openRatio))
+          : backupState.controlSetting,
+      }, touchedAssets);
+    });
+  }
+
+  function applyBlockedAssetOverlay(assetId, blockage, touchedPipes, touchedAssets) {
+    const state = ASSET_STATE[assetId];
+    if (!state || blockage <= 0) return;
+    const outletPipeId = ASSET_OUTLET_PIPE_MAP[assetId];
+    const almostBlocked = blockage >= BLOCKED_BACKFLOW_RULES.blockage;
+    const incomingFlow = Math.max(Number(state.flowRate) || 0, WEATHER_STATE.rainfall * 0.35);
+    const hasIncomingFlow = incomingFlow > BLOCKED_BACKFLOW_RULES.upstreamInflow;
+    const currentLevel = clamp(Number(state.waterLevel) || 0, 0, 1);
+    const nextLevel = hasIncomingFlow
+      ? clamp(Math.max(currentLevel, 0.18 + blockage * 0.52), 0, 1)
+      : currentLevel;
+    const shouldBackflow = almostBlocked && nextLevel >= BLOCKED_BACKFLOW_RULES.fullLevel && hasIncomingFlow;
+
+    patchAssetStateForException(assetId, {
+      waterLevel: nextLevel,
+      flowRate: hasIncomingFlow ? Math.max(Number(state.flowRate) || 0, incomingFlow) : Number(state.flowRate) || 0,
+      active: hasIncomingFlow || currentLevel > 0.02,
+      status: shouldBackflow ? 'backflow' : almostBlocked ? 'warning' : 'normal',
+    }, touchedAssets);
+
+    if (!outletPipeId || !PIPE_STATE[outletPipeId]) return;
+    const outletState = PIPE_STATE[outletPipeId];
+    const openRatio = 1 - blockage;
+    const outletCurrentLevel = clamp(Number(outletState.waterLevel) || 0, 0, 1);
+    const outletNextLevel = hasIncomingFlow
+      ? clamp(Math.max(outletCurrentLevel, 0.22 + blockage * 0.58), 0, 1)
+      : outletCurrentLevel;
+    patchPipeStateForException(outletPipeId, {
+      waterLevel: outletNextLevel,
+      flowRate: (Number(outletState.flowRate) || 0) * openRatio,
+      velocity: (Number(outletState.velocity) || 0) * Math.max(openRatio, 0.03),
+      backflow: shouldBackflow,
+      active: hasIncomingFlow || outletCurrentLevel > 0.02,
+    }, touchedPipes);
+  }
+
+  function suppressDownstreamFromBlockedInputs(touchedPipes) {
+    Object.entries(DOWNSTREAM_INPUT_PIPE_MAP).forEach(([downstreamPipeId, inputPipeIds]) => {
+      const downstreamState = PIPE_STATE[downstreamPipeId];
+      if (!downstreamState) return;
+      const openRatio = getInputOpenRatio(inputPipeIds);
+      if (openRatio >= 0.995) return;
+      patchPipeStateForException(downstreamPipeId, {
+        waterLevel: (Number(downstreamState.waterLevel) || 0) * openRatio,
+        flowRate: (Number(downstreamState.flowRate) || 0) * openRatio,
+        velocity: (Number(downstreamState.velocity) || 0) * Math.max(openRatio, 0.03),
+        backflow: false,
+        active: openRatio > 0.05,
+      }, touchedPipes);
+    });
+  }
+
+  function applyExceptionHydraulicOverlay() {
+    const touchedPipes = new Set();
+    const touchedAssets = new Set();
+
+    Object.values(OBJECT_CONTROL_STATE.exceptions).forEach((state) => {
+      const blockage = clampNumber(state.blockage, 0, 1, 0);
+      if (blockage <= 0) return;
+      if (state.objectType === 'pipe') {
+        applyBlockedPipeOverlay(state.id, blockage, touchedPipes, touchedAssets);
+      } else if (state.objectType === 'asset') {
+        applyBlockedAssetOverlay(state.id, blockage, touchedPipes, touchedAssets);
+      }
+    });
+
+    suppressDownstreamFromBlockedInputs(touchedPipes);
+    touchedPipes.forEach((pipeId) => applyPipeVisual(PIPE_BY_ID[pipeId]));
+    touchedAssets.forEach((assetId) => applyAssetVisual(ASSET_BY_ID[assetId]));
+    updateSelectedObjectPanel();
+  }
+
+	  function describeObject(definition, objectType) {
+	    if (!definition) return '선택한 객체 정보를 찾을 수 없습니다.';
+	    if (objectType === 'pipe') {
+	      return `${definition.label}입니다. 막힘 정도는 PySWMM에서 해당 link의 유효 통수능을 낮추는 제어값으로 전달됩니다.`;
+	    }
+	    if (definition.type === 'catch_basin') {
+	      return `${definition.label}입니다. 막힘 정도는 빗물받이 유입 효율 저하로 전달됩니다.`;
+	    }
+	    return `${definition.label}입니다. 막힘 정도는 시설 내부 흐름 저항 또는 유입 제한 조건으로 전달됩니다.`;
+	  }
+
+	  function getWaterTypeLabel(waterType) {
+	    return {
+	      storm: '우수',
+	      sewer: '오수',
+	      combined: '합류수',
+	      overflow: '월류수',
+	      treated: '처리수',
+	    }[waterType] || waterType || '-';
+	  }
+
+	  function updateSelectedObjectPanel() {
+	    const panel = document.querySelector('.object-panel');
+	    if (!panel) return;
+	    const selected = OBJECT_CONTROL_STATE.selected;
+	    const title = document.querySelector('[data-selected-title]');
+	    const description = document.querySelector('[data-selected-description]');
+	    const idOutput = document.querySelector('[data-selected-id]');
+	    const swmmIdOutput = document.querySelector('[data-selected-swmm-id]');
+	    const typeOutput = document.querySelector('[data-selected-type]');
+	    const waterTypeOutput = document.querySelector('[data-selected-water-type]');
+	    const levelOutput = document.querySelector('[data-selected-level]');
+	    const flowOutput = document.querySelector('[data-selected-flow]');
+	    const velocityOutput = document.querySelector('[data-selected-velocity]');
+	    const directionOutput = document.querySelector('[data-selected-direction]');
+	    const exceptionLabel = document.querySelector('[data-exception-label]');
+	    const blockageControl = document.querySelector('[data-exception-control="blockage"]');
+	    const blockageOutput = document.querySelector('[data-exception-output="blockage"]');
+
+	    if (!selected) {
+	      panel.classList.add('object-empty');
+	      if (title) title.textContent = '배관이나 시설을 선택하세요';
+	      if (description) description.textContent = '선택한 객체의 SWMM ID, 현재 상태, 막힘 정도를 여기에서 확인하고 조절합니다.';
+	      if (idOutput) idOutput.textContent = '-';
+	      if (swmmIdOutput) swmmIdOutput.textContent = '-';
+	      if (typeOutput) typeOutput.textContent = '-';
+	      if (waterTypeOutput) waterTypeOutput.textContent = '-';
+	      renderControlPayload('panel-empty');
+	      return;
+	    }
+
+	    const definition = getObjectDefinition(selected.objectType, selected.id);
+	    const runtimeState = getObjectRuntimeState(selected.objectType, selected.id) || {};
+	    const controlState = getObjectControlState(selected.id) || { blockage: 0 };
+	    panel.classList.remove('object-empty');
+
+	    if (title) title.textContent = definition?.label || selected.id;
+	    if (description) description.textContent = describeObject(definition, selected.objectType);
+	    if (idOutput) idOutput.textContent = selected.id;
+	    if (swmmIdOutput) swmmIdOutput.textContent = definition?.swmmId || selected.id;
+	    if (typeOutput) typeOutput.textContent = selected.objectType === 'pipe' ? '배관' : definition?.type || '시설';
+	    if (waterTypeOutput) waterTypeOutput.textContent = getWaterTypeLabel(definition?.waterType);
+	    if (levelOutput) levelOutput.textContent = formatPercent(runtimeState.waterLevel);
+	    if (flowOutput) flowOutput.textContent = formatRate(runtimeState.flowRate, '');
+	    if (velocityOutput) velocityOutput.textContent = selected.objectType === 'pipe' ? formatRate(runtimeState.velocity, 'x') : '-';
+	    if (directionOutput) directionOutput.textContent = runtimeState.backflow ? '역류' : '정방향';
+	    if (exceptionLabel) {
+	      exceptionLabel.textContent = definition?.type === 'catch_basin' ? '빗물받이 막힘 정도' : '막힘 정도';
+	    }
+	    if (blockageControl) blockageControl.value = String(Math.round(Number(controlState.blockage || 0) * 100));
+	    if (blockageOutput) blockageOutput.textContent = `${Math.round(Number(controlState.blockage || 0) * 100)}%`;
+	    renderControlPayload('panel-update');
+	  }
+
+	  function selectObject(objectType, objectId) {
+	    const definition = getObjectDefinition(objectType, objectId);
+	    if (!definition) return null;
+	    OBJECT_CONTROL_STATE.selected = {
+	      id: objectId,
+	      swmmId: definition.swmmId || objectId,
+	      objectType,
+	    };
+	    markSelectedObject();
+	    updateSelectedObjectPanel();
+	    return OBJECT_CONTROL_STATE.selected;
+	  }
+
+  function estimateRainfallFromFrame(frame) {
+    const stormPipeIds = [
+      'sep_storm_lateral_catch_basin_1',
+      'sep_storm_lateral_catch_basin_2',
+      'sep_storm_main_1',
+      'sep_storm_main_2',
+      'sep_storm_trunk',
+      'comb_storm_lateral_catch_basin_1',
+      'comb_storm_lateral_catch_basin_2',
+      'comb_main_1',
+      'comb_main_2',
+    ];
+    const samples = stormPipeIds
+      .map((pipeId) => frame?.pipes?.[pipeId])
+      .filter(Boolean);
+    if (samples.length === 0) return WEATHER_STATE.rainfall;
+    const maxLevel = samples.reduce((max, item) => Math.max(max, Number(item.l) || 0), 0);
+    const maxFlow = samples.reduce((max, item) => Math.max(max, Number(item.f) || 0), 0);
+    return clamp(Math.max(maxLevel, maxFlow / 1.25), 0, 1);
+  }
+
+  function isRainInletAsset(asset) {
+    return asset?.type === 'catch_basin';
+  }
+
+  function isRainInletPipe(pipe) {
+    return pipe?.waterType === 'storm' && pipe.id.includes('catch_basin');
+  }
+
+  function applyRainfallInletFloor(definition, state) {
+    const rainfall = WEATHER_STATE.rainfall;
+    if (rainfall <= 0.01 || !definition) return state;
+
+    const isAssetInlet = isRainInletAsset(definition);
+    const isPipeInlet = isRainInletPipe(definition);
+    if (!isAssetInlet && !isPipeInlet) return state;
+
+    return {
+      ...state,
+      waterLevel: Math.max(Number(state.waterLevel) || 0, rainfall * 0.08),
+      flowRate: Math.max(Number(state.flowRate) || 0, rainfall * 0.28),
+      velocity: Object.prototype.hasOwnProperty.call(state, 'velocity')
+        ? Math.max(Number(state.velocity) || 0, 0.45 + rainfall * 0.6)
+        : state.velocity,
+      active: true,
+    };
+  }
+
+  function getFullnessColor(waterLevel) {
+    const safeLevel = clamp(Number(waterLevel) || 0, 0, 1);
+    const blue = [56, 189, 248];
+    const red = [239, 68, 68];
+    const color = blue.map((channel, index) => (
+      Math.round(channel + (red[index] - channel) * safeLevel)
+    ));
+    return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+  }
+
+  function setFullnessMotionSpeed(velocity) {
+    const safeVelocity = clampNumber(velocity, HYDRAULIC_LIMITS.velocity.min, HYDRAULIC_LIMITS.velocity.max, 1);
+    document.querySelectorAll('#pipeFullWavePattern animateTransform').forEach((animation) => {
+      animation.setAttribute('dur', `${(2.4 / safeVelocity).toFixed(2)}s`);
+    });
+  }
+
+  function setFullnessTheme(waterLevel) {
+    const safeLevel = clampNumber(waterLevel, HYDRAULIC_LIMITS.waterLevel.min, HYDRAULIC_LIMITS.waterLevel.max, 0);
+    document.documentElement.style.setProperty('--fullness-color', getFullnessColor(safeLevel));
+    document.body.dataset.fullnessState = 'manual';
+    document.body.dataset.fullnessLevel = safeLevel >= 0.98 ? 'full' : 'partial';
+  }
+
+  function applyLevelElementVisual(levelElement, waterLevel, flowRate = 1) {
+    const safeLevel = clampNumber(waterLevel, HYDRAULIC_LIMITS.waterLevel.min, HYDRAULIC_LIMITS.waterLevel.max, 0);
+    const safeFlowRate = clampNumber(flowRate, 0, 1.5, 0);
+    levelElement.style.opacity = String(clamp(0.22 + safeFlowRate * 0.46, 0.22, 0.78));
+    levelElement.style.animation = 'none';
+    levelElement.style.transform = `scaleY(${safeLevel})`;
+  }
+
+  function getPipeLevelElements(pipeId) {
+    return Array.from(document.querySelectorAll(`[data-pipe-level-for="${pipeId}"]`));
+  }
+
+  function applyPipeLevelVisual(pipe) {
+    const state = PIPE_STATE[pipe.id];
+    getPipeLevelElements(pipe.id).forEach((levelElement) => {
+      applyLevelElementVisual(levelElement, state.waterLevel, state.flowRate);
+    });
+  }
+
+  function applyPipeFullnessVisuals() {
+    document.querySelectorAll('.pipe-fullness:not([data-asset-level-for]):not([data-pipe-level-for])').forEach((levelElement) => {
+      applyLevelElementVisual(levelElement, GLOBAL_HYDRAULIC_STATE.waterLevel, GLOBAL_HYDRAULIC_STATE.waterLevel * 1.5);
+    });
+  }
+
+  function getPipeBaseDuration(pipe) {
+    if (pipe.size === 'large') return 2.8;
+    if (pipe.size === 'medium') return 2.3;
+    return 1.8;
+  }
+
+  function getPipeState(pipeId) {
+    if (!PIPE_STATE[pipeId]) return null;
+    return { ...PIPE_STATE[pipeId] };
+  }
+
+  function getAssetState(assetId) {
+    if (!ASSET_STATE[assetId]) return null;
+    return { ...ASSET_STATE[assetId] };
+  }
+
+  function getPipeFlowElements(pipeId) {
+    return {
+      forward: document.querySelector(`.water-flow[data-pipe-id="${pipeId}"]:not(.backflow)`),
+      backflow: document.querySelector(`.water-flow.backflow[data-pipe-id="${pipeId}"]`),
+    };
+  }
+
+  function applyPipeVisual(pipe) {
+    const state = PIPE_STATE[pipe.id];
+    const { forward, backflow } = getPipeFlowElements(pipe.id);
+    const isBackflow = currentFlowMode === 'backflow' || state.backflow;
+    const safeVelocity = clamp(Number(state.velocity) || 1, 0.15, 5);
+    const safeFlowRate = clamp(Number(state.flowRate) || 0, 0, 1.5);
+    const pumpBoost = pipe.id === 'storm_pump_discharge_pipe' && ASSET_STATE.storm_pump_station?.active ? 1.65 : 1;
+    const isForcedOff = state.active === false && !state.backflow && safeFlowRate <= 0.025;
+    const hasVisibleFlow = !isForcedOff && (
+      state.backflow || pipe.alwaysFlow || (state.active !== false && safeFlowRate > 0.025)
+    );
+    const flowDuration = `${(getPipeBaseDuration(pipe) / (safeVelocity * pumpBoost)).toFixed(2)}s`;
+    const baseOpacity = pipe.alwaysFlow ? 0.42 : 0.28;
+    const flowOpacity = String(clamp(baseOpacity + safeFlowRate * 0.42, baseOpacity, 0.9));
+
+    [forward, backflow].forEach((flow) => {
+      if (!flow) return;
+      flow.style.setProperty('--flow-duration', flowDuration);
+      flow.style.opacity = flowOpacity;
+    });
+
+    if (forward) forward.classList.toggle('is-hidden-flow', isBackflow || !hasVisibleFlow);
+    if (backflow) backflow.classList.toggle('is-hidden-flow', !isBackflow || !hasVisibleFlow);
+    applyPipeLevelVisual(pipe);
+  }
+
+  function applyPipeStates() {
+    PIPE_DEFINITIONS.forEach(applyPipeVisual);
+  }
+
+  function getAssetLevelElements(assetId) {
+    return Array.from(document.querySelectorAll(`[data-asset-level-for="${assetId}"]`));
+  }
+
+  function applyAssetVisual(asset) {
+    const state = ASSET_STATE[asset.id];
+    const levelElements = getAssetLevelElements(asset.id);
+    const safeFlowRate = clamp(Number(state.flowRate) || 0, 0, 1.5);
+    const root = document.documentElement;
+
+    levelElements.forEach((levelElement) => {
+      if (state.waterLevel !== null && state.waterLevel !== undefined && Number.isFinite(Number(state.waterLevel))) {
+        applyLevelElementVisual(levelElement, state.waterLevel, safeFlowRate);
+      } else {
+        levelElement.style.opacity = String(clamp(0.22 + safeFlowRate * 0.46, 0.22, 0.78));
+        levelElement.style.removeProperty('animation');
+        levelElement.style.removeProperty('transform');
+      }
+    });
+
+    if (asset.id === 'overflow_chamber') {
+      const setting = clamp(Number(state.controlSetting ?? 1), 0, 1);
+      root.style.setProperty('--gate-rotation', `${Math.round((1 - setting) * 42)}deg`);
+    }
+    if (asset.id === 'storm_pump_station') {
+      const pumpActive = Boolean(state.active);
+      document.querySelectorAll('.pump-blades').forEach((blade) => {
+        blade.style.animationDuration = pumpActive ? `${Math.max(0.45, 1.05 - safeFlowRate * 0.22).toFixed(2)}s` : '1.1s';
+        blade.style.animationPlayState = pumpActive ? 'running' : 'paused';
+        blade.style.opacity = pumpActive ? '1' : '.35';
+      });
+      applyPipeVisual(PIPE_BY_ID.storm_pump_discharge_pipe);
+    }
+  }
+
+  function applyAssetStates() {
+    ASSET_DEFINITIONS.forEach(applyAssetVisual);
+  }
+
+  function setPipeState(pipeId, nextState = {}) {
+    if (!PIPE_STATE[pipeId]) {
+      console.warn(`Unknown pipe id: ${pipeId}`);
+      return null;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(nextState, 'velocity')) {
+      PIPE_STATE[pipeId].velocity = Number(nextState.velocity);
+    }
+    if (Object.prototype.hasOwnProperty.call(nextState, 'flowRate')) {
+      PIPE_STATE[pipeId].flowRate = Number(nextState.flowRate);
+    }
+    if (Object.prototype.hasOwnProperty.call(nextState, 'waterLevel')) {
+      PIPE_STATE[pipeId].waterLevel = Number(nextState.waterLevel);
+    }
+    if (Object.prototype.hasOwnProperty.call(nextState, 'backflow')) {
+      PIPE_STATE[pipeId].backflow = Boolean(nextState.backflow);
+    }
+	    if (Object.prototype.hasOwnProperty.call(nextState, 'active')) {
+	      PIPE_STATE[pipeId].active = Boolean(nextState.active);
+	    }
+
+	    applyPipeVisual(PIPE_BY_ID[pipeId]);
+	    if (OBJECT_CONTROL_STATE.selected?.id === pipeId) updateSelectedObjectPanel();
+	    return getPipeState(pipeId);
+	  }
+
+  function setAssetState(assetId, nextState = {}) {
+    if (!ASSET_STATE[assetId]) {
+      console.warn(`Unknown asset id: ${assetId}`);
+      return null;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(nextState, 'waterLevel')) {
+      ASSET_STATE[assetId].waterLevel =
+        nextState.waterLevel === null ? null : Number(nextState.waterLevel);
+    }
+    if (Object.prototype.hasOwnProperty.call(nextState, 'flowRate')) {
+      ASSET_STATE[assetId].flowRate = Number(nextState.flowRate);
+    }
+    if (Object.prototype.hasOwnProperty.call(nextState, 'backflow')) {
+      ASSET_STATE[assetId].backflow = Boolean(nextState.backflow);
+    }
+    if (Object.prototype.hasOwnProperty.call(nextState, 'active')) {
+      ASSET_STATE[assetId].active = Boolean(nextState.active);
+    }
+    if (Object.prototype.hasOwnProperty.call(nextState, 'status')) {
+      ASSET_STATE[assetId].status = String(nextState.status);
+    }
+	    if (Object.prototype.hasOwnProperty.call(nextState, 'controlSetting')) {
+	      ASSET_STATE[assetId].controlSetting = Number(nextState.controlSetting);
+	    }
+
+	    applyAssetVisual(ASSET_BY_ID[assetId]);
+	    if (OBJECT_CONTROL_STATE.selected?.id === assetId) updateSelectedObjectPanel();
+	    return getAssetState(assetId);
+	  }
+
+  function listPipes() {
+    return PIPE_DEFINITIONS.map(({ id, swmmId, htmlId, label, system, waterType, size, direction, alwaysFlow }) => ({
+      id,
+      swmmId,
+      htmlId,
+      label,
+      system,
+      waterType,
+      size,
+      direction,
+      alwaysFlow: Boolean(alwaysFlow),
+      state: getPipeState(id),
+    }));
+  }
+
+  function listAssets() {
+    return ASSET_DEFINITIONS.map(({ id, swmmId, htmlId, label, type, system, waterType, domId }) => ({
+      id,
+      swmmId,
+      htmlId,
+      label,
+      type,
+      system,
+      waterType,
+      domId,
+      state: getAssetState(id),
+    }));
+  }
+
+  function getGlobalHydraulicState() {
+    return { ...GLOBAL_HYDRAULIC_STATE };
+  }
+
+  function updateGlobalHydraulicOutputs() {
+    const velocityOutput = document.querySelector('[data-global-hydraulic-output="velocity"]');
+    const waterLevelOutput = document.querySelector('[data-global-hydraulic-output="waterLevel"]');
+    if (velocityOutput) velocityOutput.textContent = `${GLOBAL_HYDRAULIC_STATE.velocity.toFixed(1)}x`;
+    if (waterLevelOutput) waterLevelOutput.textContent = `${Math.round(GLOBAL_HYDRAULIC_STATE.waterLevel * 100)}%`;
+  }
+
+  function syncGlobalHydraulicControls() {
+    const velocityControl = document.querySelector('[data-global-hydraulic-control="velocity"]');
+    const waterLevelControl = document.querySelector('[data-global-hydraulic-control="waterLevel"]');
+    if (velocityControl) velocityControl.value = String(GLOBAL_HYDRAULIC_STATE.velocity);
+    if (waterLevelControl) waterLevelControl.value = String(Math.round(GLOBAL_HYDRAULIC_STATE.waterLevel * 100));
+    updateGlobalHydraulicOutputs();
+  }
+
+  function setGlobalHydraulicState(nextState = {}) {
+    if (Object.prototype.hasOwnProperty.call(nextState, 'velocity')) {
+      GLOBAL_HYDRAULIC_STATE.velocity = clamp(
+        clampNumber(nextState.velocity, HYDRAULIC_LIMITS.velocity.min, HYDRAULIC_LIMITS.velocity.max, GLOBAL_HYDRAULIC_STATE.velocity),
+        HYDRAULIC_LIMITS.velocity.min,
+        HYDRAULIC_LIMITS.velocity.max
+      );
+    }
+    if (Object.prototype.hasOwnProperty.call(nextState, 'waterLevel')) {
+      GLOBAL_HYDRAULIC_STATE.waterLevel = clamp(
+        clampNumber(nextState.waterLevel, HYDRAULIC_LIMITS.waterLevel.min, HYDRAULIC_LIMITS.waterLevel.max, GLOBAL_HYDRAULIC_STATE.waterLevel),
+        HYDRAULIC_LIMITS.waterLevel.min,
+        HYDRAULIC_LIMITS.waterLevel.max
+      );
+    }
+
+    PIPE_DEFINITIONS.forEach((pipe) => {
+      PIPE_STATE[pipe.id].velocity = GLOBAL_HYDRAULIC_STATE.velocity;
+      PIPE_STATE[pipe.id].flowRate = GLOBAL_HYDRAULIC_STATE.waterLevel * 1.5;
+      PIPE_STATE[pipe.id].waterLevel = GLOBAL_HYDRAULIC_STATE.waterLevel;
+      PIPE_STATE[pipe.id].active = GLOBAL_HYDRAULIC_STATE.waterLevel > 0.02;
+    });
+    ASSET_DEFINITIONS.forEach((asset) => {
+      ASSET_STATE[asset.id].waterLevel = GLOBAL_HYDRAULIC_STATE.waterLevel;
+      ASSET_STATE[asset.id].flowRate = GLOBAL_HYDRAULIC_STATE.waterLevel * 1.5;
+      if (asset.id === 'storm_pump_station') {
+        ASSET_STATE[asset.id].active = GLOBAL_HYDRAULIC_STATE.waterLevel >= 0.55;
+      }
+      ASSET_STATE[asset.id].controlSetting = 1;
+    });
+
+    setFullnessTheme(GLOBAL_HYDRAULIC_STATE.waterLevel);
+    setFullnessMotionSpeed(GLOBAL_HYDRAULIC_STATE.velocity);
+    applyPipeStates();
+    applyPipeFullnessVisuals();
+    applyAssetStates();
+    applyExceptionHydraulicOverlay();
+    syncGlobalHydraulicControls();
+
+    return getGlobalHydraulicState();
+  }
+
+  function getPlaybackScenarioData() {
+    return PLAYBACK_DATA?.scenarios?.[PLAYBACK_STATE.scenario] || null;
+  }
+
+  function getPlaybackFrames() {
+    return getPlaybackScenarioData()?.frames || [];
+  }
+
+  function formatPlaybackTime(isoTime) {
+    if (!isoTime) return '00:00';
+    const date = new Date(isoTime);
+    if (Number.isNaN(date.getTime())) return isoTime.slice(11, 16);
+    return date.toLocaleTimeString('ko-KR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+  }
+
+  function updatePlaybackOutput(frame) {
+    const output = document.querySelector('[data-playback-output]');
+    if (!output) return;
+    const scenario = getPlaybackScenarioData();
+    if (!scenario || !frame) {
+      output.textContent = '데이터 없음';
+      return;
+    }
+
+    const riskyItems = [
+      ...Object.values(frame.pipes || {}),
+      ...Object.values(frame.assets || {}),
+    ].filter((item) => item.r && item.r !== 'normal');
+    const riskLabel = riskyItems.length > 0 ? ` / 이벤트 ${riskyItems.length}` : '';
+    output.textContent = `${scenario.title} ${formatPlaybackTime(frame.time)}${riskLabel}`;
+  }
+
+  function syncPlaybackControls(frame) {
+    const frames = getPlaybackFrames();
+    const scenarioControl = document.querySelector('[data-playback-scenario]');
+    const timeControl = document.querySelector('[data-playback-time]');
+    const speedControl = document.querySelector('[data-playback-speed]');
+    const toggle = document.querySelector('[data-playback-toggle]');
+
+    if (scenarioControl) scenarioControl.value = PLAYBACK_STATE.scenario;
+    if (timeControl) {
+      timeControl.max = String(Math.max(frames.length - 1, 0));
+      timeControl.value = String(PLAYBACK_STATE.frameIndex);
+      timeControl.disabled = frames.length === 0;
+    }
+    if (speedControl) speedControl.value = String(PLAYBACK_STATE.speed);
+    if (toggle) {
+      toggle.textContent = PLAYBACK_STATE.playing ? '정지' : '재생';
+      toggle.classList.toggle('is-playing', PLAYBACK_STATE.playing);
+      toggle.disabled = frames.length === 0;
+    }
+    updatePlaybackOutput(frame);
+  }
+
+  function setPlaybackAnimationPaused(paused) {
+    const shouldPause = Boolean(paused);
+    document.body.dataset.playbackPaused = shouldPause ? 'true' : 'false';
+    document.querySelectorAll('svg').forEach((svg) => {
+      if (shouldPause && typeof svg.pauseAnimations === 'function') {
+        svg.pauseAnimations();
+      }
+      if (!shouldPause && typeof svg.unpauseAnimations === 'function') {
+        svg.unpauseAnimations();
+      }
+    });
+  }
+
+	  function applyFrameHydraulicTheme(frame) {
+    const pipeStates = Object.values(frame.pipes || {});
+    const assetStates = Object.values(frame.assets || {});
+    const allStates = [...pipeStates, ...assetStates];
+    const maxLevel = allStates.reduce((max, item) => Math.max(max, Number(item.l) || 0), 0);
+    const pipeVelocities = pipeStates.map((item) => Number(item.v) || 0).filter(Boolean);
+    const avgVelocity = pipeVelocities.length
+      ? pipeVelocities.reduce((sum, value) => sum + value, 0) / pipeVelocities.length
+      : 1;
+
+    GLOBAL_HYDRAULIC_STATE.velocity = clamp(avgVelocity, HYDRAULIC_LIMITS.velocity.min, HYDRAULIC_LIMITS.velocity.max);
+    GLOBAL_HYDRAULIC_STATE.waterLevel = clamp(maxLevel, HYDRAULIC_LIMITS.waterLevel.min, HYDRAULIC_LIMITS.waterLevel.max);
+    setFullnessTheme(GLOBAL_HYDRAULIC_STATE.waterLevel);
+    setFullnessMotionSpeed(GLOBAL_HYDRAULIC_STATE.velocity);
+	    setRainfallControl(estimateRainfallFromFrame(frame), { notify: false, reason: 'playback-rainfall' });
+	    syncGlobalHydraulicControls();
+	  }
+
+  function applySwmmStatePayload(payload = {}, options = {}) {
+    if (Object.prototype.hasOwnProperty.call(payload, 'rainfallRatio')) {
+      setRainfallControl(Number(payload.rainfallRatio) || 0, {
+        notify: options.notifyControlChange === true,
+        reason: 'swmm-state-rainfall',
+      });
+    }
+
+    Object.entries(payload.assets || {}).forEach(([assetId, state]) => {
+      const nextAssetState = {
+        waterLevel: state.depth_ratio ?? state.fullness ?? state.waterLevel ?? 0,
+        flowRate: clamp(Number(state.inflow_cms ?? state.flow_cms ?? state.flowRate ?? 0), 0, 1.5),
+        backflow: state.direction === 'reverse' || state.backflow === true,
+      };
+      if (Object.prototype.hasOwnProperty.call(state, 'active')) nextAssetState.active = state.active;
+      if (Object.prototype.hasOwnProperty.call(state, 'status')) nextAssetState.status = state.status;
+      if (Object.prototype.hasOwnProperty.call(state, 'target_setting') || Object.prototype.hasOwnProperty.call(state, 'controlSetting')) {
+        nextAssetState.controlSetting = state.target_setting ?? state.controlSetting;
+      }
+      setAssetState(assetId, nextAssetState);
+    });
+
+    Object.entries(payload.pipes || {}).forEach(([pipeId, state]) => {
+      const flowCms = Number(state.flow_cms ?? state.outflow_cms ?? state.flowRate ?? 0) || 0;
+      const capacityCms = Number(state.capacity_cms ?? state.effective_capacity_cms ?? 0) || 0;
+      const flowRatio = capacityCms > 0 ? Math.abs(flowCms) / capacityCms : Math.abs(flowCms);
+      const nextPipeState = {
+        velocity: Math.abs(Number(state.velocity_mps ?? state.velocity ?? 0)) || 0,
+        flowRate: clamp(flowRatio, 0, 1.5),
+        waterLevel: state.fullness ?? state.waterLevel ?? 0,
+        backflow: state.direction === 'reverse' || state.backflow === true,
+      };
+      if (Object.prototype.hasOwnProperty.call(state, 'active')) {
+        nextPipeState.active = state.active;
+      } else {
+        nextPipeState.active = Math.abs(flowCms) > 0.002;
+      }
+      setPipeState(pipeId, nextPipeState);
+    });
+
+    const pumpControl = payload.controls?.storm_pump_unit;
+    if (pumpControl) {
+      setAssetState('storm_pump_station', {
+        active: Boolean(pumpControl.active || Number(pumpControl.target_setting) > 0),
+        controlSetting: Number(pumpControl.target_setting ?? 0),
+      });
+    }
+
+    const overflowControl = payload.controls?.overflow_to_interceptor_drop;
+    if (overflowControl) {
+      setAssetState('overflow_chamber', {
+        controlSetting: Number(overflowControl.target_setting ?? 1),
+      });
+    }
+
+    applyPipeFullnessVisuals();
+    updateSelectedObjectPanel();
+    return payload;
+  }
+
+  function applyPlaybackFrame(frameIndex = PLAYBACK_STATE.frameIndex) {
+    const frames = getPlaybackFrames();
+    if (frames.length === 0) {
+      syncPlaybackControls(null);
+      return null;
+    }
+
+    PLAYBACK_STATE.frameIndex = clamp(Math.round(frameIndex), 0, frames.length - 1);
+    const frame = frames[PLAYBACK_STATE.frameIndex];
+    applyFrameHydraulicTheme(frame);
+
+    Object.entries(frame.assets || {}).forEach(([assetId, state]) => {
+      const visualState = applyRainfallInletFloor(ASSET_BY_ID[assetId], {
+        waterLevel: state.l,
+        flowRate: state.f,
+        backflow: state.b,
+        active: state.a,
+        status: state.s,
+        controlSetting: state.g,
+      });
+      setAssetState(assetId, visualState);
+    });
+
+    Object.entries(frame.pipes || {}).forEach(([pipeId, state]) => {
+      const visualState = applyRainfallInletFloor(PIPE_BY_ID[pipeId], {
+        velocity: state.v,
+        flowRate: state.f,
+        waterLevel: state.l,
+        backflow: state.b,
+        active: state.a,
+      });
+      setPipeState(pipeId, visualState);
+    });
+
+    applyExceptionHydraulicOverlay();
+    applyExceptionVisuals();
+    syncPlaybackControls(frame);
+    return frame;
+  }
+
+  function stopPlayback() {
+    if (PLAYBACK_STATE.timerId) {
+      window.clearInterval(PLAYBACK_STATE.timerId);
+      PLAYBACK_STATE.timerId = null;
+    }
+    PLAYBACK_STATE.playing = false;
+    setPlaybackAnimationPaused(true);
+    syncPlaybackControls(getPlaybackFrames()[PLAYBACK_STATE.frameIndex]);
+  }
+
+  function stepPlayback(step = 1) {
+    const frames = getPlaybackFrames();
+    if (frames.length === 0) return null;
+    const nextIndex = PLAYBACK_STATE.frameIndex + step;
+    if (nextIndex >= frames.length) {
+      stopPlayback();
+      return applyPlaybackFrame(frames.length - 1);
+    }
+    if (nextIndex < 0) {
+      return applyPlaybackFrame(0);
+    }
+    return applyPlaybackFrame(nextIndex);
+  }
+
+  function startPlayback() {
+    const frames = getPlaybackFrames();
+    if (frames.length === 0) return;
+    if (PLAYBACK_STATE.frameIndex >= frames.length - 1) {
+      PLAYBACK_STATE.frameIndex = 0;
+    }
+	    stopPlayback();
+	    PLAYBACK_STATE.playing = true;
+	    setPlaybackAnimationPaused(false);
+	    applyPlaybackFrame(PLAYBACK_STATE.frameIndex);
+	    const intervalMs = Math.max(180, 900 / PLAYBACK_STATE.speed);
+	    PLAYBACK_STATE.timerId = window.setInterval(() => stepPlayback(1), intervalMs);
+	  }
+
+  function setPlaybackScenario(scenario) {
+    if (!PLAYBACK_DATA?.scenarios?.[scenario]) return null;
+    stopPlayback();
+    PLAYBACK_STATE.scenario = scenario;
+    PLAYBACK_STATE.frameIndex = 0;
+    return applyPlaybackFrame(0);
+  }
+
+  function setupPlaybackControls() {
+    const scenarioControl = document.querySelector('[data-playback-scenario]');
+    const timeControl = document.querySelector('[data-playback-time]');
+    const speedControl = document.querySelector('[data-playback-speed]');
+    const toggle = document.querySelector('[data-playback-toggle]');
+
+    if (!PLAYBACK_DATA) {
+      syncPlaybackControls(null);
+      return;
+    }
+
+    if (scenarioControl) {
+      scenarioControl.innerHTML = '';
+      PLAYBACK_DATA.scenarioOrder.forEach((scenarioKey) => {
+        const scenario = PLAYBACK_DATA.scenarios[scenarioKey];
+        const option = document.createElement('option');
+        option.value = scenarioKey;
+        option.textContent = scenario.title || scenarioKey;
+        scenarioControl.appendChild(option);
+      });
+      scenarioControl.addEventListener('change', () => setPlaybackScenario(scenarioControl.value));
+    }
+
+    if (timeControl) {
+      timeControl.addEventListener('input', () => {
+        stopPlayback();
+        applyPlaybackFrame(Number(timeControl.value));
+      });
+    }
+
+    if (speedControl) {
+      speedControl.addEventListener('change', () => {
+        PLAYBACK_STATE.speed = Number(speedControl.value) || 1;
+        if (PLAYBACK_STATE.playing) startPlayback();
+      });
+    }
+
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        if (PLAYBACK_STATE.playing) {
+          stopPlayback();
+        } else {
+          startPlayback();
+        }
+      });
+    }
+
+    document.querySelectorAll('[data-playback-step]').forEach((button) => {
+      button.addEventListener('click', () => {
+        stopPlayback();
+        stepPlayback(Number(button.dataset.playbackStep) || 0);
+      });
+    });
+
+    setPlaybackScenario(PLAYBACK_STATE.scenario);
+  }
+
+  function assignPipeLevelElements(flow, pipeId) {
+    let cursor = flow.previousElementSibling;
+    while (
+      cursor &&
+      cursor.classList?.contains('pipe-fullness') &&
+      !cursor.dataset.assetLevelFor
+    ) {
+      cursor.dataset.pipeLevelFor = pipeId;
+      cursor = cursor.previousElementSibling;
+    }
+  }
+
+  const forwardFlows = Array.from(document.querySelectorAll('.water-flow:not(.backflow)'));
+
+  if (forwardFlows.length !== PIPE_DEFINITIONS.length) {
+    console.warn(
+      `Pipe definition count mismatch: ${PIPE_DEFINITIONS.length} definitions, ${forwardFlows.length} flow paths.`
+    );
+  }
+
+	  forwardFlows.forEach((flow, index) => {
+	    const pipe = PIPE_DEFINITIONS[index];
+	    if (!pipe) return;
+	    flow.dataset.pipeId = pipe.id;
+    flow.id = `${pipe.id}__forward_flow`;
+    flow.setAttribute('aria-label', `${pipe.label} 정방향 흐름`);
+    assignPipeLevelElements(flow, pipe.id);
+
+    const backflow = flow.cloneNode(false);
+    backflow.classList.add('backflow');
+    backflow.id = `${pipe.id}__backflow_flow`;
+    backflow.setAttribute('aria-hidden', 'true');
+	    flow.after(backflow);
+
+	    const hitArea = flow.cloneNode(false);
+	    hitArea.classList.remove('water-flow', 'backflow', 'is-hidden-flow');
+	    hitArea.classList.add('pipe-hit-area');
+	    hitArea.dataset.pipeId = pipe.id;
+	    hitArea.id = `${pipe.id}__hit_area`;
+	    hitArea.setAttribute('aria-label', `${pipe.label} 선택 영역`);
+	    hitArea.setAttribute('role', 'button');
+	    hitArea.setAttribute('tabindex', '0');
+	    backflow.after(hitArea);
+	  });
+
+	  function setupSelectableObjects() {
+	    document.querySelectorAll('[data-asset-id]').forEach((element) => {
+	      element.setAttribute('tabindex', '0');
+	      element.setAttribute('role', 'button');
+	      element.addEventListener('click', (event) => {
+	        event.stopPropagation();
+	        selectObject('asset', element.dataset.assetId);
+	      });
+	      element.addEventListener('keydown', (event) => {
+	        if (event.key === 'Enter' || event.key === ' ') {
+	          event.preventDefault();
+	          selectObject('asset', element.dataset.assetId);
+	        }
+	      });
+	    });
+
+	    document.querySelectorAll('[data-pipe-id], [data-pipe-level-for]').forEach((element) => {
+	      const pipeId = element.dataset.pipeId || element.dataset.pipeLevelFor;
+	      if (!pipeId) return;
+	      element.setAttribute('tabindex', '0');
+	      element.setAttribute('role', 'button');
+	      element.addEventListener('click', (event) => {
+	        event.stopPropagation();
+	        selectObject('pipe', pipeId);
+	      });
+	      element.addEventListener('keydown', (event) => {
+	        if (event.key === 'Enter' || event.key === ' ') {
+	          event.preventDefault();
+	          selectObject('pipe', pipeId);
+	        }
+	      });
+	    });
+	  }
+
+  function setFlowMode(mode) {
+    currentFlowMode = flowModes.has(mode) ? mode : 'forward';
+    document.body.dataset.flowMode = currentFlowMode;
+    document.querySelectorAll('[data-flow-mode-button]').forEach((button) => {
+      button.classList.toggle('is-active', button.dataset.flowModeButton === currentFlowMode);
+    });
+    applyPipeStates();
+  }
+
+  document.querySelectorAll('[data-flow-mode-button]').forEach((button) => {
+    button.addEventListener('click', () => setFlowMode(button.dataset.flowModeButton));
+  });
+
+  document.querySelectorAll('[data-global-hydraulic-control]').forEach((control) => {
+    control.addEventListener('input', () => {
+      stopPlayback();
+      if (control.dataset.globalHydraulicControl === 'velocity') {
+        setGlobalHydraulicState({ velocity: Number(control.value) });
+      }
+      if (control.dataset.globalHydraulicControl === 'waterLevel') {
+        setGlobalHydraulicState({ waterLevel: Number(control.value) / 100 });
+      }
+    });
+  });
+
+	  document.querySelectorAll('[data-weather-control]').forEach((control) => {
+	    control.addEventListener('input', () => {
+	      stopPlayback();
+	      if (control.dataset.weatherControl === 'rainfall') {
+	        setRainfallControl(Number(control.value) / 100, { reason: 'rainfall-control' });
+	      }
+	    });
+	  });
+
+	  document.querySelectorAll('[data-exception-control]').forEach((control) => {
+	    control.addEventListener('input', () => {
+	      const selected = OBJECT_CONTROL_STATE.selected;
+	      if (!selected) return;
+	      if (control.dataset.exceptionControl === 'blockage') {
+	        setObjectException(selected.objectType, selected.id, {
+	          blockage: Number(control.value) / 100,
+	        }, { reason: 'object-blockage-control' });
+	      }
+	    });
+	  });
+
+	  window.PIPE_DEFINITIONS = PIPE_DEFINITIONS;
+	  window.PIPE_BY_ID = PIPE_BY_ID;
+	  window.PIPE_STATE = PIPE_STATE;
+	  window.NETWORK_REGISTRY_VERSION = NETWORK_REGISTRY?.version || 'inline-fallback';
+	  window.GLOBAL_HYDRAULIC_STATE = GLOBAL_HYDRAULIC_STATE;
+	  window.WEATHER_STATE = WEATHER_STATE;
+	  window.SWMM_CONTROL_STATE = OBJECT_CONTROL_STATE;
+	  window.ASSET_DEFINITIONS = ASSET_DEFINITIONS;
+  window.ASSET_BY_ID = ASSET_BY_ID;
+  window.ASSET_STATE = ASSET_STATE;
+  window.listPipes = listPipes;
+  window.listAssets = listAssets;
+  window.getPipeState = getPipeState;
+  window.getAssetState = getAssetState;
+  window.getGlobalHydraulicState = getGlobalHydraulicState;
+	  window.setWeatherState = setWeatherState;
+	  window.setRainfallControl = setRainfallControl;
+	  window.setPipeState = setPipeState;
+	  window.setAssetState = setAssetState;
+	  window.setObjectException = setObjectException;
+	  window.selectObject = selectObject;
+	  window.buildSwmmControlPayload = buildSwmmControlPayload;
+	  window.setGlobalHydraulicState = setGlobalHydraulicState;
+  window.applyPipeStates = applyPipeStates;
+  window.applyAssetStates = applyAssetStates;
+  window.setFlowMode = setFlowMode;
+  window.PLAYBACK_DATA = PLAYBACK_DATA;
+  window.PLAYBACK_STATE = PLAYBACK_STATE;
+  window.applySwmmStatePayload = applySwmmStatePayload;
+  window.applyPlaybackFrame = applyPlaybackFrame;
+  window.startPlayback = startPlayback;
+  window.stopPlayback = stopPlayback;
+  window.setPlaybackScenario = setPlaybackScenario;
+
+	  setFlowMode(initialFlowMode);
+	  setupSelectableObjects();
+	  setWeatherState(WEATHER_STATE);
+	  setGlobalHydraulicState(GLOBAL_HYDRAULIC_STATE);
+	  setupPlaybackControls();
+	  updateSelectedObjectPanel();
+</script>
 </body>
 </html>
