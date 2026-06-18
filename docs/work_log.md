@@ -2,6 +2,14 @@
 
 최신 작업을 위에 기록한다. 새 작업을 시작하기 전에는 최근 3개 항목을 먼저 확인한다.
 
+## 2026-06-18 KST - 커넥터-맨홀 등 node-node relation을 내부 conduit로 변환
+
+- 작업 요약: SWMM GUI에서 `CONN_SEWER_09`, `CONN_SEWER_10` 사이가 `-o  o-`처럼 끊겨 보이던 문제를 수정했다. 원인은 relation 방향이 아니라, 기존 변환기가 `pipeSegment`만 SWMM `CONDUIT`로 만들고 커넥터-맨홀 같은 node-node relation은 수리 링크로 펼치지 않았기 때문이다. 이제 pipe가 아닌 두 hydraulic node 사이 relation은 최소 길이 1.0m 이상인 짧은 내부 conduit로 변환한다. 맨홀 SWMM 좌표도 시각 중심점이 아니라 relation이 붙는 하단 접속부 y를 기준으로 잡아 SWMM Map에서 연결선이 맨홀 하단부에 붙어 보이도록 했다.
+- 주요 파일: `scripts/editor_layout_to_swmm_inp.py`, `docs/work_log.md`
+- 검증 결과: `python3 -m py_compile scripts/editor_layout_to_swmm_inp.py server/swmm_engine_server.py` 통과. `/Users/onseoktae/Downloads/drainage-layout (1).json` 변환 결과 error 0개, warning 6개 유지. `REL_006_CONDUIT: CONN_SEWER_09 -> MH_SEWER_01`, `REL_009_CONDUIT: MH_SEWER_01 -> CONN_SEWER_10` 생성 확인. 전체 conduit 수는 내부 relation conduit 포함 65개이고, 막힘 제어 대상은 명시적 pipeSegment 41개로 유지했다. 강우 target은 9개로 유지했다. 수정된 서버를 `127.0.0.1:8765`로 재시작하고 `/editor/convert/validate` 응답에서 동일 결과를 확인했다.
+- 계층 영향: JSON -> SWMM INP 변환기의 topology 추론을 변경했다. `relation` 자체를 SWMM 객체로 승격한 것은 아니고, pipe가 생략된 node-node attach를 실제 수리 연결로 펼치기 위한 내부 conduit를 생성한다. React UI와 기존 SWMM 모델 원본은 변경하지 않았다.
+- 주의점: relation 방향이 반대면 선은 생성되지만 SWMM `from -> to` 흐름 방향이 반대로 잡힌다. 방향 warning은 기존처럼 별도로 확인해야 한다.
+
 ## 2026-06-18 KST - INP 단독 다운로드 warning 헤더 인코딩 수정
 
 - 작업 요약: React의 `INP만 다운로드` 버튼에서 `Failed to fetch`가 뜨던 문제를 수정했다. 변환 자체는 성공했지만 서버가 `X-Editor-Inp-Warnings` 응답 헤더에 한국어 warning 문자열을 그대로 넣으면서 HTTP 헤더가 깨져 브라우저 fetch가 실패했다. warning header를 ASCII JSON escape(`ensure_ascii=True`)로 보내도록 바꿨다.

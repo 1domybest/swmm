@@ -529,6 +529,42 @@ def convert_layout(
         fallback_height=map_height,
     )
     nodes_by_editor_id = {str(node["id"]): node for node in editor_nodes if "id" in node}
+    relation_links = [link for link in editor_links if link.get("type") == "relation"]
+    relation_attach_points_by_node: dict[str, list[Point]] = {}
+
+    def relation_endpoint_point(link: dict[str, Any], endpoint_name: str) -> Point | None:
+        endpoint = link.get(endpoint_name) or {}
+        node_id = str(endpoint.get("nodeId") or "")
+        node = nodes_by_editor_id.get(node_id)
+        if not node:
+            return None
+        attach = link.get("attach")
+        attach_key = "parentEndpoint" if endpoint_name == "from" else "childEndpoint"
+        if isinstance(attach, dict):
+            attach_endpoint = attach.get(attach_key)
+            if isinstance(attach_endpoint, dict) and str(attach_endpoint.get("nodeId")) == node_id:
+                point = attach_endpoint.get("point")
+                if isinstance(point, dict):
+                    return Point(number(point.get("x"), 0.0), number(point.get("y"), 0.0))
+        return standard_port_point(node, str(endpoint.get("portId")))
+
+    for relation in relation_links:
+        for endpoint_name in ("from", "to"):
+            endpoint = relation.get(endpoint_name) or {}
+            node_id = str(endpoint.get("nodeId") or "")
+            point = relation_endpoint_point(relation, endpoint_name)
+            if point is not None:
+                relation_attach_points_by_node.setdefault(node_id, []).append(point)
+
+    def hydraulic_point_for_node(node: dict[str, Any]) -> Point:
+        center = node_center(node)
+        if node.get("type") == "manhole":
+            attach_points = relation_attach_points_by_node.get(str(node.get("id")), [])
+            if attach_points:
+                # 맨홀은 시각 중심보다 실제 관이 붙는 하단 접속부를 SWMM node 위치로 쓴다.
+                return Point(center.x, max(point.y for point in attach_points))
+        return center
+
     used_node_ids: set[str] = set()
     used_link_ids: set[str] = set()
     swmm_nodes: dict[str, SwmmNode] = {}
@@ -569,7 +605,7 @@ def convert_layout(
         base_id = sanitize_id(editor_node.get("swmmId") or editor_node.get("id"), f"node_{len(swmm_nodes) + 1}")
         swmm_id = unique_id(base_id, used_node_ids)
         editor_to_swmm_node[editor_id] = swmm_id
-        point = node_center(editor_node)
+        point = hydraulic_point_for_node(editor_node)
         swmm_node = make_swmm_node(
             swmm_id,
             section,
@@ -599,7 +635,6 @@ def convert_layout(
         ))
         return node_id
 
-    relation_links = [link for link in editor_links if link.get("type") == "relation"]
     swmm_links: list[SwmmLink] = []
 
     def station_from_relation_attach(pipe: dict[str, Any], link: dict[str, Any], endpoint_name: str) -> float | None:
@@ -674,6 +709,26 @@ def convert_layout(
         blockage = number(props.get("blockage"), 0.0)
         roughness, initial_setting = blockage_to_roughness(blockage, PIPE_ROUGHNESS_N[pipe_kind])
         return size, pipe_kind, diameter, roughness, initial_setting
+
+    def hydraulic_relation_defaults(
+        from_node: dict[str, Any],
+        to_node: dict[str, Any],
+        relation: dict[str, Any],
+    ) -> tuple[str, float, float]:
+        candidates = [from_node.get("props") or {}, to_node.get("props") or {}, relation.get("props") or {}]
+        size = "medium"
+        pipe_kind = "storm"
+        for props in candidates:
+            if props.get("size") in PIPE_DIAMETER_M:
+                size = str(props.get("size"))
+                break
+        for props in candidates:
+            raw_kind = props.get("pipeKind") or props.get("manholeKind")
+            normalized = normalize_pipe_kind(raw_kind)
+            if raw_kind is not None:
+                pipe_kind = normalized
+                break
+        return pipe_kind, PIPE_DIAMETER_M[size], PIPE_ROUGHNESS_N[pipe_kind]
 
     def infer_pipe_station_direction(
         pipe: dict[str, Any],
@@ -783,6 +838,43 @@ def convert_layout(
         if editor_node.get("type") == "pipeSegment":
             add_pipe_segment_links(editor_node)
 
+    def add_internal_relation_links() -> None:
+        for relation in relation_links:
+            from_endpoint = relation.get("from") or {}
+            to_endpoint = relation.get("to") or {}
+            from_editor_node = nodes_by_editor_id.get(str(from_endpoint.get("nodeId") or ""))
+            to_editor_node = nodes_by_editor_id.get(str(to_endpoint.get("nodeId") or ""))
+            if not from_editor_node or not to_editor_node:
+                continue
+            if from_editor_node.get("type") == "pipeSegment" or to_editor_node.get("type") == "pipeSegment":
+                continue
+
+            from_node = resolve_non_pipe_endpoint(from_endpoint)
+            to_node = resolve_non_pipe_endpoint(to_endpoint)
+            if not from_node or not to_node:
+                continue
+
+            from_point = relation_endpoint_point(relation, "from") or standard_port_point(from_editor_node, str(from_endpoint.get("portId")))
+            to_point = relation_endpoint_point(relation, "to") or standard_port_point(to_editor_node, str(to_endpoint.get("portId")))
+            pipe_kind, diameter, roughness = hydraulic_relation_defaults(from_editor_node, to_editor_node, relation)
+            relation_id = str(relation.get("swmmId") or relation.get("id") or "relation")
+            add_link(SwmmLink(
+                id=f"{sanitize_id(relation_id, 'relation')}_CONDUIT",
+                kind="CONDUIT",
+                from_node=from_node,
+                to_node=to_node,
+                length=visual_length_m(from_point, to_point, scale_m_per_px),
+                roughness=roughness,
+                diameter=diameter,
+                slope_hint=DEFAULT_HORIZONTAL_SLOPE,
+                pipe_kind=pipe_kind,
+                source_editor_id=str(relation.get("id") or ""),
+                source_editor_type="relation",
+                source_editor_name=str(relation.get("name") or ""),
+            ))
+
+    add_internal_relation_links()
+
     def resolve_endpoint(endpoint: dict[str, Any]) -> str | None:
         node_id = str(endpoint.get("nodeId"))
         node = nodes_by_editor_id.get(node_id)
@@ -840,7 +932,10 @@ def convert_layout(
         ))
 
     def add_main_head_inflows() -> None:
-        conduits = [link for link in swmm_links if link.kind == "CONDUIT"]
+        conduits = [
+            link for link in swmm_links
+            if link.kind == "CONDUIT" and link.source_editor_type == "pipeSegment"
+        ]
         incoming_by_kind: dict[str, set[str]] = {}
         for link in conduits:
             incoming_by_kind.setdefault(link.pipe_kind, set()).add(link.to_node)
@@ -1145,7 +1240,7 @@ def render_conversion_report(result: ConvertResult, *, inp_text: str | None = No
                     "pipeKind": link.pipe_kind,
                 }
                 for link in controllable_links
-                if link.kind == "CONDUIT"
+                if link.kind == "CONDUIT" and link.source_editor_type != "relation"
             ],
         },
         "facilityNotes": facility_notes,

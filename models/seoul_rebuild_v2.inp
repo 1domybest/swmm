@@ -59,7 +59,7 @@ CATCH_BASIN_03                             74.00   26.00    0.00     0.70     18
 CONN_STORM_03                              74.00   26.00    0.00     0.50      0.0
 ELBOW_STORM_03                             59.75   40.25    0.00     0.50      0.0
 CONN_STORM_05                             -85.91  185.91    0.00     0.50      0.0
-MH_COMB_01                                -15.08  115.08    0.00     1.20     20.0
+MH_COMB_01                               -111.66  211.66    0.00     1.20     20.0
 CONN_SEWER_05                             -85.91  185.91    0.00     0.50      0.0
 CONN_SEWER_06                             -85.91  185.91    0.00     0.50      0.0
 CONN_COMB_01                             -111.66  211.66    0.00     0.50      0.0
@@ -80,8 +80,8 @@ CATCH_BASIN_04                             74.00   26.00    0.00     0.70     18
 CONN_STORM_04                              74.00   26.00    0.00     0.50      0.0
 ELBOW_STORM_04                             59.75   40.25    0.00     0.50      0.0
 CONN_STORM_06                             -85.91  185.91    0.00     0.50      0.0
-MH_SEWER_01                              -103.46  203.46    0.00     1.20     20.0
-MH_STORM_01                               -64.17  164.17    0.00     1.20     20.0
+MH_SEWER_01                              -288.43  388.43    0.00     1.20     20.0
+MH_STORM_01                              -209.85  309.85    0.00     1.20     20.0
 PIPE_STORM_MAIN_01_station_000           -209.85  309.85    0.00     0.50      0.0
 PIPE_SEWER_MAIN_01_station_000           -286.56  386.56    0.00     0.50      0.0
 PIPE_INTERCEPTOR_01_station_000          -898.82  998.82    0.00     0.50      0.0
@@ -142,6 +142,30 @@ PIPE_STORM_LATERAL_V_04                  ELBOW_STORM_04                         
 PIPE_SEWER_LATERAL_V_02                  ELBOW_SEWER_02                           CONN_SEWER_08                            329.45 0.013     0.00     0.00      0.00     0.00
 PIPE_STORM_LATERAL_V_01                  ELBOW_STORM_01                           CONN_STORM_08                            211.10 0.013     0.00     0.00      0.00     0.00
 PIPE_STORM_LATERAL_V_02                  ELBOW_STORM_02                           CONN_STORM_07                            211.46 0.013     0.00     0.00      0.00     0.00
+REL_001_CONDUIT                          APT_01                                   CONN_SEWER_01                              1.03 0.013     0.00     0.00      0.00     0.00
+REL_006_CONDUIT                          CONN_SEWER_09                            MH_SEWER_01                                1.87 0.013     0.00     0.00      0.00     0.00
+REL_009_CONDUIT                          MH_SEWER_01                              CONN_SEWER_10                              1.00 0.013     0.00     0.00      0.00     0.00
+REL_015_CONDUIT                          APT_02                                   CONN_SEWER_02                              1.00 0.013     0.00     0.00      0.00     0.00
+REL_019_CONDUIT                          CONN_SEWER_12                            FAC_WATER_RECLAMATION_01                   1.00 0.013     0.00     0.00      0.00     0.00
+REL_021_CONDUIT                          FAC_WATER_RECLAMATION_01                 CONN_TREATED_01                            1.00 0.013     0.00     0.00      0.00     0.00
+REL_022_CONDUIT                          CATCH_BASIN_01                           CONN_STORM_01                              1.00 0.013     0.00     0.00      0.00     0.00
+REL_029_CONDUIT                          CONN_STORM_10                            MH_STORM_01                                1.00 0.013     0.00     0.00      0.00     0.00
+REL_030_CONDUIT                          MH_STORM_01                              CONN_STORM_09                              1.00 0.013     0.00     0.00      0.00     0.00
+REL_036_CONDUIT                          CONN_STORM_12                            FAC_PUMP_STATION_01                        1.00 0.013     0.00     0.00      0.00     0.00
+REL_038_CONDUIT                          HOUSE_01                                 CONN_SEWER_03                              1.00 0.013     0.00     0.00      0.00     0.00
+REL_042_CONDUIT                          HOUSE_02                                 CONN_SEWER_04                              1.00 0.013     0.00     0.00      0.00     0.00
+REL_046_CONDUIT                          CATCH_BASIN_03                           CONN_STORM_03                              1.00 0.013     0.00     0.00      0.00     0.00
+REL_057_CONDUIT                          CONN_COMB_01                             MH_COMB_01                                 1.00 0.013     0.00     0.00      0.00     0.00
+REL_058_CONDUIT                          MH_COMB_01                               CONN_COMB_02                               1.00 0.013     0.00     0.00      0.00     0.00
+REL_061_CONDUIT                          CONN_COMB_03                             FAC_OVERFLOW_CHAMBER_01                    1.00 0.013     0.00     0.00      0.00     0.00
+REL_062_CONDUIT                          FAC_OVERFLOW_CHAMBER_01                  CONN_OVERFLOW_01                           1.00 0.013     0.00     0.00      0.00     0.00
+REL_065_CONDUIT                          CONN_OVERFLOW_02                         OVERFLOW_OUTFALL_01                        1.00 0.013     0.00     0.00      0.00     0.00
+REL_066_CONDUIT                          FAC_PUMP_STATION_01                      CONN_STORM_13                              1.00 0.013     0.00     0.00      0.00     0.00
+REL_069_CONDUIT                          CONN_TREATED_02                          TREATED_OUTFALL_01                         1.00 0.013     0.00     0.00      0.00     0.00
+REL_070_CONDUIT                          CONN_STORM_14                            PUMP_OUTFALL_01                            1.00 0.013     0.00     0.00      0.00     0.00
+REL_071_CONDUIT                          FAC_OVERFLOW_CHAMBER_01                  CONN_COMB_04                               1.00 0.013     0.00     0.00      0.00     0.00
+REL_079_CONDUIT                          CATCH_BASIN_02                           CONN_STORM_02                              1.00 0.013     0.00     0.00      0.00     0.00
+REL_085_CONDUIT                          CATCH_BASIN_04                           CONN_STORM_04                              1.00 0.013     0.00     0.00      0.00     0.00
 
 [XSECTIONS]
 ;;Link                                   Shape      Geom1 Geom2 Geom3 Geom4 Barrels Culvert
@@ -185,6 +209,30 @@ PIPE_STORM_LATERAL_V_04                  CIRCULAR   0.30  0.00  0.00  0.00  1   
 PIPE_SEWER_LATERAL_V_02                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
 PIPE_STORM_LATERAL_V_01                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
 PIPE_STORM_LATERAL_V_02                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
+REL_001_CONDUIT                          CIRCULAR   0.30  0.00  0.00  0.00  1       0
+REL_006_CONDUIT                          CIRCULAR   0.60  0.00  0.00  0.00  1       0
+REL_009_CONDUIT                          CIRCULAR   0.60  0.00  0.00  0.00  1       0
+REL_015_CONDUIT                          CIRCULAR   0.30  0.00  0.00  0.00  1       0
+REL_019_CONDUIT                          CIRCULAR   1.00  0.00  0.00  0.00  1       0
+REL_021_CONDUIT                          CIRCULAR   1.00  0.00  0.00  0.00  1       0
+REL_022_CONDUIT                          CIRCULAR   0.30  0.00  0.00  0.00  1       0
+REL_029_CONDUIT                          CIRCULAR   0.60  0.00  0.00  0.00  1       0
+REL_030_CONDUIT                          CIRCULAR   0.60  0.00  0.00  0.00  1       0
+REL_036_CONDUIT                          CIRCULAR   1.00  0.00  0.00  0.00  1       0
+REL_038_CONDUIT                          CIRCULAR   0.30  0.00  0.00  0.00  1       0
+REL_042_CONDUIT                          CIRCULAR   0.30  0.00  0.00  0.00  1       0
+REL_046_CONDUIT                          CIRCULAR   0.30  0.00  0.00  0.00  1       0
+REL_057_CONDUIT                          CIRCULAR   0.60  0.00  0.00  0.00  1       0
+REL_058_CONDUIT                          CIRCULAR   0.60  0.00  0.00  0.00  1       0
+REL_061_CONDUIT                          CIRCULAR   0.60  0.00  0.00  0.00  1       0
+REL_062_CONDUIT                          CIRCULAR   0.60  0.00  0.00  0.00  1       0
+REL_065_CONDUIT                          CIRCULAR   0.60  0.00  0.00  0.00  1       0
+REL_066_CONDUIT                          CIRCULAR   1.00  0.00  0.00  0.00  1       0
+REL_069_CONDUIT                          CIRCULAR   1.00  0.00  0.00  0.00  1       0
+REL_070_CONDUIT                          CIRCULAR   1.00  0.00  0.00  0.00  1       0
+REL_071_CONDUIT                          CIRCULAR   1.00  0.00  0.00  0.00  1       0
+REL_079_CONDUIT                          CIRCULAR   0.30  0.00  0.00  0.00  1       0
+REL_085_CONDUIT                          CIRCULAR   0.30  0.00  0.00  0.00  1       0
 
 [LOSSES]
 ;;Link                                   InletLoss OutletLoss AverageLoss FlapGate SeepageRate
@@ -228,6 +276,30 @@ PIPE_STORM_LATERAL_V_04                  0.00      0.00       0.00        NO    
 PIPE_SEWER_LATERAL_V_02                  0.00      0.00       0.00        NO       0.00
 PIPE_STORM_LATERAL_V_01                  0.00      0.00       0.00        NO       0.00
 PIPE_STORM_LATERAL_V_02                  0.00      0.00       0.00        NO       0.00
+REL_001_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_006_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_009_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_015_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_019_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_021_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_022_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_029_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_030_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_036_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_038_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_042_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_046_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_057_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_058_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_061_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_062_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_065_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_066_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_069_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_070_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_071_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_079_CONDUIT                          0.00      0.00       0.00        NO       0.00
+REL_085_CONDUIT                          0.00      0.00       0.00        NO       0.00
 
 [INFLOWS]
 ;;Node                                   Constituent Time Series       Type   Mfactor Sfactor Baseline Pattern
@@ -308,7 +380,7 @@ CATCH_BASIN_03                           2155.19          1148.00
 CONN_STORM_03                            2203.44          1148.00         
 ELBOW_STORM_03                           2264.74          1133.75         
 CONN_STORM_05                            2278.99          988.09          
-MH_COMB_01                               2434.77          1058.92         
+MH_COMB_01                               2434.77          962.34          
 CONN_SEWER_05                            1655.88          988.09          
 CONN_SEWER_06                            1909.47          988.09          
 CONN_COMB_01                             2402.27          962.34          
@@ -333,8 +405,8 @@ CATCH_BASIN_04                           2726.19          1148.00
 CONN_STORM_04                            2677.94          1148.00         
 ELBOW_STORM_04                           2617.19          1133.75         
 CONN_STORM_06                            2602.94          988.09          
-MH_SEWER_01                              402.95           970.54          
-MH_STORM_01                              1079.89          1009.83         
+MH_SEWER_01                              402.95           785.57          
+MH_STORM_01                              1079.89          864.15          
 PIPE_STORM_MAIN_01_station_000           91.88            864.15          
 PIPE_SEWER_MAIN_01_station_000           90.39            787.44          
 PIPE_INTERCEPTOR_01_station_000          50.00            175.18          
