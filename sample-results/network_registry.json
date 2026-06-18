@@ -1,0 +1,1487 @@
+{
+  "version": "2026-06-11-control-registry-v1",
+  "pipes": [
+    {
+      "id": "sep_sewer_lateral_apartment_1",
+      "swmmId": "sep_sewer_lateral_apartment_1",
+      "htmlId": "sep_sewer_lateral_apartment_1",
+      "label": "분류식 아파트 1 오수연결관",
+      "system": "separate",
+      "waterType": "sewer",
+      "size": "small",
+      "direction": "right-down",
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "sep_apartment_1",
+        "toNode": "sep_sewer_manhole",
+        "lengthM": 55,
+        "diameterM": 0.45,
+        "roughnessN": 0.015,
+        "slope": 0.051818,
+        "bendLossK": 0.35,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "sep_sewer_lateral_apartment_1__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "sep_sewer_lateral_apartment_1",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "sep_sewer_lateral_apartment_2",
+      "swmmId": "sep_sewer_lateral_apartment_2",
+      "htmlId": "sep_sewer_lateral_apartment_2",
+      "label": "분류식 아파트 2 오수연결관",
+      "system": "separate",
+      "waterType": "sewer",
+      "size": "small",
+      "direction": "left-down",
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "sep_apartment_2",
+        "toNode": "sep_sewer_manhole",
+        "lengthM": 55,
+        "diameterM": 0.45,
+        "roughnessN": 0.015,
+        "slope": 0.05,
+        "bendLossK": 0.35,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "sep_sewer_lateral_apartment_2__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "sep_sewer_lateral_apartment_2",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "sep_storm_lateral_catch_basin_1",
+      "swmmId": "sep_storm_lateral_catch_basin_1",
+      "htmlId": "sep_storm_lateral_catch_basin_1",
+      "label": "분류식 빗물받이 1 우수연결관",
+      "system": "separate",
+      "waterType": "storm",
+      "size": "small",
+      "direction": "right-down",
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "sep_catch_basin_1",
+        "toNode": "sep_storm_manhole",
+        "lengthM": 42,
+        "diameterM": 0.45,
+        "roughnessN": 0.018,
+        "slope": 0.055952,
+        "bendLossK": 0.35,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "sep_storm_lateral_catch_basin_1__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "sep_storm_lateral_catch_basin_1",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "sep_storm_lateral_catch_basin_2",
+      "swmmId": "sep_storm_lateral_catch_basin_2",
+      "htmlId": "sep_storm_lateral_catch_basin_2",
+      "label": "분류식 빗물받이 2 우수연결관",
+      "system": "separate",
+      "waterType": "storm",
+      "size": "small",
+      "direction": "right-down",
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "sep_catch_basin_2",
+        "toNode": "sep_storm_manhole",
+        "lengthM": 42,
+        "diameterM": 0.45,
+        "roughnessN": 0.018,
+        "slope": 0.053571,
+        "bendLossK": 0.35,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "sep_storm_lateral_catch_basin_2__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "sep_storm_lateral_catch_basin_2",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "sep_storm_trunk",
+      "swmmId": "sep_storm_trunk",
+      "htmlId": "sep_storm_trunk",
+      "label": "우수 간선관거",
+      "system": "separate",
+      "waterType": "storm",
+      "size": "large",
+      "direction": "right",
+      "alwaysFlow": true,
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "sep_storm_trunk_inlet",
+        "toNode": "storm_pump_station",
+        "lengthM": 520,
+        "diameterM": 1.6,
+        "roughnessN": 0.015,
+        "slope": 0.001346,
+        "bendLossK": 0,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "sep_storm_trunk__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "sep_storm_trunk",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "sep_interceptor",
+      "swmmId": "sep_interceptor",
+      "htmlId": "sep_interceptor",
+      "label": "차집관거",
+      "system": "separate",
+      "waterType": "sewer",
+      "size": "large",
+      "direction": "right",
+      "alwaysFlow": true,
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "sep_interceptor_join",
+        "toNode": "water_reclamation_center",
+        "lengthM": 620,
+        "diameterM": 1.6,
+        "roughnessN": 0.016,
+        "slope": 0.001129,
+        "bendLossK": 0,
+        "maxFlowCms": 1.45
+      },
+      "blockageControl": {
+        "id": "sep_interceptor__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "sep_interceptor",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "sep_storm_main_1",
+      "swmmId": "sep_storm_main_1",
+      "htmlId": "sep_storm_main_1",
+      "label": "우수 본관 1",
+      "system": "separate",
+      "waterType": "storm",
+      "size": "medium",
+      "direction": "right",
+      "alwaysFlow": true,
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "sep_storm_upstream",
+        "toNode": "sep_storm_manhole",
+        "lengthM": 260,
+        "diameterM": 1.2,
+        "roughnessN": 0.015,
+        "slope": 0.001154,
+        "bendLossK": 0,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "sep_storm_main_1__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "sep_storm_main_1",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "sep_storm_main_2",
+      "swmmId": "sep_storm_main_2",
+      "htmlId": "sep_storm_main_2",
+      "label": "우수 본관 2",
+      "system": "separate",
+      "waterType": "storm",
+      "size": "medium",
+      "direction": "right",
+      "alwaysFlow": true,
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "sep_storm_manhole",
+        "toNode": "sep_storm_downstream",
+        "lengthM": 310,
+        "diameterM": 1.2,
+        "roughnessN": 0.015,
+        "slope": 0.00129,
+        "bendLossK": 0,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "sep_storm_main_2__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "sep_storm_main_2",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "sep_storm_main_to_trunk",
+      "swmmId": "sep_storm_main_to_trunk",
+      "htmlId": "sep_storm_main_to_trunk",
+      "label": "우수 본관 2에서 우수 간선관거로 내려가는 연결관",
+      "system": "separate",
+      "waterType": "storm",
+      "size": "medium",
+      "direction": "right-down",
+      "alwaysFlow": true,
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "sep_storm_downstream",
+        "toNode": "sep_storm_trunk_inlet",
+        "lengthM": 120,
+        "diameterM": 1.2,
+        "roughnessN": 0.015,
+        "slope": 0.004167,
+        "bendLossK": 0.35,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "sep_storm_main_to_trunk__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "sep_storm_main_to_trunk",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "sep_sewer_main_1",
+      "swmmId": "sep_sewer_main_1",
+      "htmlId": "sep_sewer_main_1",
+      "label": "오수 본관 1",
+      "system": "separate",
+      "waterType": "sewer",
+      "size": "medium",
+      "direction": "right",
+      "alwaysFlow": true,
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "sep_sewer_upstream",
+        "toNode": "sep_sewer_manhole",
+        "lengthM": 230,
+        "diameterM": 1.05,
+        "roughnessN": 0.015,
+        "slope": 0.001087,
+        "bendLossK": 0,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "sep_sewer_main_1__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "sep_sewer_main_1",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "sep_sewer_main_2",
+      "swmmId": "sep_sewer_main_2",
+      "htmlId": "sep_sewer_main_2",
+      "label": "오수 본관 2",
+      "system": "separate",
+      "waterType": "sewer",
+      "size": "medium",
+      "direction": "right",
+      "alwaysFlow": true,
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "sep_sewer_manhole",
+        "toNode": "sep_sewer_downstream",
+        "lengthM": 260,
+        "diameterM": 1.05,
+        "roughnessN": 0.015,
+        "slope": 0.001346,
+        "bendLossK": 0,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "sep_sewer_main_2__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "sep_sewer_main_2",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "sep_sewer_main_to_interceptor",
+      "swmmId": "sep_sewer_main_to_interceptor",
+      "htmlId": "sep_sewer_main_to_interceptor",
+      "label": "오수 본관 2에서 차집관거로 내려가는 연결관",
+      "system": "separate",
+      "waterType": "sewer",
+      "size": "medium",
+      "direction": "right-down",
+      "alwaysFlow": true,
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "sep_sewer_downstream",
+        "toNode": "sep_interceptor_join",
+        "lengthM": 110,
+        "diameterM": 1.05,
+        "roughnessN": 0.015,
+        "slope": 0.005,
+        "bendLossK": 0.35,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "sep_sewer_main_to_interceptor__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "sep_sewer_main_to_interceptor",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "storm_pump_discharge_pipe",
+      "swmmId": "storm_pump_discharge_pipe",
+      "htmlId": "storm_pump_discharge_pipe",
+      "label": "펌프 토출관",
+      "system": "separate",
+      "waterType": "storm",
+      "size": "large",
+      "direction": "right",
+      "alwaysFlow": true,
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "pump_discharge_node",
+        "toNode": "pump_outfall",
+        "lengthM": 240,
+        "diameterM": 1.35,
+        "roughnessN": 0.013,
+        "slope": 0.003958,
+        "bendLossK": 0,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "storm_pump_discharge_pipe__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "storm_pump_discharge_pipe",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "treatment_effluent_pipe",
+      "swmmId": "treatment_effluent_pipe",
+      "htmlId": "treatment_effluent_pipe",
+      "label": "처리수 방류관",
+      "system": "treatment",
+      "waterType": "treated",
+      "size": "large",
+      "direction": "right",
+      "alwaysFlow": true,
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "water_reclamation_center",
+        "toNode": "treated_outfall",
+        "lengthM": 360,
+        "diameterM": 1.35,
+        "roughnessN": 0.014,
+        "slope": 0.002222,
+        "bendLossK": 0,
+        "maxFlowCms": 1.3
+      },
+      "blockageControl": {
+        "id": "treatment_effluent_pipe__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "treatment_effluent_pipe",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "comb_sewer_lateral_house_1",
+      "swmmId": "comb_sewer_lateral_house_1",
+      "htmlId": "comb_sewer_lateral_house_1",
+      "label": "합류식 주거지 1 오수연결관",
+      "system": "combined",
+      "waterType": "sewer",
+      "size": "small",
+      "direction": "right-down",
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "comb_house_1",
+        "toNode": "combined_manhole",
+        "lengthM": 58,
+        "diameterM": 0.45,
+        "roughnessN": 0.015,
+        "slope": 0.047414,
+        "bendLossK": 0.35,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "comb_sewer_lateral_house_1__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "comb_sewer_lateral_house_1",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "comb_sewer_lateral_house_2",
+      "swmmId": "comb_sewer_lateral_house_2",
+      "htmlId": "comb_sewer_lateral_house_2",
+      "label": "합류식 주거지 2 오수연결관",
+      "system": "combined",
+      "waterType": "sewer",
+      "size": "small",
+      "direction": "right-down",
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "comb_house_2",
+        "toNode": "combined_manhole",
+        "lengthM": 58,
+        "diameterM": 0.45,
+        "roughnessN": 0.015,
+        "slope": 0.04569,
+        "bendLossK": 0.35,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "comb_sewer_lateral_house_2__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "comb_sewer_lateral_house_2",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "comb_storm_lateral_catch_basin_1",
+      "swmmId": "comb_storm_lateral_catch_basin_1",
+      "htmlId": "comb_storm_lateral_catch_basin_1",
+      "label": "합류식 빗물받이 1 우수연결관",
+      "system": "combined",
+      "waterType": "storm",
+      "size": "small",
+      "direction": "right-down",
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "comb_catch_basin_1",
+        "toNode": "combined_manhole",
+        "lengthM": 48,
+        "diameterM": 0.45,
+        "roughnessN": 0.018,
+        "slope": 0.053125,
+        "bendLossK": 0.35,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "comb_storm_lateral_catch_basin_1__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "comb_storm_lateral_catch_basin_1",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "comb_main_1",
+      "swmmId": "comb_main_1",
+      "htmlId": "comb_main_1",
+      "label": "합류식 본관 1",
+      "system": "combined",
+      "waterType": "combined",
+      "size": "medium",
+      "direction": "right",
+      "alwaysFlow": true,
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "comb_upstream",
+        "toNode": "combined_manhole",
+        "lengthM": 330,
+        "diameterM": 1.2,
+        "roughnessN": 0.015,
+        "slope": 0.001061,
+        "bendLossK": 0,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "comb_main_1__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "comb_main_1",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "comb_main_2",
+      "swmmId": "comb_main_2",
+      "htmlId": "comb_main_2",
+      "label": "합류식 본관 2",
+      "system": "combined",
+      "waterType": "combined",
+      "size": "medium",
+      "direction": "right",
+      "alwaysFlow": true,
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "combined_manhole",
+        "toNode": "overflow_chamber",
+        "lengthM": 360,
+        "diameterM": 1.2,
+        "roughnessN": 0.015,
+        "slope": 0.001667,
+        "bendLossK": 0,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "comb_main_2__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "comb_main_2",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "overflow_to_interceptor_drop",
+      "swmmId": "overflow_to_interceptor_drop",
+      "htmlId": "overflow_to_interceptor_drop",
+      "label": "우수토실 일반 유량에서 차집관거로 내려가는 관",
+      "system": "combined",
+      "waterType": "combined",
+      "size": "medium",
+      "direction": "down",
+      "alwaysFlow": true,
+      "physics": {
+        "linkType": "ORIFICE",
+        "fromNode": "overflow_chamber",
+        "toNode": "sep_interceptor_join",
+        "lengthM": 70,
+        "diameterM": 0.95,
+        "roughnessN": 0.015,
+        "slope": 0.002857,
+        "bendLossK": 0.65,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "overflow_to_interceptor_drop__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "overflow_to_interceptor_drop",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "overflow_pipe",
+      "swmmId": "overflow_pipe",
+      "htmlId": "overflow_pipe",
+      "label": "월류관",
+      "system": "combined",
+      "waterType": "overflow",
+      "size": "large",
+      "direction": "right",
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "overflow_chamber",
+        "toNode": "overflow_outfall",
+        "lengthM": 280,
+        "diameterM": 1.35,
+        "roughnessN": 0.016,
+        "slope": 0.005357,
+        "bendLossK": 0,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "overflow_pipe__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "overflow_pipe",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    },
+    {
+      "id": "comb_storm_lateral_catch_basin_2",
+      "swmmId": "comb_storm_lateral_catch_basin_2",
+      "htmlId": "comb_storm_lateral_catch_basin_2",
+      "label": "합류식 빗물받이 2 우수연결관",
+      "system": "combined",
+      "waterType": "storm",
+      "size": "small",
+      "direction": "right-down",
+      "physics": {
+        "linkType": "CONDUIT",
+        "fromNode": "comb_catch_basin_2",
+        "toNode": "combined_manhole",
+        "lengthM": 48,
+        "diameterM": 0.45,
+        "roughnessN": 0.018,
+        "slope": 0.051042,
+        "bendLossK": 0.35,
+        "maxFlowCms": 0
+      },
+      "blockageControl": {
+        "id": "comb_storm_lateral_catch_basin_2__blockage",
+        "type": "blockage",
+        "targetKind": "pipe",
+        "targetId": "comb_storm_lateral_catch_basin_2",
+        "settingKey": "blockage_ratio",
+        "min": 0.0,
+        "max": 1.0,
+        "implementation": "effective_capacity_scale"
+      }
+    }
+  ],
+  "assets": [
+    {
+      "id": "sep_catch_basin_1",
+      "swmmId": "sep_catch_basin_1",
+      "htmlId": "asset-sep-catch-basin-1",
+      "label": "분류식 빗물받이 1",
+      "type": "catch_basin",
+      "system": "separate",
+      "waterType": "storm",
+      "domId": "asset-sep-catch-basin-1",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 11.0,
+        "maxDepthM": 1.2,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.7,
+        "pondedAreaM2": 12
+      }
+    },
+    {
+      "id": "sep_catch_basin_2",
+      "swmmId": "sep_catch_basin_2",
+      "htmlId": "asset-sep-catch-basin-2",
+      "label": "분류식 빗물받이 2",
+      "type": "catch_basin",
+      "system": "separate",
+      "waterType": "storm",
+      "domId": "asset-sep-catch-basin-2",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 10.9,
+        "maxDepthM": 1.2,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.7,
+        "pondedAreaM2": 12
+      }
+    },
+    {
+      "id": "comb_catch_basin_1",
+      "swmmId": "comb_catch_basin_1",
+      "htmlId": "asset-comb-catch-basin-1",
+      "label": "합류식 빗물받이 1",
+      "type": "catch_basin",
+      "system": "combined",
+      "waterType": "storm",
+      "domId": "asset-comb-catch-basin-1",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 10.9,
+        "maxDepthM": 1.2,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.7,
+        "pondedAreaM2": 12
+      }
+    },
+    {
+      "id": "comb_catch_basin_2",
+      "swmmId": "comb_catch_basin_2",
+      "htmlId": "asset-comb-catch-basin-2",
+      "label": "합류식 빗물받이 2",
+      "type": "catch_basin",
+      "system": "combined",
+      "waterType": "storm",
+      "domId": "asset-comb-catch-basin-2",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 10.8,
+        "maxDepthM": 1.2,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.7,
+        "pondedAreaM2": 12
+      }
+    },
+    {
+      "id": "sep_sewer_manhole",
+      "swmmId": "sep_sewer_manhole",
+      "htmlId": "asset-sep-sewer-manhole",
+      "label": "분류식 오수 맨홀",
+      "type": "manhole",
+      "system": "separate",
+      "waterType": "sewer",
+      "domId": "asset-sep-sewer-manhole",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 8.45,
+        "maxDepthM": 3.6,
+        "initialDepthM": 0,
+        "surchargeDepthM": 1.2,
+        "pondedAreaM2": 20
+      }
+    },
+    {
+      "id": "sep_storm_manhole",
+      "swmmId": "sep_storm_manhole",
+      "htmlId": "asset-sep-storm-manhole",
+      "label": "분류식 우수 맨홀",
+      "type": "manhole",
+      "system": "separate",
+      "waterType": "storm",
+      "domId": "asset-sep-storm-manhole",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 8.65,
+        "maxDepthM": 3.2,
+        "initialDepthM": 0,
+        "surchargeDepthM": 1.2,
+        "pondedAreaM2": 20
+      }
+    },
+    {
+      "id": "combined_manhole",
+      "swmmId": "combined_manhole",
+      "htmlId": "asset-combined-manhole",
+      "label": "합류식 맨홀",
+      "type": "manhole",
+      "system": "combined",
+      "waterType": "combined",
+      "domId": "asset-combined-manhole",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 8.35,
+        "maxDepthM": 3.5,
+        "initialDepthM": 0,
+        "surchargeDepthM": 1.2,
+        "pondedAreaM2": 20
+      }
+    },
+    {
+      "id": "overflow_chamber",
+      "swmmId": "overflow_chamber",
+      "htmlId": "asset-overflow-chamber",
+      "label": "우수토실-월류시설",
+      "type": "overflow_facility",
+      "system": "combined",
+      "waterType": "combined",
+      "domId": "asset-overflow-chamber",
+      "physics": {
+        "nodeType": "STORAGE",
+        "elevationM": 7.75,
+        "maxDepthM": 2.8,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    },
+    {
+      "id": "storm_pump_station",
+      "swmmId": "storm_pump_station",
+      "htmlId": "asset-storm-pump-station",
+      "label": "빗물펌프장",
+      "type": "pump_station",
+      "system": "separate",
+      "waterType": "storm",
+      "domId": "asset-storm-pump-station",
+      "physics": {
+        "nodeType": "STORAGE",
+        "elevationM": 7.05,
+        "maxDepthM": 3.3,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    },
+    {
+      "id": "water_reclamation_center",
+      "swmmId": "water_reclamation_center",
+      "htmlId": "asset-water-reclamation-center",
+      "label": "물재생센터",
+      "type": "treatment_facility",
+      "system": "treatment",
+      "waterType": "treated",
+      "domId": "asset-water-reclamation-center",
+      "physics": {
+        "nodeType": "STORAGE",
+        "elevationM": 6.85,
+        "maxDepthM": 4.0,
+        "initialDepthM": 0.15,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    },
+    {
+      "id": "overflow_outfall",
+      "swmmId": "overflow_outfall",
+      "htmlId": "asset-overflow-outfall",
+      "label": "월류 방류구",
+      "type": "outfall",
+      "system": "combined",
+      "waterType": "overflow",
+      "domId": "asset-overflow-outfall",
+      "physics": {
+        "nodeType": "OUTFALLS",
+        "elevationM": 6.25,
+        "maxDepthM": 0,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    },
+    {
+      "id": "pump_outfall",
+      "swmmId": "pump_outfall",
+      "htmlId": "asset-pump-outfall",
+      "label": "펌프 방류구",
+      "type": "outfall",
+      "system": "separate",
+      "waterType": "storm",
+      "domId": "asset-pump-outfall",
+      "physics": {
+        "nodeType": "OUTFALLS",
+        "elevationM": 6.2,
+        "maxDepthM": 0,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    },
+    {
+      "id": "treated_outfall",
+      "swmmId": "treated_outfall",
+      "htmlId": "asset-treated-outfall",
+      "label": "처리수 방류구",
+      "type": "outfall",
+      "system": "treatment",
+      "waterType": "treated",
+      "domId": "asset-treated-outfall",
+      "physics": {
+        "nodeType": "OUTFALLS",
+        "elevationM": 6.05,
+        "maxDepthM": 0,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    }
+  ],
+  "surfaces": [
+    {
+      "id": "sep_apartment_1",
+      "swmmId": "sep_apartment_1",
+      "label": "분류식 아파트 1",
+      "type": "apartment",
+      "system": "separate",
+      "waterType": "sewer",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 11.3,
+        "maxDepthM": 1.0,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    },
+    {
+      "id": "sep_apartment_2",
+      "swmmId": "sep_apartment_2",
+      "label": "분류식 아파트 2",
+      "type": "apartment",
+      "system": "separate",
+      "waterType": "sewer",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 11.2,
+        "maxDepthM": 1.0,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    },
+    {
+      "id": "comb_house_1",
+      "swmmId": "comb_house_1",
+      "label": "합류식 주거지 1",
+      "type": "house",
+      "system": "combined",
+      "waterType": "sewer",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 11.1,
+        "maxDepthM": 1.0,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    },
+    {
+      "id": "comb_house_2",
+      "swmmId": "comb_house_2",
+      "label": "합류식 주거지 2",
+      "type": "house",
+      "system": "combined",
+      "waterType": "sewer",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 11.0,
+        "maxDepthM": 1.0,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    }
+  ],
+  "modelOnlyNodes": [
+    {
+      "id": "sep_sewer_upstream",
+      "swmmId": "sep_sewer_upstream",
+      "label": "분류식 오수 상류 계산 노드",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 8.7,
+        "maxDepthM": 2.0,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    },
+    {
+      "id": "sep_sewer_downstream",
+      "swmmId": "sep_sewer_downstream",
+      "label": "분류식 오수 하류 계산 노드",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 8.1,
+        "maxDepthM": 2.4,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    },
+    {
+      "id": "sep_interceptor_join",
+      "swmmId": "sep_interceptor_join",
+      "label": "차집관거 합류 계산 노드",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 7.55,
+        "maxDepthM": 3.0,
+        "initialDepthM": 0,
+        "surchargeDepthM": 1.0,
+        "pondedAreaM2": 20
+      }
+    },
+    {
+      "id": "sep_storm_upstream",
+      "swmmId": "sep_storm_upstream",
+      "label": "분류식 우수 상류 계산 노드",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 8.95,
+        "maxDepthM": 2.4,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    },
+    {
+      "id": "sep_storm_downstream",
+      "swmmId": "sep_storm_downstream",
+      "label": "분류식 우수 하류 계산 노드",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 8.25,
+        "maxDepthM": 2.8,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    },
+    {
+      "id": "sep_storm_trunk_inlet",
+      "swmmId": "sep_storm_trunk_inlet",
+      "label": "우수 간선관거 유입 계산 노드",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 7.75,
+        "maxDepthM": 3.0,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    },
+    {
+      "id": "comb_upstream",
+      "swmmId": "comb_upstream",
+      "label": "합류식 상류 계산 노드",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 8.7,
+        "maxDepthM": 2.6,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    },
+    {
+      "id": "pump_discharge_node",
+      "swmmId": "pump_discharge_node",
+      "label": "펌프 토출 계산 노드",
+      "physics": {
+        "nodeType": "JUNCTIONS",
+        "elevationM": 7.15,
+        "maxDepthM": 2.0,
+        "initialDepthM": 0,
+        "surchargeDepthM": 0.5,
+        "pondedAreaM2": 0
+      }
+    }
+  ],
+  "controls": [
+    {
+      "id": "storm_pump_unit",
+      "swmmId": "storm_pump_unit",
+      "label": "빗물펌프 가동 제어",
+      "type": "pump",
+      "targetId": "storm_pump_station",
+      "settingKey": "target_setting",
+      "min": 0.0,
+      "max": 1.0
+    },
+    {
+      "id": "overflow_to_interceptor_drop",
+      "swmmId": "overflow_to_interceptor_drop",
+      "label": "우수토실 일반 유량부 개도 제어",
+      "type": "orifice",
+      "targetId": "overflow_chamber",
+      "settingKey": "target_setting",
+      "min": 0.0,
+      "max": 1.0
+    }
+  ],
+  "blockageControls": [
+    {
+      "id": "sep_sewer_lateral_apartment_1__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "sep_sewer_lateral_apartment_1",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "sep_sewer_lateral_apartment_2__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "sep_sewer_lateral_apartment_2",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "sep_storm_lateral_catch_basin_1__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "sep_storm_lateral_catch_basin_1",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "sep_storm_lateral_catch_basin_2__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "sep_storm_lateral_catch_basin_2",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "sep_storm_trunk__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "sep_storm_trunk",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "sep_interceptor__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "sep_interceptor",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "sep_storm_main_1__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "sep_storm_main_1",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "sep_storm_main_2__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "sep_storm_main_2",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "sep_storm_main_to_trunk__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "sep_storm_main_to_trunk",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "sep_sewer_main_1__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "sep_sewer_main_1",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "sep_sewer_main_2__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "sep_sewer_main_2",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "sep_sewer_main_to_interceptor__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "sep_sewer_main_to_interceptor",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "storm_pump_discharge_pipe__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "storm_pump_discharge_pipe",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "treatment_effluent_pipe__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "treatment_effluent_pipe",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "comb_sewer_lateral_house_1__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "comb_sewer_lateral_house_1",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "comb_sewer_lateral_house_2__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "comb_sewer_lateral_house_2",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "comb_storm_lateral_catch_basin_1__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "comb_storm_lateral_catch_basin_1",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "comb_main_1__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "comb_main_1",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "comb_main_2__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "comb_main_2",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "overflow_to_interceptor_drop__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "overflow_to_interceptor_drop",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "overflow_pipe__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "overflow_pipe",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "comb_storm_lateral_catch_basin_2__blockage",
+      "type": "blockage",
+      "targetKind": "pipe",
+      "targetId": "comb_storm_lateral_catch_basin_2",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "effective_capacity_scale"
+    },
+    {
+      "id": "sep_catch_basin_1__blockage",
+      "type": "blockage",
+      "targetKind": "asset",
+      "targetId": "sep_catch_basin_1",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "inlet_or_storage_resistance"
+    },
+    {
+      "id": "sep_catch_basin_2__blockage",
+      "type": "blockage",
+      "targetKind": "asset",
+      "targetId": "sep_catch_basin_2",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "inlet_or_storage_resistance"
+    },
+    {
+      "id": "comb_catch_basin_1__blockage",
+      "type": "blockage",
+      "targetKind": "asset",
+      "targetId": "comb_catch_basin_1",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "inlet_or_storage_resistance"
+    },
+    {
+      "id": "comb_catch_basin_2__blockage",
+      "type": "blockage",
+      "targetKind": "asset",
+      "targetId": "comb_catch_basin_2",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "inlet_or_storage_resistance"
+    },
+    {
+      "id": "sep_sewer_manhole__blockage",
+      "type": "blockage",
+      "targetKind": "asset",
+      "targetId": "sep_sewer_manhole",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "inlet_or_storage_resistance"
+    },
+    {
+      "id": "sep_storm_manhole__blockage",
+      "type": "blockage",
+      "targetKind": "asset",
+      "targetId": "sep_storm_manhole",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "inlet_or_storage_resistance"
+    },
+    {
+      "id": "combined_manhole__blockage",
+      "type": "blockage",
+      "targetKind": "asset",
+      "targetId": "combined_manhole",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "inlet_or_storage_resistance"
+    },
+    {
+      "id": "overflow_chamber__blockage",
+      "type": "blockage",
+      "targetKind": "asset",
+      "targetId": "overflow_chamber",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "inlet_or_storage_resistance"
+    },
+    {
+      "id": "storm_pump_station__blockage",
+      "type": "blockage",
+      "targetKind": "asset",
+      "targetId": "storm_pump_station",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "inlet_or_storage_resistance"
+    },
+    {
+      "id": "water_reclamation_center__blockage",
+      "type": "blockage",
+      "targetKind": "asset",
+      "targetId": "water_reclamation_center",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "inlet_or_storage_resistance"
+    },
+    {
+      "id": "overflow_outfall__blockage",
+      "type": "blockage",
+      "targetKind": "asset",
+      "targetId": "overflow_outfall",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "inlet_or_storage_resistance"
+    },
+    {
+      "id": "pump_outfall__blockage",
+      "type": "blockage",
+      "targetKind": "asset",
+      "targetId": "pump_outfall",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "inlet_or_storage_resistance"
+    },
+    {
+      "id": "treated_outfall__blockage",
+      "type": "blockage",
+      "targetKind": "asset",
+      "targetId": "treated_outfall",
+      "settingKey": "blockage_ratio",
+      "min": 0.0,
+      "max": 1.0,
+      "implementation": "inlet_or_storage_resistance"
+    }
+  ],
+  "physics": {
+    "pipeCapacityRule": "manning_with_effective_capacity_scale",
+    "flowTransferRule": "previous_node_outflow_becomes_next_node_inflow",
+    "backflowRule": "full_link_plus_upstream_inflow_plus_blockage"
+  }
+}

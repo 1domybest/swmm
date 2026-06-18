@@ -1,0 +1,244 @@
+[TITLE]
+;; Seoul drainage model rebuild v2
+;; This file is separate from the old design model.
+;; Existing HTML/SWMM IDs are kept only as the naming contract.
+
+[OPTIONS]
+FLOW_UNITS           CMS
+INFILTRATION         HORTON
+FLOW_ROUTING         DYNWAVE
+LINK_OFFSETS         DEPTH
+MIN_SLOPE            0
+ALLOW_PONDING        YES
+START_DATE           06/11/2026
+START_TIME           00:00:00
+REPORT_START_DATE    06/11/2026
+REPORT_START_TIME    00:00:00
+END_DATE             06/11/2026
+END_TIME             03:00:00
+REPORT_STEP          00:00:01
+WET_STEP             00:00:01
+DRY_STEP             00:01:00
+ROUTING_STEP         00:00:01
+VARIABLE_STEP        0.75
+NORMAL_FLOW_LIMITED  BOTH
+INERTIAL_DAMPING     PARTIAL
+SURCHARGE_METHOD     SLOT
+
+[EVAPORATION]
+CONSTANT             0.0
+
+[JUNCTIONS]
+;;Name                         Elev     MaxDepth InitDepth SurDepth Aponded
+road_runoff_sep_catch_basin_1              12.20    0.35     0.00      0.40     18.0
+road_runoff_sep_catch_basin_2              12.20    0.35     0.00      0.40     18.0
+sep_apartment_1                            11.35    1.00     0.00      0.50     0.0
+sep_apartment_2                            11.30    1.00     0.00      0.50     0.0
+sep_sewer_lateral_apartment_1_elbow_connector 11.33    0.80     0.00      0.30     0.0
+sep_sewer_lateral_apartment_2_elbow_connector 11.28    0.80     0.00      0.30     0.0
+sep_sewer_upstream                         8.70     2.40     0.00      0.50     0.0
+sep_sewer_main_1_apartment_1_connector     8.55     2.40     0.00      0.50     0.0
+sep_sewer_manhole                          8.45     3.60     0.00      1.20     20.0
+sep_sewer_main_2_apartment_2_connector     8.35     2.40     0.00      0.50     0.0
+sep_sewer_downstream                       8.10     2.40     0.00      0.50     0.0
+sep_storm_lateral_catch_basin_1_start      11.33    0.80     0.00      0.30     0.0
+sep_storm_lateral_catch_basin_1_elbow_connector 11.31    0.80     0.00      0.30     0.0
+sep_storm_lateral_catch_basin_2_start      11.33    0.80     0.00      0.30     0.0
+sep_storm_lateral_catch_basin_2_elbow_connector 11.31    0.80     0.00      0.30     0.0
+sep_storm_main_1_catch_basin_1_connector   8.75     2.40     0.00      0.50     0.0
+offscreen_catch_basin_storm_main_1         8.95     2.40     0.00      0.50     0.0
+sep_storm_manhole                          8.65     3.55     0.00      0.50     20.0
+sep_storm_main_2_catch_basin_2_connector   8.38     2.40     0.00      0.50     0.0
+sep_storm_main_2_outlet_connector          8.32     2.40     0.00      0.50     0.0
+sep_storm_main_to_trunk_elbow_connector    8.29     2.40     0.00      0.50     0.0
+sep_storm_trunk_upstream                   6.16     3.00     0.00      0.50     0.0
+sep_storm_trunk_main_2_drop_connector      5.60     3.00     0.00      0.50     0.0
+sep_storm_trunk_downstream                 5.01     3.00     0.00      0.50     0.0
+storm_pump_inlet_gate_node                 4.95     2.40     0.00      0.50     0.0
+storm_pump_discharge_node                  5.20     2.40     0.00      0.50     0.0
+pump_outfall_gate_node                     5.03     2.40     0.00      0.50     0.0
+
+[STORAGE]
+;;Name                         Elev     MaxDepth InitDepth Shape      Curve/Params          N/A  Fevap Psi Ksat IMD
+sep_catch_basin_1                          11.00    1.20     0.00      FUNCTIONAL 2.0     0      0      0    0
+sep_catch_basin_2                          11.00    1.20     0.00      FUNCTIONAL 2.0     0      0      0    0
+storm_pump_station                         4.70     2.40     0.00      FUNCTIONAL 25.0    0      0      0    0
+
+[OUTFALLS]
+;;Name                         Elev     Type       Stage Data       Gated
+pump_outfall                               5.02     FREE                        NO
+sep_sewer_boundary_outfall                 8.05     FREE                        NO
+
+[ORIFICES]
+;;Name                         From Node                    To Node                      Type   Offset Qcoeff Gated CloseTime
+sep_catch_basin_1_inlet_connector          road_runoff_sep_catch_basin_1              sep_catch_basin_1                          BOTTOM 0.00   0.65   NO    0
+sep_catch_basin_1_outlet_connector         sep_catch_basin_1                          sep_storm_lateral_catch_basin_1_start      SIDE   0.33   0.65   NO    0
+sep_catch_basin_2_inlet_connector          road_runoff_sep_catch_basin_2              sep_catch_basin_2                          BOTTOM 0.00   0.65   NO    0
+sep_catch_basin_2_outlet_connector         sep_catch_basin_2                          sep_storm_lateral_catch_basin_2_start      SIDE   0.33   0.65   NO    0
+storm_pump_inlet_gate                      storm_pump_inlet_gate_node                 storm_pump_station                         SIDE   0.00   0.75   NO    0
+pump_outfall_gate                          pump_outfall_gate_node                     pump_outfall                               SIDE   0.00   0.75   NO    0
+
+[PUMPS]
+;;Name                         From Node                    To Node                      Pump Curve        Status Startup Shutoff
+storm_pump_unit                            storm_pump_station                         storm_pump_discharge_node                  STORM_PUMP_CURVE  OFF    0.80    0.25
+
+[CONDUITS]
+;;Name                         From Node                    To Node                      Length Roughness InOffset OutOffset InitFlow MaxFlow
+sep_sewer_lateral_apartment_1_horizontal   sep_apartment_1                            sep_sewer_lateral_apartment_1_elbow_connector 18.00  0.015     0.00     0.00      0.00     0.00
+sep_sewer_lateral_apartment_1_vertical     sep_sewer_lateral_apartment_1_elbow_connector sep_sewer_main_1_apartment_1_connector     30.00  0.015     0.00     0.00      0.00     0.00
+sep_sewer_lateral_apartment_2_horizontal   sep_apartment_2                            sep_sewer_lateral_apartment_2_elbow_connector 18.00  0.015     0.00     0.00      0.00     0.00
+sep_sewer_lateral_apartment_2_vertical     sep_sewer_lateral_apartment_2_elbow_connector sep_sewer_main_2_apartment_2_connector     30.00  0.015     0.00     0.00      0.00     0.00
+sep_sewer_main_1_upstream_segment          sep_sewer_upstream                         sep_sewer_main_1_apartment_1_connector     185.00 0.015     0.00     0.00      0.00     0.00
+sep_sewer_main_1_downstream_segment        sep_sewer_main_1_apartment_1_connector     sep_sewer_manhole                          45.00  0.015     0.00     0.00      0.00     0.00
+sep_sewer_main_2_upstream_segment          sep_sewer_manhole                          sep_sewer_main_2_apartment_2_connector     60.00  0.015     0.00     0.00      0.00     0.00
+sep_sewer_main_2_downstream_segment        sep_sewer_main_2_apartment_2_connector     sep_sewer_downstream                       200.00 0.015     0.00     0.00      0.00     0.00
+sep_sewer_downstream_boundary_pipe         sep_sewer_downstream                       sep_sewer_boundary_outfall                 45.00  0.015     0.00     0.00      0.00     0.00
+sep_storm_lateral_catch_basin_1_horizontal sep_storm_lateral_catch_basin_1_start      sep_storm_lateral_catch_basin_1_elbow_connector 18.00  0.018     0.00     0.00      0.00     0.00
+sep_storm_lateral_catch_basin_1_vertical   sep_storm_lateral_catch_basin_1_elbow_connector sep_storm_main_1_catch_basin_1_connector   30.00  0.018     0.00     0.00      0.00     0.00
+sep_storm_lateral_catch_basin_2_horizontal sep_storm_lateral_catch_basin_2_start      sep_storm_lateral_catch_basin_2_elbow_connector 18.00  0.018     0.00     0.00      0.00     0.00
+sep_storm_lateral_catch_basin_2_vertical   sep_storm_lateral_catch_basin_2_elbow_connector sep_storm_main_2_catch_basin_2_connector   30.00  0.018     0.00     0.00      0.00     0.00
+sep_storm_main_1_upstream_segment          offscreen_catch_basin_storm_main_1         sep_storm_main_1_catch_basin_1_connector   175.00 0.015     0.00     0.00      0.00     0.00
+sep_storm_main_1_downstream_segment        sep_storm_main_1_catch_basin_1_connector   sep_storm_manhole                          85.00  0.015     0.00     0.00      0.00     0.00
+sep_storm_main_2_upstream_segment          sep_storm_manhole                          sep_storm_main_2_catch_basin_2_connector   233.00 0.015     0.00     0.00      0.00     0.00
+sep_storm_main_2_downstream_segment        sep_storm_main_2_catch_basin_2_connector   sep_storm_main_2_outlet_connector          47.00  0.015     0.00     0.00      0.00     0.00
+sep_storm_main_to_trunk_horizontal         sep_storm_main_2_outlet_connector          sep_storm_main_to_trunk_elbow_connector    24.00  0.016     0.00     0.00      0.00     0.00
+sep_storm_main_to_trunk_vertical           sep_storm_main_to_trunk_elbow_connector    sep_storm_trunk_main_2_drop_connector      40.00  0.016     0.00     0.00      0.00     0.00
+sep_storm_trunk_upstream_segment           sep_storm_trunk_upstream                   sep_storm_trunk_main_2_drop_connector      490.00 0.015     0.00     0.00      0.00     0.00
+sep_storm_trunk_downstream_segment         sep_storm_trunk_main_2_drop_connector      sep_storm_trunk_downstream                 510.00 0.015     0.00     0.00      0.00     0.00
+sep_storm_trunk_to_pump_station            sep_storm_trunk_downstream                 storm_pump_inlet_gate_node                 35.00  0.015     0.00     0.00      0.00     0.00
+storm_pump_discharge_pipe                  storm_pump_discharge_node                  pump_outfall_gate_node                     145.00 0.015     0.00     0.00      0.00     0.00
+
+[XSECTIONS]
+;;Link                         Shape      Geom1 Geom2 Geom3 Geom4 Barrels Culvert
+sep_catch_basin_1_inlet_connector          RECT_CLOSED 0.60  0.60  0.00  0.00  1       0
+sep_catch_basin_1_outlet_connector         CIRCULAR   0.45  0.00  0.00  0.00  1       0
+sep_catch_basin_2_inlet_connector          RECT_CLOSED 0.60  0.60  0.00  0.00  1       0
+sep_catch_basin_2_outlet_connector         CIRCULAR   0.45  0.00  0.00  0.00  1       0
+storm_pump_inlet_gate                      CIRCULAR   1.80  0.00  0.00  0.00  1       0
+pump_outfall_gate                          CIRCULAR   1.80  0.00  0.00  0.00  1       0
+sep_sewer_lateral_apartment_1_horizontal   CIRCULAR   0.45  0.00  0.00  0.00  1       0
+sep_sewer_lateral_apartment_1_vertical     CIRCULAR   0.45  0.00  0.00  0.00  1       0
+sep_sewer_lateral_apartment_2_horizontal   CIRCULAR   0.45  0.00  0.00  0.00  1       0
+sep_sewer_lateral_apartment_2_vertical     CIRCULAR   0.45  0.00  0.00  0.00  1       0
+sep_sewer_main_1_upstream_segment          CIRCULAR   1.05  0.00  0.00  0.00  1       0
+sep_sewer_main_1_downstream_segment        CIRCULAR   1.05  0.00  0.00  0.00  1       0
+sep_sewer_main_2_upstream_segment          CIRCULAR   1.05  0.00  0.00  0.00  1       0
+sep_sewer_main_2_downstream_segment        CIRCULAR   1.05  0.00  0.00  0.00  1       0
+sep_sewer_downstream_boundary_pipe         CIRCULAR   1.05  0.00  0.00  0.00  1       0
+sep_storm_lateral_catch_basin_1_horizontal CIRCULAR   0.45  0.00  0.00  0.00  1       0
+sep_storm_lateral_catch_basin_1_vertical   CIRCULAR   0.45  0.00  0.00  0.00  1       0
+sep_storm_lateral_catch_basin_2_horizontal CIRCULAR   0.45  0.00  0.00  0.00  1       0
+sep_storm_lateral_catch_basin_2_vertical   CIRCULAR   0.45  0.00  0.00  0.00  1       0
+sep_storm_main_1_upstream_segment          CIRCULAR   1.20  0.00  0.00  0.00  1       0
+sep_storm_main_1_downstream_segment        CIRCULAR   1.20  0.00  0.00  0.00  1       0
+sep_storm_main_2_upstream_segment          CIRCULAR   1.20  0.00  0.00  0.00  1       0
+sep_storm_main_2_downstream_segment        CIRCULAR   1.20  0.00  0.00  0.00  1       0
+sep_storm_main_to_trunk_horizontal         CIRCULAR   0.80  0.00  0.00  0.00  1       0
+sep_storm_main_to_trunk_vertical           CIRCULAR   0.80  0.00  0.00  0.00  1       0
+sep_storm_trunk_upstream_segment           CIRCULAR   1.80  0.00  0.00  0.00  1       0
+sep_storm_trunk_downstream_segment         CIRCULAR   1.80  0.00  0.00  0.00  1       0
+sep_storm_trunk_to_pump_station            CIRCULAR   1.80  0.00  0.00  0.00  1       0
+storm_pump_discharge_pipe                  CIRCULAR   1.80  0.00  0.00  0.00  1       0
+
+[LOSSES]
+;;Link                         InletLoss OutletLoss AverageLoss FlapGate SeepageRate
+sep_sewer_lateral_apartment_1_horizontal   0.00      0.00       0.00        NO       0.00
+sep_sewer_lateral_apartment_1_vertical     0.00      0.00       1.20        NO       0.00
+sep_sewer_lateral_apartment_2_horizontal   0.00      0.00       0.00        NO       0.00
+sep_sewer_lateral_apartment_2_vertical     0.00      0.00       1.20        NO       0.00
+sep_sewer_main_1_upstream_segment          0.00      0.00       0.00        NO       0.00
+sep_sewer_main_1_downstream_segment        0.00      0.00       0.00        NO       0.00
+sep_sewer_main_2_upstream_segment          0.00      0.00       0.00        NO       0.00
+sep_sewer_main_2_downstream_segment        0.00      0.00       0.00        NO       0.00
+sep_sewer_downstream_boundary_pipe         0.00      0.00       0.00        NO       0.00
+sep_storm_lateral_catch_basin_1_horizontal 0.00      0.00       0.00        NO       0.00
+sep_storm_lateral_catch_basin_1_vertical   0.00      0.00       1.20        NO       0.00
+sep_storm_lateral_catch_basin_2_horizontal 0.00      0.00       0.00        NO       0.00
+sep_storm_lateral_catch_basin_2_vertical   0.00      0.00       1.20        NO       0.00
+sep_storm_main_1_upstream_segment          0.00      0.00       0.00        NO       0.00
+sep_storm_main_1_downstream_segment        0.00      0.00       0.00        NO       0.00
+sep_storm_main_2_upstream_segment          0.00      0.00       0.00        NO       0.00
+sep_storm_main_2_downstream_segment        0.00      0.00       0.00        NO       0.00
+sep_storm_main_to_trunk_horizontal         0.00      0.00       0.00        NO       0.00
+sep_storm_main_to_trunk_vertical           0.00      0.00       1.50        NO       0.00
+sep_storm_trunk_upstream_segment           0.00      0.00       0.00        NO       0.00
+sep_storm_trunk_downstream_segment         0.00      0.00       0.00        NO       0.00
+sep_storm_trunk_to_pump_station            0.00      0.00       0.00        NO       0.00
+storm_pump_discharge_pipe                  0.00      0.00       0.00        NO       0.00
+
+[INFLOWS]
+;;Node                         Constituent Time Series       Type   Mfactor Sfactor Baseline Pattern
+offscreen_catch_basin_storm_main_1         FLOW        TS_STORM_RAIN     FLOW   1.20    1.00     0.00
+road_runoff_sep_catch_basin_1              FLOW        TS_STORM_RAIN     FLOW   0.95    1.00     0.00
+road_runoff_sep_catch_basin_2              FLOW        TS_STORM_RAIN     FLOW   1.05    1.00     0.00
+sep_sewer_upstream                         FLOW        TS_SEWER_DWF      FLOW   3.00    1.00     0.00
+sep_apartment_1                            FLOW        TS_SEWER_DWF      FLOW   1.40    1.00     0.00
+sep_apartment_2                            FLOW        TS_SEWER_DWF      FLOW   1.50    1.00     0.00
+
+[TIMESERIES]
+;;Name                         Time      Value
+TS_STORM_RAIN                              00:00    0.0000
+TS_STORM_RAIN                              00:20    0.0055
+TS_STORM_RAIN                              00:40    0.0248
+TS_STORM_RAIN                              01:00    0.0451
+TS_STORM_RAIN                              01:15    0.0550
+TS_STORM_RAIN                              01:35    0.0473
+TS_STORM_RAIN                              02:00    0.0220
+TS_STORM_RAIN                              02:30    0.0066
+TS_STORM_RAIN                              03:00    0.0000
+TS_SEWER_DWF                               00:00    0.0100
+TS_SEWER_DWF                               03:00    0.0100
+
+[CURVES]
+;;Name                         Type   X-Value  Y-Value
+STORM_PUMP_CURVE                           PUMP4  0.00     0.00
+STORM_PUMP_CURVE                                  0.50     0.25
+STORM_PUMP_CURVE                                  0.80     0.55
+STORM_PUMP_CURVE                                  1.50     1.10
+STORM_PUMP_CURVE                                  2.20     1.60
+
+[REPORT]
+INPUT      YES
+CONTROLS   YES
+NODES ALL
+LINKS ALL
+
+[MAP]
+DIMENSIONS 0 0 5000 1900
+Units      Meters
+
+[COORDINATES]
+;;Node                         X-Coord          Y-Coord
+road_runoff_sep_catch_basin_1              1195             1654
+road_runoff_sep_catch_basin_2              1985             1654
+sep_apartment_1                            245              1682
+sep_apartment_2                            847              1682
+sep_sewer_lateral_apartment_1_elbow_connector 365              1682
+sep_sewer_lateral_apartment_2_elbow_connector 727              1682
+sep_sewer_upstream                         0                1075
+sep_sewer_main_1_apartment_1_connector     365              1075
+sep_sewer_manhole                          546              1075
+sep_sewer_main_2_apartment_2_connector     727              1075
+sep_sewer_downstream                       2170             1075
+sep_storm_lateral_catch_basin_1_start      1250             1586
+sep_storm_lateral_catch_basin_1_elbow_connector 1370             1586
+sep_storm_lateral_catch_basin_2_start      2040             1586
+sep_storm_lateral_catch_basin_2_elbow_connector 2160             1586
+sep_storm_main_1_catch_basin_1_connector   1370             1370
+offscreen_catch_basin_storm_main_1         0                1370
+sep_storm_manhole                          1704             1370
+sep_storm_main_2_catch_basin_2_connector   2160             1370
+sep_storm_main_2_outlet_connector          2240             1370
+sep_storm_main_to_trunk_elbow_connector    2355             1370
+sep_storm_trunk_upstream                   0                766
+sep_storm_trunk_main_2_drop_connector      2355             766
+sep_storm_trunk_downstream                 4800             766
+storm_pump_inlet_gate_node                 4885             762
+storm_pump_discharge_node                  5400             761
+pump_outfall_gate_node                     5870             761
+sep_catch_basin_1                          1195             1576
+sep_catch_basin_2                          1985             1576
+storm_pump_station                         5092             762
+pump_outfall                               6054             761
+sep_sewer_boundary_outfall                 2240             1075
+

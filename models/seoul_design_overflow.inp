@@ -1,0 +1,239 @@
+[TITLE]
+;; Seoul design-control model - 폭우 월류
+;; IDs are aligned with viewer/overall_drainage_diagram.html.
+
+[OPTIONS]
+FLOW_UNITS           CMS
+INFILTRATION         HORTON
+FLOW_ROUTING         DYNWAVE
+LINK_OFFSETS         DEPTH
+MIN_SLOPE            0
+ALLOW_PONDING        YES
+START_DATE           06/10/2026
+START_TIME           00:00:00
+REPORT_START_DATE    06/10/2026
+REPORT_START_TIME    00:00:00
+END_DATE             06/10/2026
+END_TIME             03:00:00
+REPORT_STEP          00:01:00
+WET_STEP             00:01:00
+DRY_STEP             00:05:00
+ROUTING_STEP         00:00:15
+VARIABLE_STEP        0.75
+NORMAL_FLOW_LIMITED  BOTH
+INERTIAL_DAMPING     PARTIAL
+SURCHARGE_METHOD     SLOT
+
+[EVAPORATION]
+CONSTANT             0.0
+
+[JUNCTIONS]
+;;Name                         Elev     MaxDepth InitDepth SurDepth Aponded
+sep_apartment_1                11.30    1.00     0.00      0.50     0.0
+sep_apartment_2                11.20    1.00     0.00      0.50     0.0
+sep_catch_basin_1              11.00    1.20     0.00      0.70     12.0
+sep_catch_basin_2              10.90    1.20     0.00      0.70     12.0
+sep_sewer_upstream             8.70     2.00     0.00      0.50     0.0
+sep_sewer_manhole              8.45     3.60     0.00      1.20     20.0
+sep_sewer_downstream           8.10     2.40     0.00      0.50     0.0
+sep_interceptor_join           7.55     3.00     0.00      1.00     20.0
+sep_storm_upstream             8.95     2.40     0.00      0.50     0.0
+sep_storm_manhole              8.65     3.20     0.00      1.20     20.0
+sep_storm_downstream           8.25     2.80     0.00      0.50     0.0
+sep_storm_trunk_inlet          7.75     3.00     0.00      0.50     0.0
+comb_house_1                   11.10    1.00     0.00      0.50     0.0
+comb_house_2                   11.00    1.00     0.00      0.50     0.0
+comb_catch_basin_1             10.90    1.20     0.00      0.70     12.0
+comb_catch_basin_2             10.80    1.20     0.00      0.70     12.0
+comb_upstream                  8.70     2.60     0.00      0.50     0.0
+combined_manhole               8.35     3.50     0.00      1.20     20.0
+pump_discharge_node            7.15     2.00     0.00      0.50     0.0
+
+[STORAGE]
+;;Name                         Elev     MaxDepth InitDepth Shape      Curve/Params          N/A  Fevap Psi Ksat IMD
+storm_pump_station             7.05     3.30     0.00      FUNCTIONAL 90.0    0      0      0    0
+overflow_chamber               7.75     2.80     0.00      FUNCTIONAL 110.0   0      0      0    0
+water_reclamation_center       6.85     4.00     0.15      FUNCTIONAL 360.0   0      0      0    0
+
+[OUTFALLS]
+;;Name                         Elev     Type       Stage Data       Gated
+overflow_outfall               6.25     TIMESERIES TS_RIVER_STAGE    YES
+pump_outfall                   6.20     TIMESERIES TS_RIVER_STAGE    YES
+treated_outfall                6.05     TIMESERIES TS_RIVER_STAGE    YES
+
+[CONDUITS]
+;;Name                         From Node                    To Node                      Length Roughness InOffset OutOffset InitFlow MaxFlow
+sep_sewer_lateral_apartment_1  sep_apartment_1              sep_sewer_manhole            55.0   0.015     0.00     0.00      0        0.00
+sep_sewer_lateral_apartment_2  sep_apartment_2              sep_sewer_manhole            55.0   0.015     0.00     0.00      0        0.00
+sep_storm_lateral_catch_basin_1 sep_catch_basin_1            sep_storm_manhole            42.0   0.018     0.00     0.00      0        0.00
+sep_storm_lateral_catch_basin_2 sep_catch_basin_2            sep_storm_manhole            42.0   0.018     0.00     0.00      0        0.00
+sep_storm_trunk                sep_storm_trunk_inlet        storm_pump_station           520.0  0.015     0.00     0.00      0        0.00
+sep_interceptor                sep_interceptor_join         water_reclamation_center     620.0  0.016     0.00     0.00      0        1.45
+sep_storm_main_1               sep_storm_upstream           sep_storm_manhole            260.0  0.015     0.00     0.00      0        0.00
+sep_storm_main_2               sep_storm_manhole            sep_storm_downstream         310.0  0.015     0.00     0.00      0        0.00
+sep_storm_main_to_trunk        sep_storm_downstream         sep_storm_trunk_inlet        120.0  0.015     0.00     0.00      0        0.00
+sep_sewer_main_1               sep_sewer_upstream           sep_sewer_manhole            230.0  0.015     0.00     0.00      0        0.00
+sep_sewer_main_2               sep_sewer_manhole            sep_sewer_downstream         260.0  0.015     0.00     0.00      0        0.00
+sep_sewer_main_to_interceptor  sep_sewer_downstream         sep_interceptor_join         110.0  0.015     0.00     0.00      0        0.00
+storm_pump_discharge_pipe      pump_discharge_node          pump_outfall                 240.0  0.013     0.00     0.00      0        0.00
+treatment_effluent_pipe        water_reclamation_center     treated_outfall              360.0  0.014     0.00     0.00      0        1.30
+comb_sewer_lateral_house_1     comb_house_1                 combined_manhole             58.0   0.015     0.00     0.00      0        0.00
+comb_sewer_lateral_house_2     comb_house_2                 combined_manhole             58.0   0.015     0.00     0.00      0        0.00
+comb_storm_lateral_catch_basin_1 comb_catch_basin_1           combined_manhole             48.0   0.018     0.00     0.00      0        0.00
+comb_main_1                    comb_upstream                combined_manhole             330.0  0.015     0.00     0.00      0        0.00
+comb_main_2                    combined_manhole             overflow_chamber             360.0  0.015     0.00     0.00      0        0.00
+overflow_pipe                  overflow_chamber             overflow_outfall             280.0  0.016     1.05     0.00      0        0.00
+comb_storm_lateral_catch_basin_2 comb_catch_basin_2           combined_manhole             48.0   0.018     0.00     0.00      0        0.00
+
+[ORIFICES]
+;;Name                         From Node                    To Node                      Type   Offset Qcoeff Gated CloseTime
+overflow_to_interceptor_drop   overflow_chamber             sep_interceptor_join         SIDE   0.00   0.65   NO    0
+
+[PUMPS]
+;;Name                         From Node                    To Node                      Pump Curve     Status Startup Shutoff
+storm_pump_unit                storm_pump_station           pump_discharge_node          PUMP_CURVE     OFF    0.75    0.25
+
+[XSECTIONS]
+;;Link                         Shape      Geom1 Geom2 Geom3 Geom4 Barrels Culvert
+sep_sewer_lateral_apartment_1  CIRCULAR   0.45  0     0     0     1
+sep_sewer_lateral_apartment_2  CIRCULAR   0.45  0     0     0     1
+sep_storm_lateral_catch_basin_1 CIRCULAR   0.45  0     0     0     1
+sep_storm_lateral_catch_basin_2 CIRCULAR   0.45  0     0     0     1
+sep_storm_trunk                CIRCULAR   1.60  0     0     0     1
+sep_interceptor                CIRCULAR   1.60  0     0     0     1
+sep_storm_main_1               CIRCULAR   1.20  0     0     0     1
+sep_storm_main_2               CIRCULAR   1.20  0     0     0     1
+sep_storm_main_to_trunk        CIRCULAR   1.20  0     0     0     1
+sep_sewer_main_1               CIRCULAR   1.05  0     0     0     1
+sep_sewer_main_2               CIRCULAR   1.05  0     0     0     1
+sep_sewer_main_to_interceptor  CIRCULAR   1.05  0     0     0     1
+storm_pump_discharge_pipe      CIRCULAR   1.35  0     0     0     1
+treatment_effluent_pipe        CIRCULAR   1.35  0     0     0     1
+comb_sewer_lateral_house_1     CIRCULAR   0.45  0     0     0     1
+comb_sewer_lateral_house_2     CIRCULAR   0.45  0     0     0     1
+comb_storm_lateral_catch_basin_1 CIRCULAR   0.45  0     0     0     1
+comb_main_1                    CIRCULAR   1.20  0     0     0     1
+comb_main_2                    CIRCULAR   1.20  0     0     0     1
+overflow_pipe                  CIRCULAR   1.35  0     0     0     1
+comb_storm_lateral_catch_basin_2 CIRCULAR   0.45  0     0     0     1
+overflow_to_interceptor_drop   RECT_CLOSED 0.95  0.95  0     0     1
+
+[CURVES]
+;;Name           Type       X-Value  Y-Value
+PUMP_CURVE       PUMP4      0.00     0.00
+PUMP_CURVE                  0.70     0.35
+PUMP_CURVE                  1.20     0.70
+PUMP_CURVE                  2.00     1.15
+PUMP_CURVE                  3.00     1.45
+
+[INFLOWS]
+;;Node                         Constituent Time Series       Type   Mfactor Sfactor Baseline Pattern
+sep_storm_upstream             FLOW        TS_STORM_RAIN     FLOW   1.20    1.00    0
+sep_catch_basin_1              FLOW        TS_STORM_RAIN     FLOW   0.95    1.00    0
+sep_catch_basin_2              FLOW        TS_STORM_RAIN     FLOW   1.05    1.00    0
+comb_upstream                  FLOW        TS_COMBINED_RAIN  FLOW   1.05    1.00    0
+comb_catch_basin_1             FLOW        TS_COMBINED_RAIN  FLOW   0.95    1.00    0
+comb_catch_basin_2             FLOW        TS_COMBINED_RAIN  FLOW   1.10    1.00    0
+sep_sewer_upstream             FLOW        TS_SEWER_DWF      FLOW   1.15    1.00    0
+sep_apartment_1                FLOW        TS_SEWER_DWF      FLOW   1.00    1.00    0
+sep_apartment_2                FLOW        TS_SEWER_DWF      FLOW   0.95    1.00    0
+comb_house_1                   FLOW        TS_SEWER_DWF      FLOW   0.90    1.00    0
+comb_house_2                   FLOW        TS_SEWER_DWF      FLOW   1.00    1.00    0
+comb_upstream                  FLOW        TS_SEWER_DWF      FLOW   0.50    1.00    0
+
+[TIMESERIES]
+;;Name                         Time      Value
+TS_STORM_RAIN                  00:00    0.0000
+TS_STORM_RAIN                  00:20    0.0075
+TS_STORM_RAIN                  00:40    0.0338
+TS_STORM_RAIN                  01:00    0.0615
+TS_STORM_RAIN                  01:15    0.0750
+TS_STORM_RAIN                  01:35    0.0645
+TS_STORM_RAIN                  02:00    0.0300
+TS_STORM_RAIN                  02:30    0.0090
+TS_STORM_RAIN                  03:00    0.0000
+TS_COMBINED_RAIN               00:00    0.0000
+TS_COMBINED_RAIN               00:20    0.0115
+TS_COMBINED_RAIN               00:40    0.0518
+TS_COMBINED_RAIN               01:00    0.0943
+TS_COMBINED_RAIN               01:15    0.1150
+TS_COMBINED_RAIN               01:35    0.0989
+TS_COMBINED_RAIN               02:00    0.0460
+TS_COMBINED_RAIN               02:30    0.0138
+TS_COMBINED_RAIN               03:00    0.0000
+TS_SEWER_DWF                   00:00    0.0550
+TS_SEWER_DWF                   03:00    0.0550
+TS_RIVER_STAGE                 00:00    6.0000
+TS_RIVER_STAGE                 00:50    6.1500
+TS_RIVER_STAGE                 01:20    6.5500
+TS_RIVER_STAGE                 02:10    6.2500
+TS_RIVER_STAGE                 03:00    6.0500
+
+[CONTROLS]
+RULE PUMP_ON
+IF NODE storm_pump_station DEPTH > 0.75
+THEN PUMP storm_pump_unit STATUS = ON
+PRIORITY 2
+
+RULE PUMP_OFF
+IF NODE storm_pump_station DEPTH < 0.25
+THEN PUMP storm_pump_unit STATUS = OFF
+PRIORITY 2
+
+RULE NORMAL_GATE_CLOSE_FOR_OVERFLOW
+IF NODE overflow_chamber DEPTH > 1.05
+THEN ORIFICE overflow_to_interceptor_drop SETTING = 0.15
+PRIORITY 3
+
+RULE NORMAL_GATE_OPEN
+IF NODE overflow_chamber DEPTH < 0.70
+THEN ORIFICE overflow_to_interceptor_drop SETTING = 1.00
+PRIORITY 3
+
+[REPORT]
+INPUT      NO
+CONTROLS   YES
+NODES ALL
+LINKS ALL
+
+[MAP]
+DIMENSIONS 0 0 3500 650
+Units      Meters
+
+[COORDINATES]
+;;Node                         X-Coord          Y-Coord
+sep_apartment_1                120              560
+sep_apartment_2                420              560
+sep_catch_basin_1              760              550
+sep_catch_basin_2              1120             550
+sep_sewer_upstream             130              300
+sep_sewer_manhole              360              300
+sep_sewer_downstream           590              300
+sep_interceptor_join           720              180
+sep_storm_upstream             700              420
+sep_storm_manhole              960              420
+sep_storm_downstream           1210             420
+sep_storm_trunk_inlet          1350             250
+comb_house_1                   1580             560
+comb_house_2                   1810             560
+comb_catch_basin_1             2050             550
+comb_catch_basin_2             2320             550
+comb_upstream                  1880             395
+combined_manhole               2200             395
+pump_discharge_node            1600             250
+storm_pump_station             1510             250
+overflow_chamber               2650             390
+water_reclamation_center       2920             160
+overflow_outfall               3300             395
+pump_outfall                   3300             250
+treated_outfall                3300             160
+
+[VERTICES]
+;;Link                         X-Coord          Y-Coord
+sep_storm_main_to_trunk        1260             330
+sep_sewer_main_to_interceptor  650              230
+overflow_to_interceptor_drop   2620             210
+
+[TAGS]
+
+[END]
