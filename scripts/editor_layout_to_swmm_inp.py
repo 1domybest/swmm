@@ -36,6 +36,7 @@ DEFAULT_CATCHMENT_AREA_M2 = 500.0
 DEFAULT_RUNOFF_COEFFICIENT = 0.8
 DEFAULT_MANNING_N = 0.013
 MAX_BLOCKED_MANNING_N = 0.15
+MAP_PADDING_M = 50.0
 
 PIPE_DIAMETER_M = {
     "small": 0.30,
@@ -109,6 +110,22 @@ class Point:
     y: float
 
 
+@dataclass(frozen=True)
+class MapTransform:
+    min_x: float
+    min_y: float
+    max_x: float
+    max_y: float
+    scale_m_per_px: float
+    padding_m: float = MAP_PADDING_M
+
+    @property
+    def dimensions(self) -> tuple[float, float, float, float]:
+        width = max(1.0, (self.max_x - self.min_x) * self.scale_m_per_px + self.padding_m * 2)
+        height = max(1.0, (self.max_y - self.min_y) * self.scale_m_per_px + self.padding_m * 2)
+        return (0.0, 0.0, width, height)
+
+
 @dataclass
 class SwmmNode:
     id: str
@@ -162,6 +179,7 @@ class ConvertResult:
     editor_node_to_swmm_nodes: dict[str, list[str]]
     editor_node_to_swmm_links: dict[str, list[str]]
     editor_link_to_swmm_links: dict[str, list[str]]
+    map_dimensions: tuple[float, float, float, float]
 
 
 def load_layout(path: str) -> dict[str, Any]:
@@ -222,8 +240,33 @@ def node_center(node: dict[str, Any]) -> Point:
     )
 
 
-def map_point(point: Point, map_height: float, scale_m_per_px: float) -> Point:
-    return Point(point.x * scale_m_per_px, (map_height - point.y) * scale_m_per_px)
+def layout_map_transform(
+    nodes: Iterable[dict[str, Any]],
+    *,
+    scale_m_per_px: float,
+    fallback_height: float,
+) -> MapTransform:
+    xs: list[float] = []
+    ys: list[float] = []
+    for node in nodes:
+        x = number(node.get("x"), 0.0)
+        y = number(node.get("y"), 0.0)
+        width = number(node.get("width"), 0.0)
+        height = number(node.get("height"), 0.0)
+        xs.extend([x, x + width])
+        ys.extend([y, y + height])
+
+    if not xs or not ys:
+        return MapTransform(0.0, 0.0, 3000.0, fallback_height, scale_m_per_px)
+
+    return MapTransform(min(xs), min(ys), max(xs), max(ys), scale_m_per_px)
+
+
+def map_point(point: Point, transform: MapTransform) -> Point:
+    return Point(
+        (point.x - transform.min_x) * transform.scale_m_per_px + transform.padding_m,
+        (transform.max_y - point.y) * transform.scale_m_per_px + transform.padding_m,
+    )
 
 
 def depth_for_point(point: Point, ground_surface_y: float, scale_m_per_px: float) -> float:
@@ -429,20 +472,19 @@ def make_swmm_node(
     section: NodeSection,
     point: Point,
     ground_surface_y: float,
-    map_height: float,
-    scale_m_per_px: float,
+    map_transform: MapTransform,
     base_ground_elevation_m: float,
     source_node: dict[str, Any] | None = None,
 ) -> SwmmNode:
     max_depth, init_depth, surcharge_depth, ponded_area = node_depth_defaults(source_node or {})
-    depth_m = depth_for_point(point, ground_surface_y, scale_m_per_px)
+    depth_m = depth_for_point(point, ground_surface_y, map_transform.scale_m_per_px)
     if section != "OUTFALLS":
         max_depth = max(depth_m, 1.0)
-    mapped = map_point(point, map_height, scale_m_per_px)
+    mapped = map_point(point, map_transform)
     return SwmmNode(
         id=node_id,
         section=section,
-        elevation=elevation_for_point(point, ground_surface_y, scale_m_per_px, base_ground_elevation_m),
+        elevation=elevation_for_point(point, ground_surface_y, map_transform.scale_m_per_px, base_ground_elevation_m),
         max_depth=max_depth,
         init_depth=init_depth,
         surcharge_depth=surcharge_depth,
@@ -481,6 +523,11 @@ def convert_layout(
     validate_unique_editor_ids(editor_nodes, editor_links)
 
     ground_surface_y = number(layout.get("groundSurfaceY"), 330.0)
+    map_transform = layout_map_transform(
+        editor_nodes,
+        scale_m_per_px=scale_m_per_px,
+        fallback_height=map_height,
+    )
     nodes_by_editor_id = {str(node["id"]): node for node in editor_nodes if "id" in node}
     used_node_ids: set[str] = set()
     used_link_ids: set[str] = set()
@@ -528,8 +575,7 @@ def convert_layout(
             section,
             point,
             ground_surface_y,
-            map_height,
-            scale_m_per_px,
+            map_transform,
             base_ground_elevation_m,
             editor_node,
         )
@@ -547,8 +593,7 @@ def convert_layout(
             "JUNCTIONS",
             point,
             ground_surface_y,
-            map_height,
-            scale_m_per_px,
+            map_transform,
             base_ground_elevation_m,
             source_node,
         ))
@@ -838,6 +883,7 @@ def convert_layout(
         editor_node_to_swmm_nodes,
         editor_node_to_swmm_links,
         editor_link_to_swmm_links,
+        map_transform.dimensions,
     )
 
 
@@ -1012,7 +1058,8 @@ def render_inp(result: ConvertResult, *, title: str) -> str:
     add("LINKS ALL")
     add("")
     add("[MAP]")
-    add("DIMENSIONS 0 0 3000 2000")
+    min_x, min_y, max_x, max_y = result.map_dimensions
+    add(f"DIMENSIONS {min_x:.2f} {min_y:.2f} {max_x:.2f} {max_y:.2f}")
     add("Units      Meters")
     add("")
     add("[COORDINATES]")
@@ -1068,6 +1115,8 @@ def render_conversion_report(result: ConvertResult, *, inp_text: str | None = No
         "decisions": {
             "scaleMPerPx": DEFAULT_SCALE_M_PER_PX,
             "baseGroundElevationM": DEFAULT_BASE_GROUND_ELEVATION_M,
+            "mapCoordinateMode": "react_layout_bounds_normalized_with_y_inversion",
+            "mapDimensions": result.map_dimensions,
             "horizontalSlope": DEFAULT_HORIZONTAL_SLOPE,
             "verticalPipeMode": "drop_by_invert_elevation",
             "mainHeadInflowDetection": "name_based",
@@ -1111,6 +1160,11 @@ def render_mapping_json(result: ConvertResult) -> dict[str, Any]:
     return {
         "version": 1,
         "source": "react-editor-json",
+        "map": {
+            "coordinateMode": "react_layout_bounds_normalized_with_y_inversion",
+            "dimensions": result.map_dimensions,
+            "units": "Meters",
+        },
         "editorNodes": {
             editor_id: {
                 "swmmNodes": sorted(set(result.editor_node_to_swmm_nodes.get(editor_id, []))),

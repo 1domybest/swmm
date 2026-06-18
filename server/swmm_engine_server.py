@@ -171,7 +171,7 @@ def make_handler(session: EngineSession) -> type[BaseHTTPRequestHandler]:
             self.send_header("Access-Control-Expose-Headers", "Content-Disposition, X-Editor-Inp-Warnings")
             self.send_header("Content-Disposition", f'attachment; filename="{filename}"')
             if warnings:
-                self.send_header("X-Editor-Inp-Warnings", json.dumps(warnings, ensure_ascii=False))
+                self.send_header("X-Editor-Inp-Warnings", json.dumps(warnings, ensure_ascii=True))
             self.end_headers()
             self.wfile.write(encoded)
 

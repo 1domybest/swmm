@@ -1,344 +1,261 @@
 [TITLE]
-;; Seoul drainage model rebuild v2
-;; This file is separate from the old design model.
-;; Existing HTML/SWMM IDs are kept only as the naming contract.
+;; SWMM model generated from React editor layout
+;; Generated from React editor layout JSON.
 
 [OPTIONS]
 FLOW_UNITS           CMS
 INFILTRATION         HORTON
 FLOW_ROUTING         DYNWAVE
 LINK_OFFSETS         DEPTH
-MIN_SLOPE            0
+MIN_SLOPE            0.0001
 ALLOW_PONDING        YES
-START_DATE           06/11/2026
+START_DATE           06/16/2026
 START_TIME           00:00:00
-REPORT_START_DATE    06/11/2026
+REPORT_START_DATE    06/16/2026
 REPORT_START_TIME    00:00:00
-END_DATE             06/11/2026
-END_TIME             03:00:00
-REPORT_STEP          00:00:01
+END_DATE             06/16/2026
+END_TIME             01:00:00
 WET_STEP             00:00:01
 DRY_STEP             00:01:00
-ROUTING_STEP         00:00:01
-VARIABLE_STEP        0.75
-NORMAL_FLOW_LIMITED  BOTH
-INERTIAL_DAMPING     PARTIAL
-SURCHARGE_METHOD     SLOT
-
-[EVAPORATION]
-CONSTANT             0.0
+REPORT_STEP          00:00:01
+ROUTING_STEP         0:00:01
 
 [JUNCTIONS]
-;;Name                         Elev     MaxDepth InitDepth SurDepth Aponded
-road_runoff_sep_catch_basin_1              12.20    0.35     0.00      0.40     18.0
-road_runoff_sep_catch_basin_2              12.20    0.35     0.00      0.40     18.0
-sep_apartment_1                            11.35    1.00     0.00      0.50     0.0
-sep_apartment_2                            11.30    1.00     0.00      0.50     0.0
-sep_sewer_lateral_apartment_1_elbow_connector 11.33    0.80     0.00      0.30     0.0
-sep_sewer_lateral_apartment_2_elbow_connector 11.28    0.80     0.00      0.30     0.0
-sep_sewer_upstream                         8.70     2.40     0.00      0.50     0.0
-sep_sewer_main_1_apartment_1_connector     8.55     2.40     0.00      0.50     0.0
-sep_sewer_manhole                          8.45     3.60     0.00      1.20     20.0
-sep_sewer_main_2_apartment_2_connector     8.35     2.40     0.00      0.50     0.0
-sep_sewer_downstream                       8.10     2.40     0.00      0.50     0.0
-sep_sewer_main_to_interceptor_elbow_connector 8.07     2.40     0.00      0.50     0.0
-sep_interceptor_upstream                   6.55     3.20     0.00      0.80     0.0
-sep_interceptor_join                       6.20     3.20     0.00      1.00     20.0
-overflow_interceptor_join                  5.65     3.20     0.00      1.00     20.0
-sep_interceptor_downstream                 5.60     3.20     0.00      0.80     0.0
-treatment_process_outlet_node              4.95     3.20     0.00      0.80     0.0
-treated_outfall_gate_node                  4.86     3.20     0.00      0.80     0.0
-sep_storm_lateral_catch_basin_1_start      11.33    0.80     0.00      0.30     0.0
-sep_storm_lateral_catch_basin_1_elbow_connector 11.31    0.80     0.00      0.30     0.0
-sep_storm_lateral_catch_basin_2_start      11.33    0.80     0.00      0.30     0.0
-sep_storm_lateral_catch_basin_2_elbow_connector 11.31    0.80     0.00      0.30     0.0
-sep_storm_main_1_catch_basin_1_connector   8.75     2.40     0.00      0.50     30.0
-offscreen_catch_basin_storm_main_1         8.95     2.40     0.00      0.50     0.0
-sep_storm_manhole                          8.65     3.55     0.00      0.50     50.0
-sep_storm_main_2_catch_basin_2_connector   8.38     2.40     0.00      0.50     30.0
-sep_storm_main_2_outlet_connector          8.32     2.40     0.00      0.50     50.0
-sep_storm_main_to_trunk_elbow_connector    8.29     2.40     0.00      0.50     50.0
-sep_storm_trunk_upstream                   6.16     3.00     0.00      0.50     0.0
-sep_storm_trunk_main_2_drop_connector      5.60     3.00     0.00      0.50     0.0
-sep_storm_trunk_downstream                 5.01     3.00     0.00      0.50     0.0
-storm_pump_inlet_gate_node                 4.95     2.40     0.00      0.50     0.0
-storm_pump_discharge_node                  5.20     2.40     0.00      0.50     0.0
-pump_outfall_gate_node                     5.03     2.40     0.00      0.50     0.0
-road_runoff_offscreen_comb_catch_basin     12.20    0.35     0.00      0.40     18.0
-offscreen_comb_sewer_source                8.88     1.20     0.00      0.40     0.0
-offscreen_comb_storm_lateral_start         11.33    0.80     0.00      0.30     0.0
-offscreen_comb_storm_lateral_elbow_connector 11.31    0.80     0.00      0.30     0.0
-comb_upstream                              8.82     2.60     0.00      0.50     0.0
-comb_house_1                               11.10    1.00     0.00      0.50     0.0
-comb_sewer_lateral_house_1_elbow_connector 11.08    0.80     0.00      0.30     0.0
-comb_main_house_1_connector                8.60     2.60     0.00      0.50     0.0
-comb_house_2                               11.00    1.00     0.00      0.50     0.0
-comb_sewer_lateral_house_2_elbow_connector 10.98    0.80     0.00      0.30     0.0
-comb_main_house_2_connector                8.54     2.60     0.00      0.50     0.0
-road_runoff_comb_catch_basin_1             12.20    0.35     0.00      0.40     18.0
-comb_storm_lateral_catch_basin_1_start     11.33    0.80     0.00      0.30     0.0
-comb_storm_lateral_catch_basin_1_elbow_connector 11.31    0.80     0.00      0.30     0.0
-comb_main_catch_basin_1_connector          8.43     2.60     0.00      0.50     0.0
-combined_manhole                           8.35     3.50     0.00      1.20     20.0
-road_runoff_comb_catch_basin_2             12.20    0.35     0.00      0.40     18.0
-comb_storm_lateral_catch_basin_2_start     11.28    0.80     0.00      0.30     0.0
-comb_storm_lateral_catch_basin_2_elbow_connector 11.26    0.80     0.00      0.30     0.0
-comb_main_catch_basin_2_connector          8.18     2.60     0.00      0.50     0.0
-overflow_normal_flow_node                  7.62     2.80     0.00      0.50     0.0
-overflow_weir_outlet_node                  7.70     2.40     0.00      0.50     0.0
-overflow_outfall_gate_node                 6.30     2.40     0.00      0.50     0.0
+;;Name                                   Elev    MaxDepth InitDepth SurDepth Aponded
+APT_01                                    100.00    1.00    0.00     0.50      0.0
+APT_02                                    100.00    1.00    0.00     0.50      0.0
+CONN_SEWER_01                             100.00    1.00    0.00     0.50      0.0
+ELBOW_SEWER_01                             99.53    1.00    0.00     0.50      0.0
+ELBOW_SEWER_02                             98.50    1.50    0.00     0.50      0.0
+CONN_SEWER_09                            -286.56  386.56    0.00     0.50      0.0
+CONN_SEWER_07                            -260.81  360.81    0.00     0.50      0.0
+CONN_SEWER_08                            -262.68  362.68    0.00     0.50      0.0
+CONN_SEWER_10                            -288.43  388.43    0.00     0.50      0.0
+CONN_SEWER_02                             100.00    1.00    0.00     0.50      0.0
+ELBOW_SEWER_05                           -313.43  413.43    0.00     0.50      0.0
+CONN_SEWER_11                            -861.32  961.32    0.00     0.50      0.0
+CONN_SEWER_12                            -898.82  998.82    0.00     0.50      0.0
+CONN_TREATED_01                          -898.82  998.82    0.00     0.50      0.0
+CATCH_BASIN_01                             74.00   26.00    0.00     0.70     18.0
+CONN_STORM_01                              74.00   26.00    0.00     0.50      0.0
+ELBOW_STORM_01                             59.75   40.25    0.00     0.50      0.0
+CATCH_BASIN_02                             74.00   26.00    0.00     0.70     18.0
+CONN_STORM_02                              74.00   26.00    0.00     0.50      0.0
+ELBOW_STORM_02                             59.75   40.25    0.00     0.50      0.0
+CONN_STORM_08                            -184.10  284.10    0.00     0.50      0.0
+CONN_STORM_10                            -209.85  309.85    0.00     0.50      0.0
+CONN_STORM_09                            -209.85  309.85    0.00     0.50      0.0
+CONN_STORM_07                            -184.10  284.10    0.00     0.50      0.0
+ELBOW_STORM_05                           -234.85  334.85    0.00     0.50      0.0
+CONN_STORM_12                            -693.12  793.12    0.00     0.50      0.0
+CONN_STORM_11                            -655.62  755.62    0.00     0.50      0.0
+HOUSE_01                                  100.00    1.00    0.00     0.50      0.0
+CONN_SEWER_03                             100.00    1.00    0.00     0.50      0.0
+ELBOW_SEWER_03                             98.50    1.50    0.00     0.50      0.0
+HOUSE_02                                  100.00    1.00    0.00     0.50      0.0
+CONN_SEWER_04                             100.00    1.00    0.00     0.50      0.0
+ELBOW_SEWER_04                             98.50    1.50    0.00     0.50      0.0
+CATCH_BASIN_03                             74.00   26.00    0.00     0.70     18.0
+CONN_STORM_03                              74.00   26.00    0.00     0.50      0.0
+ELBOW_STORM_03                             59.75   40.25    0.00     0.50      0.0
+CONN_STORM_05                             -85.91  185.91    0.00     0.50      0.0
+MH_COMB_01                                -15.08  115.08    0.00     1.20     20.0
+CONN_SEWER_05                             -85.91  185.91    0.00     0.50      0.0
+CONN_SEWER_06                             -85.91  185.91    0.00     0.50      0.0
+CONN_COMB_01                             -111.66  211.66    0.00     0.50      0.0
+CONN_COMB_02                             -111.66  211.66    0.00     0.50      0.0
+CONN_COMB_03                             -111.66  211.66    0.00     0.50      0.0
+CONN_OVERFLOW_01                         -111.66  211.66    0.00     0.50      0.0
+CONN_OVERFLOW_02                         -111.66  211.66    0.00     0.50      0.0
+CONN_STORM_13                            -693.12  793.12    0.00     0.50      0.0
+CONN_STORM_14                            -693.12  793.12    0.00     0.50      0.0
+CONN_TREATED_02                          -898.82  998.82    0.00     0.50      0.0
+ROAD_02                                   100.00    1.00    0.00     0.50      0.0
+ROAD_01                                   100.00    1.00    0.00     0.50      0.0
+CONN_COMB_04                             -167.91  267.91    0.00     0.50      0.0
+CONN_COMB_05                             -861.32  961.32    0.00     0.50      0.0
+TERRAIN_RIVER_01                         -459.86  559.86    0.00     0.50      0.0
+TERRAIN_RIVER_02                         -462.00  562.00    0.00     0.50      0.0
+CATCH_BASIN_04                             74.00   26.00    0.00     0.70     18.0
+CONN_STORM_04                              74.00   26.00    0.00     0.50      0.0
+ELBOW_STORM_04                             59.75   40.25    0.00     0.50      0.0
+CONN_STORM_06                             -85.91  185.91    0.00     0.50      0.0
+MH_SEWER_01                              -103.46  203.46    0.00     1.20     20.0
+MH_STORM_01                               -64.17  164.17    0.00     1.20     20.0
+PIPE_STORM_MAIN_01_station_000           -209.85  309.85    0.00     0.50      0.0
+PIPE_SEWER_MAIN_01_station_000           -286.56  386.56    0.00     0.50      0.0
+PIPE_INTERCEPTOR_01_station_000          -898.82  998.82    0.00     0.50      0.0
+PIPE_STORM_TRUNK_01_station_000          -693.12  793.12    0.00     0.50      0.0
+PIPE_COMB_MAIN_01_station_000            -111.66  211.66    0.00     0.50      0.0
 
 [STORAGE]
-;;Name                         Elev     MaxDepth InitDepth Shape      Curve/Params          N/A  Fevap Psi Ksat IMD
-sep_catch_basin_1                          11.00    1.20     0.00      FUNCTIONAL 2.0     0      0      0    0
-sep_catch_basin_2                          11.00    1.20     0.00      FUNCTIONAL 2.0     0      0      0    0
-offscreen_comb_catch_basin                 11.00    1.20     0.00      FUNCTIONAL 2.0     0      0      0    0
-comb_catch_basin_1                         11.00    1.20     0.00      FUNCTIONAL 2.0     0      0      0    0
-comb_catch_basin_2                         10.95    1.20     0.00      FUNCTIONAL 2.0     0      0      0    0
-overflow_chamber                           7.75     2.80     0.00      FUNCTIONAL 45.0    0      0      0    0
-storm_pump_station                         4.70     2.40     0.00      FUNCTIONAL 25.0    0      0      0    0
-water_reclamation_center                   5.05     4.00     0.15      FUNCTIONAL 120.0   0      0      0    0
+;;Name                                   Elev    MaxDepth InitDepth Shape      Curve/Params          N/A  Fevap Psi Ksat IMD
+FAC_WATER_RECLAMATION_01                 -898.82  998.82    0.15 FUNCTIONAL 1000.00 0      0      0    0
+FAC_PUMP_STATION_01                      -693.12  793.12    0.00 FUNCTIONAL 200.00  0      0      0    0
+FAC_OVERFLOW_CHAMBER_01                  -111.66  211.66    0.00 FUNCTIONAL 100.00  0      0      0    0
 
 [OUTFALLS]
-;;Name                         Elev     Type       Stage Data       Gated
-overflow_outfall                           6.25     FREE                        NO
-pump_outfall                               5.02     FREE                        NO
-treated_outfall                            4.85     FREE                        NO
-
-[ORIFICES]
-;;Name                         From Node                    To Node                      Type   Offset Qcoeff Gated CloseTime
-sep_catch_basin_1_inlet_connector          road_runoff_sep_catch_basin_1              sep_catch_basin_1                          BOTTOM 0.00   0.65   NO    0
-sep_catch_basin_1_outlet_connector         sep_catch_basin_1                          sep_storm_lateral_catch_basin_1_start      SIDE   0.33   0.65   NO    0
-sep_catch_basin_2_inlet_connector          road_runoff_sep_catch_basin_2              sep_catch_basin_2                          BOTTOM 0.00   0.65   NO    0
-sep_catch_basin_2_outlet_connector         sep_catch_basin_2                          sep_storm_lateral_catch_basin_2_start      SIDE   0.33   0.65   NO    0
-storm_pump_inlet_gate                      storm_pump_inlet_gate_node                 storm_pump_station                         SIDE   0.00   0.75   NO    0
-pump_outfall_gate                          pump_outfall_gate_node                     pump_outfall                               SIDE   0.00   0.75   NO    0
-treated_outfall_gate                       treated_outfall_gate_node                  treated_outfall                            SIDE   0.00   0.75   NO    0
-offscreen_comb_catch_basin_inlet_connector road_runoff_offscreen_comb_catch_basin     offscreen_comb_catch_basin                 BOTTOM 0.00   0.65   NO    0
-offscreen_comb_catch_basin_outlet_connector offscreen_comb_catch_basin                 offscreen_comb_storm_lateral_start         SIDE   0.33   0.65   NO    0
-comb_catch_basin_1_inlet_connector         road_runoff_comb_catch_basin_1             comb_catch_basin_1                         BOTTOM 0.00   0.65   NO    0
-comb_catch_basin_1_outlet_connector        comb_catch_basin_1                         comb_storm_lateral_catch_basin_1_start     SIDE   0.33   0.65   NO    0
-comb_catch_basin_2_inlet_connector         road_runoff_comb_catch_basin_2             comb_catch_basin_2                         BOTTOM 0.00   0.65   NO    0
-comb_catch_basin_2_outlet_connector        comb_catch_basin_2                         comb_storm_lateral_catch_basin_2_start     SIDE   0.33   0.65   NO    0
-overflow_normal_flow_gate                  overflow_chamber                           overflow_normal_flow_node                  SIDE   0.20   0.65   NO    0
-overflow_outfall_gate                      overflow_outfall_gate_node                 overflow_outfall                           SIDE   0.00   0.75   NO    0
-
-[WEIRS]
-;;Name                         From Node                    To Node                      Type       CrestHt Qcoeff Gated EndCon EndCoeff Surcharge RoadWidth RoadSurf
-overflow_excess_weir                       overflow_chamber                           overflow_weir_outlet_node                  TRANSVERSE 1.60    1.84   NO    0      0.00     YES       0.00      
-
-[PUMPS]
-;;Name                         From Node                    To Node                      Pump Curve        Status Startup Shutoff
-storm_pump_unit                            storm_pump_station                         storm_pump_discharge_node                  STORM_PUMP_CURVE  OFF    0.80    0.25
+;;Name                                   Elev    Type       Stage Data       Gated
+OVERFLOW_OUTFALL_01                         0.20 FREE                        NO
+PUMP_OUTFALL_01                             0.20 FREE                        NO
+TREATED_OUTFALL_01                          0.20 FREE                        NO
 
 [CONDUITS]
-;;Name                         From Node                    To Node                      Length Roughness InOffset OutOffset InitFlow MaxFlow
-sep_sewer_lateral_apartment_1_horizontal   sep_apartment_1                            sep_sewer_lateral_apartment_1_elbow_connector 18.00  0.015     0.00     0.00      0.00     0.00
-sep_sewer_lateral_apartment_1_vertical     sep_sewer_lateral_apartment_1_elbow_connector sep_sewer_main_1_apartment_1_connector     30.00  0.015     0.00     0.00      0.00     0.00
-sep_sewer_lateral_apartment_2_horizontal   sep_apartment_2                            sep_sewer_lateral_apartment_2_elbow_connector 18.00  0.015     0.00     0.00      0.00     0.00
-sep_sewer_lateral_apartment_2_vertical     sep_sewer_lateral_apartment_2_elbow_connector sep_sewer_main_2_apartment_2_connector     30.00  0.015     0.00     0.00      0.00     0.00
-sep_sewer_main_1_upstream_segment          sep_sewer_upstream                         sep_sewer_main_1_apartment_1_connector     185.00 0.015     0.00     0.00      0.00     0.00
-sep_sewer_main_1_downstream_segment        sep_sewer_main_1_apartment_1_connector     sep_sewer_manhole                          45.00  0.015     0.00     0.00      0.00     0.00
-sep_sewer_main_2_upstream_segment          sep_sewer_manhole                          sep_sewer_main_2_apartment_2_connector     60.00  0.015     0.00     0.00      0.00     0.00
-sep_sewer_main_2_downstream_segment        sep_sewer_main_2_apartment_2_connector     sep_sewer_downstream                       200.00 0.015     0.00     0.00      0.00     0.00
-sep_sewer_main_to_interceptor_horizontal   sep_sewer_downstream                       sep_sewer_main_to_interceptor_elbow_connector 24.00  0.015     0.00     0.00      0.00     0.00
-sep_sewer_main_to_interceptor_vertical     sep_sewer_main_to_interceptor_elbow_connector sep_interceptor_join                       40.00  0.015     0.00     0.00      0.00     0.00
-sep_interceptor_upstream_segment           sep_interceptor_upstream                   sep_interceptor_join                       460.00 0.016     0.00     0.00      0.00     0.00
-sep_interceptor_join_to_overflow_segment   sep_interceptor_join                       overflow_interceptor_join                  570.00 0.016     0.00     0.00      0.00     0.00
-sep_interceptor_downstream_segment         overflow_interceptor_join                  sep_interceptor_downstream                 50.00  0.016     0.00     0.00      0.00     0.00
-sep_interceptor_to_reclamation_inlet       sep_interceptor_downstream                 water_reclamation_center                   45.00  0.016     0.00     0.00      0.00     0.00
-treatment_process_limited_outlet           water_reclamation_center                   treatment_process_outlet_node              30.00  0.014     0.00     0.00      0.00     0.02
-treatment_effluent_pipe                    treatment_process_outlet_node              treated_outfall_gate_node                  300.00 0.014     0.00     0.00      0.00     0.00
-sep_storm_lateral_catch_basin_1_horizontal sep_storm_lateral_catch_basin_1_start      sep_storm_lateral_catch_basin_1_elbow_connector 18.00  0.018     0.00     0.00      0.00     0.00
-sep_storm_lateral_catch_basin_1_vertical   sep_storm_lateral_catch_basin_1_elbow_connector sep_storm_main_1_catch_basin_1_connector   30.00  0.018     0.00     0.00      0.00     0.00
-sep_storm_lateral_catch_basin_2_horizontal sep_storm_lateral_catch_basin_2_start      sep_storm_lateral_catch_basin_2_elbow_connector 18.00  0.018     0.00     0.00      0.00     0.00
-sep_storm_lateral_catch_basin_2_vertical   sep_storm_lateral_catch_basin_2_elbow_connector sep_storm_main_2_catch_basin_2_connector   30.00  0.018     0.00     0.00      0.00     0.00
-sep_storm_main_1_upstream_segment          offscreen_catch_basin_storm_main_1         sep_storm_main_1_catch_basin_1_connector   175.00 0.015     0.00     0.00      0.00     0.00
-sep_storm_main_1_downstream_segment        sep_storm_main_1_catch_basin_1_connector   sep_storm_manhole                          85.00  0.015     0.00     0.00      0.00     0.00
-sep_storm_main_2_upstream_segment          sep_storm_manhole                          sep_storm_main_2_catch_basin_2_connector   233.00 0.015     0.00     0.00      0.00     0.00
-sep_storm_main_2_downstream_segment        sep_storm_main_2_catch_basin_2_connector   sep_storm_main_2_outlet_connector          47.00  0.015     0.00     0.00      0.00     0.00
-sep_storm_main_to_trunk_horizontal         sep_storm_main_2_outlet_connector          sep_storm_main_to_trunk_elbow_connector    24.00  0.016     0.00     0.00      0.00     0.00
-sep_storm_main_to_trunk_vertical           sep_storm_main_to_trunk_elbow_connector    sep_storm_trunk_main_2_drop_connector      40.00  0.016     0.00     0.00      0.00     0.00
-sep_storm_trunk_upstream_segment           sep_storm_trunk_upstream                   sep_storm_trunk_main_2_drop_connector      490.00 0.015     0.00     0.00      0.00     0.00
-sep_storm_trunk_downstream_segment         sep_storm_trunk_main_2_drop_connector      sep_storm_trunk_downstream                 510.00 0.015     0.00     0.00      0.00     0.00
-sep_storm_trunk_to_pump_station            sep_storm_trunk_downstream                 storm_pump_inlet_gate_node                 35.00  0.015     0.00     0.00      0.00     0.00
-storm_pump_discharge_pipe                  storm_pump_discharge_node                  pump_outfall_gate_node                     145.00 0.015     0.00     0.00      0.00     0.00
-offscreen_comb_sewer_lateral               offscreen_comb_sewer_source                comb_upstream                              24.00  0.015     0.00     0.00      0.00     0.00
-offscreen_comb_storm_lateral_horizontal    offscreen_comb_storm_lateral_start         offscreen_comb_storm_lateral_elbow_connector 18.00  0.018     0.00     0.00      0.00     0.00
-offscreen_comb_storm_lateral_vertical      offscreen_comb_storm_lateral_elbow_connector comb_upstream                              30.00  0.018     0.00     0.00      0.00     0.00
-comb_sewer_lateral_house_1_horizontal      comb_house_1                               comb_sewer_lateral_house_1_elbow_connector 18.00  0.015     0.00     0.00      0.00     0.00
-comb_sewer_lateral_house_1_vertical        comb_sewer_lateral_house_1_elbow_connector comb_main_house_1_connector                30.00  0.015     0.00     0.00      0.00     0.00
-comb_sewer_lateral_house_2_horizontal      comb_house_2                               comb_sewer_lateral_house_2_elbow_connector 18.00  0.015     0.00     0.00      0.00     0.00
-comb_sewer_lateral_house_2_vertical        comb_sewer_lateral_house_2_elbow_connector comb_main_house_2_connector                30.00  0.015     0.00     0.00      0.00     0.00
-comb_storm_lateral_catch_basin_1_horizontal comb_storm_lateral_catch_basin_1_start     comb_storm_lateral_catch_basin_1_elbow_connector 18.00  0.018     0.00     0.00      0.00     0.00
-comb_storm_lateral_catch_basin_1_vertical  comb_storm_lateral_catch_basin_1_elbow_connector comb_main_catch_basin_1_connector          30.00  0.018     0.00     0.00      0.00     0.00
-comb_storm_lateral_catch_basin_2_horizontal comb_storm_lateral_catch_basin_2_start     comb_storm_lateral_catch_basin_2_elbow_connector 18.00  0.018     0.00     0.00      0.00     0.00
-comb_storm_lateral_catch_basin_2_vertical  comb_storm_lateral_catch_basin_2_elbow_connector comb_main_catch_basin_2_connector          30.00  0.018     0.00     0.00      0.00     0.00
-comb_main_1_upstream_segment               comb_upstream                              comb_main_house_1_connector                220.00 0.015     0.00     0.00      0.00     0.00
-comb_main_1_house_1_to_house_2_segment     comb_main_house_1_connector                comb_main_house_2_connector                60.00  0.015     0.00     0.00      0.00     0.00
-comb_main_1_house_2_to_catch_basin_1_segment comb_main_house_2_connector                comb_main_catch_basin_1_connector          110.00 0.015     0.00     0.00      0.00     0.00
-comb_main_1_to_manhole_segment             comb_main_catch_basin_1_connector          combined_manhole                           80.00  0.015     0.00     0.00      0.00     0.00
-comb_main_2_manhole_to_catch_basin_2_segment combined_manhole                           comb_main_catch_basin_2_connector          120.00 0.015     0.00     0.00      0.00     0.00
-comb_main_2_downstream_segment             comb_main_catch_basin_2_connector          overflow_chamber                           70.00  0.015     0.00     0.00      0.00     0.00
-overflow_to_interceptor_drop               overflow_normal_flow_node                  overflow_interceptor_join                  40.00  0.016     0.00     0.00      0.00     0.00
-overflow_pipe                              overflow_weir_outlet_node                  overflow_outfall_gate_node                 280.00 0.016     0.00     0.00      0.00     0.00
+;;Name                                   From Node                                To Node                                  Length Roughness InOffset OutOffset InitFlow MaxFlow
+PIPE_STORM_MAIN_01_segment_01            PIPE_STORM_MAIN_01_station_000           CONN_STORM_08                            871.90 0.013     0.00     0.00      0.00     0.00
+PIPE_STORM_MAIN_01_segment_02            CONN_STORM_08                            CONN_STORM_10                             72.63 0.013     0.00     0.00      0.00     0.00
+PIPE_SEWER_LATERAL_H_01                  CONN_SEWER_01                            ELBOW_SEWER_01                            28.00 0.013     0.00     0.00      0.00     0.00
+PIPE_SEWER_LATERAL_V_01                  ELBOW_SEWER_01                           CONN_SEWER_07                            327.59 0.013     0.00     0.00      0.00     0.00
+PIPE_SEWER_MAIN_01_segment_01            PIPE_SEWER_MAIN_01_station_000           CONN_SEWER_07                            207.70 0.013     0.00     0.00      0.00     0.00
+PIPE_SEWER_MAIN_01_segment_02            CONN_SEWER_07                            CONN_SEWER_09                             62.36 0.013     0.00     0.00      0.00     0.00
+PIPE_SEWER_MAIN_02_segment_01            CONN_SEWER_10                            CONN_SEWER_08                             55.05 0.013     0.00     0.00      0.00     0.00
+PIPE_SEWER_MAIN_02_segment_02            CONN_SEWER_08                            ELBOW_SEWER_05                           654.31 0.013     0.00     0.00      0.00     0.00
+PIPE_SEWER_LATERAL_H_02                  CONN_SEWER_02                            ELBOW_SEWER_02                            37.61 0.013     0.00     0.00      0.00     0.00
+PIPE_SEWER_MAIN_DROP_01                  ELBOW_SEWER_05                           CONN_SEWER_11                            490.77 0.013     0.00     0.00      0.00     0.00
+PIPE_INTERCEPTOR_01_segment_01           PIPE_INTERCEPTOR_01_station_000          CONN_SEWER_11                            1176.89 0.013     0.00     0.00      0.00     0.00
+PIPE_INTERCEPTOR_01_segment_02           CONN_SEWER_11                            CONN_COMB_05                             1674.02 0.013     0.00     0.00      0.00     0.00
+PIPE_INTERCEPTOR_01_segment_03           CONN_COMB_05                             CONN_SEWER_12                            118.79 0.013     0.00     0.00      0.00     0.00
+PIPE_STORM_LATERAL_H_01                  CONN_STORM_01                            ELBOW_STORM_01                            28.00 0.013     0.00     0.00      0.00     0.00
+PIPE_STORM_LATERAL_H_02                  CONN_STORM_02                            ELBOW_STORM_02                            28.00 0.013     0.00     0.00      0.00     0.00
+PIPE_STORM_MAIN_02                       CONN_STORM_09                            ELBOW_STORM_05                           272.44 0.013     0.00     0.00      0.00     0.00
+PIPE_STORM_MAIN_DROP_01                  ELBOW_STORM_05                           CONN_STORM_11                            363.77 0.013     0.00     0.00      0.00     0.00
+PIPE_STORM_TRUNK_01_segment_01           PIPE_STORM_TRUNK_01_station_000          CONN_STORM_11                            1369.96 0.013     0.00     0.00      0.00     0.00
+PIPE_STORM_TRUNK_01_segment_02           CONN_STORM_11                            CONN_STORM_12                            241.76 0.013     0.00     0.00      0.00     0.00
+PIPE_SEWER_LATERAL_H_03                  CONN_SEWER_03                            ELBOW_SEWER_03                           108.39 0.013     0.00     0.00      0.00     0.00
+PIPE_SEWER_LATERAL_V_03                  ELBOW_SEWER_03                           CONN_SEWER_05                            151.65 0.013     0.00     0.00      0.00     0.00
+PIPE_SEWER_LATERAL_H_04                  CONN_SEWER_04                            ELBOW_SEWER_04                            61.03 0.013     0.00     0.00      0.00     0.00
+PIPE_SEWER_LATERAL_V_04                  ELBOW_SEWER_04                           CONN_SEWER_06                            151.66 0.013     0.00     0.00      0.00     0.00
+PIPE_STORM_LATERAL_H_03                  CONN_STORM_03                            ELBOW_STORM_03                            28.00 0.013     0.00     0.00      0.00     0.00
+PIPE_STORM_LATERAL_V_03                  ELBOW_STORM_03                           CONN_STORM_05                            113.93 0.013     0.00     0.00      0.00     0.00
+PIPE_COMB_MAIN_01_segment_01             PIPE_COMB_MAIN_01_station_000            CONN_SEWER_05                            1556.19 0.013     0.00     0.00      0.00     0.00
+PIPE_COMB_MAIN_01_segment_02             CONN_SEWER_05                            CONN_SEWER_06                            253.40 0.013     0.00     0.00      0.00     0.00
+PIPE_COMB_MAIN_01_segment_03             CONN_SEWER_06                            CONN_STORM_05                            369.67 0.013     0.00     0.00      0.00     0.00
+PIPE_COMB_MAIN_01_segment_04             CONN_STORM_05                            CONN_COMB_01                             113.97 0.013     0.00     0.00      0.00     0.00
+PIPE_COMB_MAIN_02_segment_01             CONN_COMB_02                             CONN_STORM_06                            125.66 0.013     0.00     0.00      0.00     0.00
+PIPE_COMB_MAIN_02_segment_02             CONN_STORM_06                            CONN_COMB_03                             188.17 0.013     0.00     0.00      0.00     0.00
+PIPE_OVERFLOW_OUTFALL_PIPE_01            CONN_OVERFLOW_01                         CONN_OVERFLOW_02                         349.29 0.013     0.00     0.00      0.00     0.00
+PIPE_STORM_TRUNK_02                      CONN_STORM_13                            CONN_STORM_14                            1434.85 0.013     0.00     0.00      0.00     0.00
+PIPE_OVERFLOW_INTERCEPTOR_DROP_01        CONN_COMB_04                             CONN_COMB_05                             669.85 0.013     0.00     0.00      0.00     0.00
+PIPE_TREATED_OUTFALL_PIPE_01             CONN_TREATED_01                          CONN_TREATED_02                          131.19 0.013     0.00     0.00      0.00     0.00
+PIPE_STORM_LATERAL_H_04                  CONN_STORM_04                            ELBOW_STORM_04                            28.00 0.013     0.00     0.00      0.00     0.00
+PIPE_STORM_LATERAL_V_04                  ELBOW_STORM_04                           CONN_STORM_06                            113.52 0.013     0.00     0.00      0.00     0.00
+PIPE_SEWER_LATERAL_V_02                  ELBOW_SEWER_02                           CONN_SEWER_08                            329.45 0.013     0.00     0.00      0.00     0.00
+PIPE_STORM_LATERAL_V_01                  ELBOW_STORM_01                           CONN_STORM_08                            211.10 0.013     0.00     0.00      0.00     0.00
+PIPE_STORM_LATERAL_V_02                  ELBOW_STORM_02                           CONN_STORM_07                            211.46 0.013     0.00     0.00      0.00     0.00
 
 [XSECTIONS]
-;;Link                         Shape      Geom1 Geom2 Geom3 Geom4 Barrels Culvert
-sep_catch_basin_1_inlet_connector          RECT_CLOSED 0.60  0.60  0.00  0.00  1       0
-sep_catch_basin_1_outlet_connector         CIRCULAR   0.45  0.00  0.00  0.00  1       0
-sep_catch_basin_2_inlet_connector          RECT_CLOSED 0.60  0.60  0.00  0.00  1       0
-sep_catch_basin_2_outlet_connector         CIRCULAR   0.45  0.00  0.00  0.00  1       0
-storm_pump_inlet_gate                      CIRCULAR   1.80  0.00  0.00  0.00  1       0
-pump_outfall_gate                          CIRCULAR   1.80  0.00  0.00  0.00  1       0
-treated_outfall_gate                       CIRCULAR   1.80  0.00  0.00  0.00  1       0
-offscreen_comb_catch_basin_inlet_connector RECT_CLOSED 0.60  0.60  0.00  0.00  1       0
-offscreen_comb_catch_basin_outlet_connector CIRCULAR   0.45  0.00  0.00  0.00  1       0
-comb_catch_basin_1_inlet_connector         RECT_CLOSED 0.60  0.60  0.00  0.00  1       0
-comb_catch_basin_1_outlet_connector        CIRCULAR   0.45  0.00  0.00  0.00  1       0
-comb_catch_basin_2_inlet_connector         RECT_CLOSED 0.60  0.60  0.00  0.00  1       0
-comb_catch_basin_2_outlet_connector        CIRCULAR   0.45  0.00  0.00  0.00  1       0
-overflow_normal_flow_gate                  CIRCULAR   0.95  0.00  0.00  0.00  1       0
-overflow_outfall_gate                      CIRCULAR   1.80  0.00  0.00  0.00  1       0
-sep_sewer_lateral_apartment_1_horizontal   CIRCULAR   0.45  0.00  0.00  0.00  1       0
-sep_sewer_lateral_apartment_1_vertical     CIRCULAR   0.45  0.00  0.00  0.00  1       0
-sep_sewer_lateral_apartment_2_horizontal   CIRCULAR   0.45  0.00  0.00  0.00  1       0
-sep_sewer_lateral_apartment_2_vertical     CIRCULAR   0.45  0.00  0.00  0.00  1       0
-sep_sewer_main_1_upstream_segment          CIRCULAR   1.05  0.00  0.00  0.00  1       0
-sep_sewer_main_1_downstream_segment        CIRCULAR   1.05  0.00  0.00  0.00  1       0
-sep_sewer_main_2_upstream_segment          CIRCULAR   1.05  0.00  0.00  0.00  1       0
-sep_sewer_main_2_downstream_segment        CIRCULAR   1.05  0.00  0.00  0.00  1       0
-sep_sewer_main_to_interceptor_horizontal   CIRCULAR   1.05  0.00  0.00  0.00  1       0
-sep_sewer_main_to_interceptor_vertical     CIRCULAR   1.05  0.00  0.00  0.00  1       0
-sep_interceptor_upstream_segment           CIRCULAR   1.80  0.00  0.00  0.00  1       0
-sep_interceptor_join_to_overflow_segment   CIRCULAR   1.80  0.00  0.00  0.00  1       0
-sep_interceptor_downstream_segment         CIRCULAR   1.80  0.00  0.00  0.00  1       0
-sep_interceptor_to_reclamation_inlet       CIRCULAR   1.80  0.00  0.00  0.00  1       0
-treatment_process_limited_outlet           CIRCULAR   1.20  0.00  0.00  0.00  1       0
-treatment_effluent_pipe                    CIRCULAR   1.80  0.00  0.00  0.00  1       0
-sep_storm_lateral_catch_basin_1_horizontal CIRCULAR   0.45  0.00  0.00  0.00  1       0
-sep_storm_lateral_catch_basin_1_vertical   CIRCULAR   0.45  0.00  0.00  0.00  1       0
-sep_storm_lateral_catch_basin_2_horizontal CIRCULAR   0.45  0.00  0.00  0.00  1       0
-sep_storm_lateral_catch_basin_2_vertical   CIRCULAR   0.45  0.00  0.00  0.00  1       0
-sep_storm_main_1_upstream_segment          CIRCULAR   1.20  0.00  0.00  0.00  1       0
-sep_storm_main_1_downstream_segment        CIRCULAR   1.20  0.00  0.00  0.00  1       0
-sep_storm_main_2_upstream_segment          CIRCULAR   1.20  0.00  0.00  0.00  1       0
-sep_storm_main_2_downstream_segment        CIRCULAR   1.20  0.00  0.00  0.00  1       0
-sep_storm_main_to_trunk_horizontal         CIRCULAR   0.80  0.00  0.00  0.00  1       0
-sep_storm_main_to_trunk_vertical           CIRCULAR   0.80  0.00  0.00  0.00  1       0
-sep_storm_trunk_upstream_segment           CIRCULAR   1.80  0.00  0.00  0.00  1       0
-sep_storm_trunk_downstream_segment         CIRCULAR   1.80  0.00  0.00  0.00  1       0
-sep_storm_trunk_to_pump_station            CIRCULAR   1.80  0.00  0.00  0.00  1       0
-storm_pump_discharge_pipe                  CIRCULAR   1.80  0.00  0.00  0.00  1       0
-offscreen_comb_sewer_lateral               CIRCULAR   0.45  0.00  0.00  0.00  1       0
-offscreen_comb_storm_lateral_horizontal    CIRCULAR   0.45  0.00  0.00  0.00  1       0
-offscreen_comb_storm_lateral_vertical      CIRCULAR   0.45  0.00  0.00  0.00  1       0
-comb_sewer_lateral_house_1_horizontal      CIRCULAR   0.45  0.00  0.00  0.00  1       0
-comb_sewer_lateral_house_1_vertical        CIRCULAR   0.45  0.00  0.00  0.00  1       0
-comb_sewer_lateral_house_2_horizontal      CIRCULAR   0.45  0.00  0.00  0.00  1       0
-comb_sewer_lateral_house_2_vertical        CIRCULAR   0.45  0.00  0.00  0.00  1       0
-comb_storm_lateral_catch_basin_1_horizontal CIRCULAR   0.45  0.00  0.00  0.00  1       0
-comb_storm_lateral_catch_basin_1_vertical  CIRCULAR   0.45  0.00  0.00  0.00  1       0
-comb_storm_lateral_catch_basin_2_horizontal CIRCULAR   0.45  0.00  0.00  0.00  1       0
-comb_storm_lateral_catch_basin_2_vertical  CIRCULAR   0.45  0.00  0.00  0.00  1       0
-comb_main_1_upstream_segment               CIRCULAR   1.20  0.00  0.00  0.00  1       0
-comb_main_1_house_1_to_house_2_segment     CIRCULAR   1.20  0.00  0.00  0.00  1       0
-comb_main_1_house_2_to_catch_basin_1_segment CIRCULAR   1.20  0.00  0.00  0.00  1       0
-comb_main_1_to_manhole_segment             CIRCULAR   1.20  0.00  0.00  0.00  1       0
-comb_main_2_manhole_to_catch_basin_2_segment CIRCULAR   1.20  0.00  0.00  0.00  1       0
-comb_main_2_downstream_segment             CIRCULAR   1.20  0.00  0.00  0.00  1       0
-overflow_to_interceptor_drop               CIRCULAR   0.95  0.00  0.00  0.00  1       0
-overflow_pipe                              CIRCULAR   1.80  0.00  0.00  0.00  1       0
-overflow_excess_weir                       RECT_OPEN  1.00  2.40  0.00  0.00  1       0
+;;Link                                   Shape      Geom1 Geom2 Geom3 Geom4 Barrels Culvert
+PIPE_STORM_MAIN_01_segment_01            CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_STORM_MAIN_01_segment_02            CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_SEWER_LATERAL_H_01                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
+PIPE_SEWER_LATERAL_V_01                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
+PIPE_SEWER_MAIN_01_segment_01            CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_SEWER_MAIN_01_segment_02            CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_SEWER_MAIN_02_segment_01            CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_SEWER_MAIN_02_segment_02            CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_SEWER_LATERAL_H_02                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
+PIPE_SEWER_MAIN_DROP_01                  CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_INTERCEPTOR_01_segment_01           CIRCULAR   1.00  0.00  0.00  0.00  1       0
+PIPE_INTERCEPTOR_01_segment_02           CIRCULAR   1.00  0.00  0.00  0.00  1       0
+PIPE_INTERCEPTOR_01_segment_03           CIRCULAR   1.00  0.00  0.00  0.00  1       0
+PIPE_STORM_LATERAL_H_01                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
+PIPE_STORM_LATERAL_H_02                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
+PIPE_STORM_MAIN_02                       CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_STORM_MAIN_DROP_01                  CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_STORM_TRUNK_01_segment_01           CIRCULAR   1.00  0.00  0.00  0.00  1       0
+PIPE_STORM_TRUNK_01_segment_02           CIRCULAR   1.00  0.00  0.00  0.00  1       0
+PIPE_SEWER_LATERAL_H_03                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
+PIPE_SEWER_LATERAL_V_03                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
+PIPE_SEWER_LATERAL_H_04                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
+PIPE_SEWER_LATERAL_V_04                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
+PIPE_STORM_LATERAL_H_03                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
+PIPE_STORM_LATERAL_V_03                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
+PIPE_COMB_MAIN_01_segment_01             CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_COMB_MAIN_01_segment_02             CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_COMB_MAIN_01_segment_03             CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_COMB_MAIN_01_segment_04             CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_COMB_MAIN_02_segment_01             CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_COMB_MAIN_02_segment_02             CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_OVERFLOW_OUTFALL_PIPE_01            CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_STORM_TRUNK_02                      CIRCULAR   1.00  0.00  0.00  0.00  1       0
+PIPE_OVERFLOW_INTERCEPTOR_DROP_01        CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_TREATED_OUTFALL_PIPE_01             CIRCULAR   0.60  0.00  0.00  0.00  1       0
+PIPE_STORM_LATERAL_H_04                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
+PIPE_STORM_LATERAL_V_04                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
+PIPE_SEWER_LATERAL_V_02                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
+PIPE_STORM_LATERAL_V_01                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
+PIPE_STORM_LATERAL_V_02                  CIRCULAR   0.30  0.00  0.00  0.00  1       0
 
 [LOSSES]
-;;Link                         InletLoss OutletLoss AverageLoss FlapGate SeepageRate
-sep_sewer_lateral_apartment_1_horizontal   0.00      0.00       0.00        NO       0.00
-sep_sewer_lateral_apartment_1_vertical     0.00      0.00       1.20        NO       0.00
-sep_sewer_lateral_apartment_2_horizontal   0.00      0.00       0.00        NO       0.00
-sep_sewer_lateral_apartment_2_vertical     0.00      0.00       1.20        NO       0.00
-sep_sewer_main_1_upstream_segment          0.00      0.00       0.00        NO       0.00
-sep_sewer_main_1_downstream_segment        0.00      0.00       0.00        NO       0.00
-sep_sewer_main_2_upstream_segment          0.00      0.00       0.00        NO       0.00
-sep_sewer_main_2_downstream_segment        0.00      0.00       0.00        NO       0.00
-sep_sewer_main_to_interceptor_horizontal   0.00      0.00       0.00        NO       0.00
-sep_sewer_main_to_interceptor_vertical     0.00      0.00       1.50        NO       0.00
-sep_interceptor_upstream_segment           0.00      0.00       0.00        NO       0.00
-sep_interceptor_join_to_overflow_segment   0.00      0.00       0.00        NO       0.00
-sep_interceptor_downstream_segment         0.00      0.00       0.00        NO       0.00
-sep_interceptor_to_reclamation_inlet       0.00      0.00       0.00        NO       0.00
-treatment_process_limited_outlet           0.00      0.00       0.00        NO       0.00
-treatment_effluent_pipe                    0.00      0.00       0.00        NO       0.00
-sep_storm_lateral_catch_basin_1_horizontal 0.00      0.00       0.00        NO       0.00
-sep_storm_lateral_catch_basin_1_vertical   0.00      0.00       1.20        NO       0.00
-sep_storm_lateral_catch_basin_2_horizontal 0.00      0.00       0.00        NO       0.00
-sep_storm_lateral_catch_basin_2_vertical   0.00      0.00       1.20        NO       0.00
-sep_storm_main_1_upstream_segment          0.00      0.00       0.00        NO       0.00
-sep_storm_main_1_downstream_segment        0.00      0.00       0.00        NO       0.00
-sep_storm_main_2_upstream_segment          0.00      0.00       0.00        NO       0.00
-sep_storm_main_2_downstream_segment        0.00      0.00       0.00        NO       0.00
-sep_storm_main_to_trunk_horizontal         0.00      0.00       0.00        NO       0.00
-sep_storm_main_to_trunk_vertical           0.00      0.00       1.50        NO       0.00
-sep_storm_trunk_upstream_segment           0.00      0.00       0.00        NO       0.00
-sep_storm_trunk_downstream_segment         0.00      0.00       0.00        NO       0.00
-sep_storm_trunk_to_pump_station            0.00      0.00       0.00        NO       0.00
-storm_pump_discharge_pipe                  0.00      0.00       0.00        NO       0.00
-offscreen_comb_sewer_lateral               0.00      0.00       0.00        NO       0.00
-offscreen_comb_storm_lateral_horizontal    0.00      0.00       0.00        NO       0.00
-offscreen_comb_storm_lateral_vertical      0.00      0.00       1.20        NO       0.00
-comb_sewer_lateral_house_1_horizontal      0.00      0.00       0.00        NO       0.00
-comb_sewer_lateral_house_1_vertical        0.00      0.00       1.20        NO       0.00
-comb_sewer_lateral_house_2_horizontal      0.00      0.00       0.00        NO       0.00
-comb_sewer_lateral_house_2_vertical        0.00      0.00       1.20        NO       0.00
-comb_storm_lateral_catch_basin_1_horizontal 0.00      0.00       0.00        NO       0.00
-comb_storm_lateral_catch_basin_1_vertical  0.00      0.00       1.20        NO       0.00
-comb_storm_lateral_catch_basin_2_horizontal 0.00      0.00       0.00        NO       0.00
-comb_storm_lateral_catch_basin_2_vertical  0.00      0.00       1.20        NO       0.00
-comb_main_1_upstream_segment               0.00      0.00       0.00        NO       0.00
-comb_main_1_house_1_to_house_2_segment     0.00      0.00       0.00        NO       0.00
-comb_main_1_house_2_to_catch_basin_1_segment 0.00      0.00       0.00        NO       0.00
-comb_main_1_to_manhole_segment             0.00      0.00       0.00        NO       0.00
-comb_main_2_manhole_to_catch_basin_2_segment 0.00      0.00       0.00        NO       0.00
-comb_main_2_downstream_segment             0.00      0.00       0.00        NO       0.00
-overflow_to_interceptor_drop               0.00      0.00       1.50        NO       0.00
-overflow_pipe                              0.00      0.00       0.00        NO       0.00
+;;Link                                   InletLoss OutletLoss AverageLoss FlapGate SeepageRate
+PIPE_STORM_MAIN_01_segment_01            0.00      0.00       0.00        NO       0.00
+PIPE_STORM_MAIN_01_segment_02            0.00      0.00       0.00        NO       0.00
+PIPE_SEWER_LATERAL_H_01                  0.00      0.00       0.00        NO       0.00
+PIPE_SEWER_LATERAL_V_01                  0.00      0.00       0.00        NO       0.00
+PIPE_SEWER_MAIN_01_segment_01            0.00      0.00       0.00        NO       0.00
+PIPE_SEWER_MAIN_01_segment_02            0.00      0.00       0.00        NO       0.00
+PIPE_SEWER_MAIN_02_segment_01            0.00      0.00       0.00        NO       0.00
+PIPE_SEWER_MAIN_02_segment_02            0.00      0.00       0.00        NO       0.00
+PIPE_SEWER_LATERAL_H_02                  0.00      0.00       0.00        NO       0.00
+PIPE_SEWER_MAIN_DROP_01                  0.00      0.00       0.00        NO       0.00
+PIPE_INTERCEPTOR_01_segment_01           0.00      0.00       0.00        NO       0.00
+PIPE_INTERCEPTOR_01_segment_02           0.00      0.00       0.00        NO       0.00
+PIPE_INTERCEPTOR_01_segment_03           0.00      0.00       0.00        NO       0.00
+PIPE_STORM_LATERAL_H_01                  0.00      0.00       0.00        NO       0.00
+PIPE_STORM_LATERAL_H_02                  0.00      0.00       0.00        NO       0.00
+PIPE_STORM_MAIN_02                       0.00      0.00       0.00        NO       0.00
+PIPE_STORM_MAIN_DROP_01                  0.00      0.00       0.00        NO       0.00
+PIPE_STORM_TRUNK_01_segment_01           0.00      0.00       0.00        NO       0.00
+PIPE_STORM_TRUNK_01_segment_02           0.00      0.00       0.00        NO       0.00
+PIPE_SEWER_LATERAL_H_03                  0.00      0.00       0.00        NO       0.00
+PIPE_SEWER_LATERAL_V_03                  0.00      0.00       0.00        NO       0.00
+PIPE_SEWER_LATERAL_H_04                  0.00      0.00       0.00        NO       0.00
+PIPE_SEWER_LATERAL_V_04                  0.00      0.00       0.00        NO       0.00
+PIPE_STORM_LATERAL_H_03                  0.00      0.00       0.00        NO       0.00
+PIPE_STORM_LATERAL_V_03                  0.00      0.00       0.00        NO       0.00
+PIPE_COMB_MAIN_01_segment_01             0.00      0.00       0.00        NO       0.00
+PIPE_COMB_MAIN_01_segment_02             0.00      0.00       0.00        NO       0.00
+PIPE_COMB_MAIN_01_segment_03             0.00      0.00       0.00        NO       0.00
+PIPE_COMB_MAIN_01_segment_04             0.00      0.00       0.00        NO       0.00
+PIPE_COMB_MAIN_02_segment_01             0.00      0.00       0.00        NO       0.00
+PIPE_COMB_MAIN_02_segment_02             0.00      0.00       0.00        NO       0.00
+PIPE_OVERFLOW_OUTFALL_PIPE_01            0.00      0.00       0.00        NO       0.00
+PIPE_STORM_TRUNK_02                      0.00      0.00       0.00        NO       0.00
+PIPE_OVERFLOW_INTERCEPTOR_DROP_01        0.00      0.00       0.00        NO       0.00
+PIPE_TREATED_OUTFALL_PIPE_01             0.00      0.00       0.00        NO       0.00
+PIPE_STORM_LATERAL_H_04                  0.00      0.00       0.00        NO       0.00
+PIPE_STORM_LATERAL_V_04                  0.00      0.00       0.00        NO       0.00
+PIPE_SEWER_LATERAL_V_02                  0.00      0.00       0.00        NO       0.00
+PIPE_STORM_LATERAL_V_01                  0.00      0.00       0.00        NO       0.00
+PIPE_STORM_LATERAL_V_02                  0.00      0.00       0.00        NO       0.00
 
 [INFLOWS]
-;;Node                         Constituent Time Series       Type   Mfactor Sfactor Baseline Pattern
-offscreen_catch_basin_storm_main_1         FLOW        TS_STORM_RAIN     FLOW   1.20    1.00     0.00
-road_runoff_sep_catch_basin_1              FLOW        TS_STORM_RAIN     FLOW   0.95    1.00     0.00
-road_runoff_sep_catch_basin_2              FLOW        TS_STORM_RAIN     FLOW   1.05    1.00     0.00
-sep_sewer_upstream                         FLOW        TS_SEWER_DWF      FLOW   3.00    1.00     0.00
-sep_apartment_1                            FLOW        TS_SEWER_DWF      FLOW   1.40    1.00     0.00
-sep_apartment_2                            FLOW        TS_SEWER_DWF      FLOW   1.50    1.00     0.00
-road_runoff_offscreen_comb_catch_basin     FLOW        TS_STORM_RAIN     FLOW   0.85    1.00     0.00
-road_runoff_comb_catch_basin_1             FLOW        TS_STORM_RAIN     FLOW   0.90    1.00     0.00
-road_runoff_comb_catch_basin_2             FLOW        TS_STORM_RAIN     FLOW   0.95    1.00     0.00
-offscreen_comb_sewer_source                FLOW        TS_SEWER_DWF      FLOW   1.20    1.00     0.00
-comb_house_1                               FLOW        TS_SEWER_DWF      FLOW   1.00    1.00     0.00
-comb_house_2                               FLOW        TS_SEWER_DWF      FLOW   1.10    1.00     0.00
+;;Node                                   Constituent Time Series       Type   Mfactor Sfactor Baseline Pattern
+APT_01                                   FLOW        TS_SEWER_DWF     FLOW   1.00    1.00     0.00
+APT_02                                   FLOW        TS_SEWER_DWF     FLOW   1.00    1.00     0.00
+CATCH_BASIN_01                           FLOW        TS_STORM_RAIN    FLOW   1.00    1.00     0.00
+CATCH_BASIN_02                           FLOW        TS_STORM_RAIN    FLOW   1.00    1.00     0.00
+CATCH_BASIN_03                           FLOW        TS_STORM_RAIN    FLOW   1.00    1.00     0.00
+CATCH_BASIN_04                           FLOW        TS_STORM_RAIN    FLOW   1.00    1.00     0.00
+CONN_COMB_02                             FLOW        TS_SEWER_DWF     FLOW   1.00    1.00     0.00
+CONN_COMB_02                             FLOW        TS_STORM_RAIN    FLOW   1.00    1.00     0.00
+CONN_SEWER_10                            FLOW        TS_SEWER_DWF     FLOW   1.00    1.00     0.00
+CONN_STORM_09                            FLOW        TS_STORM_RAIN    FLOW   1.00    1.00     0.00
+CONN_STORM_13                            FLOW        TS_STORM_RAIN    FLOW   1.00    1.00     0.00
+HOUSE_01                                 FLOW        TS_SEWER_DWF     FLOW   1.00    1.00     0.00
+HOUSE_02                                 FLOW        TS_SEWER_DWF     FLOW   1.00    1.00     0.00
+PIPE_COMB_MAIN_01_station_000            FLOW        TS_SEWER_DWF     FLOW   1.00    1.00     0.00
+PIPE_COMB_MAIN_01_station_000            FLOW        TS_STORM_RAIN    FLOW   1.00    1.00     0.00
+PIPE_SEWER_MAIN_01_station_000           FLOW        TS_SEWER_DWF     FLOW   1.00    1.00     0.00
+PIPE_STORM_MAIN_01_station_000           FLOW        TS_STORM_RAIN    FLOW   1.00    1.00     0.00
+PIPE_STORM_TRUNK_01_station_000          FLOW        TS_STORM_RAIN    FLOW   1.00    1.00     0.00
 
 [TIMESERIES]
-;;Name                         Time      Value
-TS_STORM_RAIN                              00:00    0.0000
-TS_STORM_RAIN                              00:20    0.0055
-TS_STORM_RAIN                              00:40    0.0248
-TS_STORM_RAIN                              01:00    0.0451
-TS_STORM_RAIN                              01:15    0.0550
-TS_STORM_RAIN                              01:35    0.0473
-TS_STORM_RAIN                              02:00    0.0220
-TS_STORM_RAIN                              02:30    0.0066
-TS_STORM_RAIN                              03:00    0.0000
-TS_SEWER_DWF                               00:00    0.0100
-TS_SEWER_DWF                               03:00    0.0100
-
-[CURVES]
-;;Name                         Type   X-Value  Y-Value
-STORM_PUMP_CURVE                           PUMP4  0.00     0.00
-STORM_PUMP_CURVE                                  0.50     0.25
-STORM_PUMP_CURVE                                  0.80     0.55
-STORM_PUMP_CURVE                                  1.50     1.10
-STORM_PUMP_CURVE                                  2.20     1.60
+;;Name                                   Time      Value
+TS_STORM_RAIN                           00:00    0.0000
+TS_STORM_RAIN                           01:00    0.0000
+TS_SEWER_DWF                            00:00    0.0050
+TS_SEWER_DWF                            01:00    0.0050
 
 [REPORT]
 INPUT      YES
@@ -347,77 +264,79 @@ NODES ALL
 LINKS ALL
 
 [MAP]
-DIMENSIONS 0 0 5000 1900
+DIMENSIONS 0.00 0.00 4880.60 1304.00
 Units      Meters
 
 [COORDINATES]
-;;Node                         X-Coord          Y-Coord
-road_runoff_sep_catch_basin_1              1195             1654
-road_runoff_sep_catch_basin_2              1985             1654
-sep_apartment_1                            245              1682
-sep_apartment_2                            847              1682
-sep_sewer_lateral_apartment_1_elbow_connector 365              1682
-sep_sewer_lateral_apartment_2_elbow_connector 727              1682
-sep_sewer_upstream                         0                1075
-sep_sewer_main_1_apartment_1_connector     365              1075
-sep_sewer_manhole                          546              1075
-sep_sewer_main_2_apartment_2_connector     727              1075
-sep_sewer_downstream                       2170             1075
-sep_sewer_main_to_interceptor_elbow_connector 2264             1075
-sep_interceptor_upstream                   0                231
-sep_interceptor_join                       2264             231
-overflow_interceptor_join                  4753             231
-sep_interceptor_downstream                 4978             231
-treatment_process_outlet_node              5578             223
-treated_outfall_gate_node                  5870             223
-sep_storm_lateral_catch_basin_1_start      1250             1586
-sep_storm_lateral_catch_basin_1_elbow_connector 1370             1586
-sep_storm_lateral_catch_basin_2_start      2040             1586
-sep_storm_lateral_catch_basin_2_elbow_connector 2160             1586
-sep_storm_main_1_catch_basin_1_connector   1370             1370
-offscreen_catch_basin_storm_main_1         0                1370
-sep_storm_manhole                          1704             1370
-sep_storm_main_2_catch_basin_2_connector   2160             1370
-sep_storm_main_2_outlet_connector          2240             1370
-sep_storm_main_to_trunk_elbow_connector    2355             1370
-sep_storm_trunk_upstream                   0                766
-sep_storm_trunk_main_2_drop_connector      2355             766
-sep_storm_trunk_downstream                 4800             766
-storm_pump_inlet_gate_node                 4885             762
-storm_pump_discharge_node                  5400             761
-pump_outfall_gate_node                     5870             761
-road_runoff_offscreen_comb_catch_basin     2440             1654
-offscreen_comb_sewer_source                2440             1262
-offscreen_comb_storm_lateral_start         2480             1586
-offscreen_comb_storm_lateral_elbow_connector 2510             1586
-comb_upstream                              2440             1223
-comb_house_1                               2645             1682
-comb_sewer_lateral_house_1_elbow_connector 2850             1682
-comb_main_house_1_connector                2850             1223
-comb_house_2                               3075             1682
-comb_sewer_lateral_house_2_elbow_connector 3280             1682
-comb_main_house_2_connector                3280             1223
-road_runoff_comb_catch_basin_1             3475             1654
-comb_storm_lateral_catch_basin_1_start     3530             1586
-comb_storm_lateral_catch_basin_1_elbow_connector 3650             1586
-comb_main_catch_basin_1_connector          3650             1223
-combined_manhole                           3900             1223
-road_runoff_comb_catch_basin_2             4225             1654
-comb_storm_lateral_catch_basin_2_start     4280             1586
-comb_storm_lateral_catch_basin_2_elbow_connector 4400             1586
-comb_main_catch_basin_2_connector          4400             1223
-overflow_normal_flow_node                  4753             1054
-overflow_weir_outlet_node                  5012             1223
-overflow_outfall_gate_node                 5870             1223
-sep_catch_basin_1                          1195             1576
-sep_catch_basin_2                          1985             1576
-offscreen_comb_catch_basin                 2440             1576
-comb_catch_basin_1                         3475             1576
-comb_catch_basin_2                         4225             1576
-overflow_chamber                           4752             1220
-storm_pump_station                         5092             762
-water_reclamation_center                   5270             228
-overflow_outfall                           6028             1223
-pump_outfall                               6054             761
-treated_outfall                            6028             223
-
+;;Node                                   X-Coord          Y-Coord
+APT_01                                   181.87           1214.00         
+APT_02                                   628.15           1214.00         
+CONN_SEWER_01                            225.12           1187.78         
+ELBOW_SEWER_01                           283.84           1173.53         
+ELBOW_SEWER_02                           514.72           1172.50         
+CONN_SEWER_09                            370.45           787.44          
+CONN_SEWER_07                            298.09           813.19          
+CONN_SEWER_08                            500.47           811.32          
+CONN_SEWER_10                            435.45           785.57          
+CONN_SEWER_02                            584.90           1186.75         
+ELBOW_SEWER_05                           1201.81          760.57          
+CONN_SEWER_11                            1226.81          212.68          
+FAC_WATER_RECLAMATION_01                 3128.22          175.18          
+CONN_SEWER_12                            3031.97          175.18          
+CONN_TREATED_01                          3224.47          175.18          
+CATCH_BASIN_01                           839.41           1148.00         
+CONN_STORM_01                            887.66           1148.00         
+ELBOW_STORM_01                           949.50           1133.75         
+CATCH_BASIN_02                           1322.18          1148.00         
+CONN_STORM_02                            1273.93          1148.00         
+ELBOW_STORM_02                           1213.18          1133.75         
+CONN_STORM_08                            963.75           889.90          
+CONN_STORM_10                            1047.39          864.15          
+CONN_STORM_09                            1112.39          864.15          
+CONN_STORM_07                            1198.93          889.90          
+ELBOW_STORM_05                           1441.83          839.15          
+CONN_STORM_12                            1721.60          380.88          
+FAC_PUMP_STATION_01                      1817.85          380.88          
+CONN_STORM_11                            1466.83          418.38          
+HOUSE_01                                 1452.24          1206.50         
+CONN_SEWER_03                            1500.49          1186.75         
+ELBOW_SEWER_03                           1641.63          1172.50         
+HOUSE_02                                 1753.19          1206.50         
+CONN_SEWER_04                            1801.44          1186.75         
+ELBOW_SEWER_04                           1895.22          1172.50         
+CATCH_BASIN_03                           2155.19          1148.00         
+CONN_STORM_03                            2203.44          1148.00         
+ELBOW_STORM_03                           2264.74          1133.75         
+CONN_STORM_05                            2278.99          988.09          
+MH_COMB_01                               2434.77          1058.92         
+CONN_SEWER_05                            1655.88          988.09          
+CONN_SEWER_06                            1909.47          988.09          
+CONN_COMB_01                             2402.27          962.34          
+CONN_COMB_02                             2467.27          962.34          
+FAC_OVERFLOW_CHAMBER_01                  2900.91          962.34          
+CONN_COMB_03                             2800.91          962.34          
+CONN_OVERFLOW_01                         3000.91          962.34          
+CONN_OVERFLOW_02                         3371.23          962.34          
+OVERFLOW_OUTFALL_01                      3436.23          962.34          
+CONN_STORM_13                            1914.10          380.88          
+PUMP_OUTFALL_01                          3443.28          380.88          
+CONN_STORM_14                            3374.53          380.88          
+CONN_TREATED_02                          3382.66          175.18          
+TREATED_OUTFALL_01                       3451.41          175.18          
+ROAD_02                                  2428.86          1204.00         
+ROAD_01                                  1076.25          1204.00         
+CONN_COMB_04                             2900.91          906.09          
+CONN_COMB_05                             2900.91          212.68          
+TERRAIN_RIVER_01                         3780.60          614.14          
+TERRAIN_RIVER_02                         4480.60          612.00          
+CATCH_BASIN_04                           2726.19          1148.00         
+CONN_STORM_04                            2677.94          1148.00         
+ELBOW_STORM_04                           2617.19          1133.75         
+CONN_STORM_06                            2602.94          988.09          
+MH_SEWER_01                              402.95           970.54          
+MH_STORM_01                              1079.89          1009.83         
+PIPE_STORM_MAIN_01_station_000           91.88            864.15          
+PIPE_SEWER_MAIN_01_station_000           90.39            787.44          
+PIPE_INTERCEPTOR_01_station_000          50.00            175.18          
+PIPE_STORM_TRUNK_01_station_000          96.87            380.88          
+PIPE_COMB_MAIN_01_station_000            99.77            962.34          

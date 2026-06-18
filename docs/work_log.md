@@ -2,6 +2,22 @@
 
 최신 작업을 위에 기록한다. 새 작업을 시작하기 전에는 최근 3개 항목을 먼저 확인한다.
 
+## 2026-06-18 KST - INP 단독 다운로드 warning 헤더 인코딩 수정
+
+- 작업 요약: React의 `INP만 다운로드` 버튼에서 `Failed to fetch`가 뜨던 문제를 수정했다. 변환 자체는 성공했지만 서버가 `X-Editor-Inp-Warnings` 응답 헤더에 한국어 warning 문자열을 그대로 넣으면서 HTTP 헤더가 깨져 브라우저 fetch가 실패했다. warning header를 ASCII JSON escape(`ensure_ascii=True`)로 보내도록 바꿨다.
+- 주요 파일: `server/swmm_engine_server.py`, `docs/work_log.md`
+- 검증 결과: `python3 -m py_compile server/swmm_engine_server.py` 통과. 수정된 서버를 `127.0.0.1:8765`로 재시작한 뒤 `/editor/export-inp` POST 요청이 200으로 `generated_from_editor.inp` 28919 bytes를 반환하는 것 확인. CORS/preflight와 warning header도 정상 확인.
+- 계층 영향: 서버의 INP 텍스트 다운로드 응답 헤더만 변경했다. 변환 규칙, React UI, SWMM 모델 원본은 변경하지 않았다.
+- 주의점: warning 내용은 기존처럼 React에서 alert로 표시되며, 헤더 내부에서는 `\\uXXXX` escape 형태로 전송된다.
+
+## 2026-06-18 KST - SWMM MAP 좌표를 React 레이아웃 기준으로 정규화
+
+- 작업 요약: React에서 화면 밖까지 이어지는 긴 관이 SWMM GUI에서는 중간부터 시작하는 것처럼 보이던 문제를 수정했다. 기존 변환기는 conduit `Length`는 React 관 길이 기반으로 계산했지만 `[MAP] DIMENSIONS`를 `0 0 3000 2000`으로 고정했고, y축 반전도 고정 `mapHeight=2000` 기준이라 큰/음수 좌표 레이아웃에서 SWMM GUI 표시가 어긋났다. 이제 전체 React node bounds를 기준으로 좌표를 meter 단위로 정규화하고 y축을 뒤집으며, `[MAP] DIMENSIONS`도 동적으로 출력한다. React 원본 좌표는 mapping JSON의 `reactPoint`에 계속 보존한다.
+- 주요 파일: `scripts/editor_layout_to_swmm_inp.py`, `docs/work_log.md`
+- 검증 결과: `python3 -m py_compile scripts/editor_layout_to_swmm_inp.py server/swmm_engine_server.py` 통과. `/Users/onseoktae/Downloads/drainage-layout (1).json` 변환에서 error 0개, 기존 방향 warning 6개 유지, `PIPE_COMB_MAIN_01` 길이 2105.31m 유지 확인. 새 `[MAP] DIMENSIONS`는 `0.00 0.00 5036.21 1409.00`으로 출력되고, 합류식 본관 시작점은 SWMM 좌표 x=56.34m로 맵 왼쪽 근처에 배치되는 것 확인.
+- 계층 영향: JSON -> SWMM INP 변환기의 지도 좌표/맵 범위 산출만 변경했다. 관 수리 길이 계산은 기존처럼 React 파이프 width/height 및 attach station 기반을 유지하고, 너무 짧은 경우에만 최소 conduit length 1.0m 보정을 적용한다. React UI, 서버 API shape, 기존 SWMM 모델 원본은 변경하지 않았다.
+- 주의점: SWMM `[COORDINATES]`는 GUI 표시 안정성을 위해 React 좌표를 그대로 쓰지 않고 전체 레이아웃 bounds 기준으로 양수 좌표로 평행이동한다. 원본 React 좌표가 필요하면 `swmm-react-mapping.json`의 `reactPoint`를 확인한다.
+
 ## 2026-06-18 KST - React editor JSON -> SWMM 변환 검증/ZIP 패널 추가
 
 - 작업 요약: React editor JSON을 기준으로 SWMM GUI 확인용 `.inp`, 변환 리포트 JSON, React/SWMM 매핑 JSON을 생성하는 1차 변환 흐름을 확장했다. 선택한 정책(0.5m/px, 지표고 100m, y좌표 기반 invert/max depth, 관경 소/중/대 0.3/0.6/1.0m, Manning n 0.013, 강우 직접 유입 기본 0mm/h, 오수 DWF 0.005 CMS, 방류구 FREE, warning/error 분리)을 변환기에 반영했고, 서버에 검증 JSON API와 ZIP 다운로드 API를 추가했다. React 오른쪽 패널에는 `시뮬레이션` 섹션을 추가해 검증, ZIP 다운로드, report/mapping JSON 다운로드를 실행할 수 있게 했다.
