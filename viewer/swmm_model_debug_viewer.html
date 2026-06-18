@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SWMM 모델 디버그 뷰어</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --ink: #142033;
+      --muted: #64748b;
+      --line: #d8e0ea;
+      --soil: #9f6335;
+      --water: #1bb7c5;
+      --storm-fill: #c7e3ff;
+      --storm-stroke: #1684ed;
+      --sewer-fill: #fff1d8;
+      --sewer-stroke: #aa6a2c;
+      --combined-fill: #f3edff;
+      --combined-stroke: #7657d7;
+      --overflow-fill: #ead9d7;
+      --overflow-stroke: #b75b5b;
+      --treated-fill: #d6ead9;
+      --treated-stroke: #42a568;
+      --unknown-fill: #e2e8f0;
+      --unknown-stroke: #475569;
+      --offscreen-stroke: #94a3b8;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, .94);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+      min-width: 430px;
+    }
+
+    .control {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 36px;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .control input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #2563eb;
+    }
+
+    .control input[type="range"] {
+      width: 130px;
+      accent-color: #2563eb;
+    }
+
+    .control output {
+      min-width: 42px;
+      text-align: right;
+      color: #0f172a;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    .canvas-shell,
+    .side-panel {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, .07);
+      overflow: hidden;
+    }
+
+    .canvas-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .canvas-wrap {
+      overflow: auto;
+      height: calc(100vh - 148px);
+      min-height: 620px;
+      background:
+        linear-gradient(#e7f6ff 0 360px, transparent 360px),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.08) 0 2px, transparent 2px 22px),
+        var(--soil);
+    }
+
+    svg {
+      display: block;
+      min-width: 1600px;
+      min-height: 780px;
+    }
+
+    .ground-sky {
+      fill: #e7f6ff;
+    }
+
+    .ground-soil {
+      fill: var(--soil);
+    }
+
+    .river {
+      fill: var(--water);
+    }
+
+    .river-line {
+      fill: none;
+      stroke: rgba(255, 255, 255, .58);
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+
+    .axis-line {
+      stroke: rgba(15, 23, 42, .18);
+      stroke-width: 2;
+      stroke-dasharray: 12 12;
+    }
+
+    .section-title {
+      font-size: 42px;
+      font-weight: 950;
+      fill: #0f172a;
+      paint-order: stroke;
+      stroke: rgba(255, 255, 255, .92);
+      stroke-width: 8px;
+    }
+
+    .debug-link {
+      cursor: pointer;
+      transition: opacity .16s ease, filter .16s ease;
+    }
+
+    .debug-link:hover {
+      filter: drop-shadow(0 0 9px rgba(37, 99, 235, .28));
+    }
+
+    .pipe-outline,
+    .pipe-fill,
+    .pipe-center {
+      fill: none;
+      stroke-linecap: butt;
+      stroke-linejoin: round;
+    }
+
+    .pipe-outline {
+      stroke: rgba(15, 23, 42, .55);
+    }
+
+    .pipe-fill {
+      opacity: .94;
+    }
+
+    .pipe-center {
+      stroke: rgba(15, 23, 42, .34);
+      stroke-dasharray: 28 22;
+      stroke-linecap: round;
+      opacity: .76;
+    }
+
+    .debug-link.is-offscreen {
+      opacity: .24;
+    }
+
+    .debug-link.is-offscreen .pipe-fill {
+      stroke: #edf2f7;
+    }
+
+    .debug-link.is-offscreen .pipe-outline {
+      stroke: var(--offscreen-stroke);
+    }
+
+    .debug-node {
+      cursor: pointer;
+    }
+
+    .node-circle {
+      fill: #fff;
+      stroke: rgba(15, 23, 42, .65);
+      stroke-width: 4;
+    }
+
+    .node-circle.is-storage {
+      fill: #fef9c3;
+    }
+
+    .node-circle.is-outfall {
+      fill: #ccfbf1;
+    }
+
+    .node-circle.is-manhole {
+      stroke-width: 7;
+    }
+
+    .node-circle.is-offscreen {
+      fill: #f1f5f9;
+      stroke: var(--offscreen-stroke);
+      stroke-dasharray: 6 5;
+      opacity: .55;
+    }
+
+    .manhole-inner {
+      pointer-events: none;
+      opacity: .94;
+    }
+
+    .manhole-grille {
+      pointer-events: none;
+      fill: none;
+      stroke: rgba(255, 255, 255, .9);
+      stroke-width: 5;
+      stroke-linecap: round;
+    }
+
+    .link-label,
+    .node-label,
+    .manhole-label {
+      pointer-events: none;
+      dominant-baseline: central;
+      text-anchor: middle;
+      fill: #111827;
+      font-weight: 950;
+      paint-order: stroke;
+      stroke: rgba(255, 255, 255, .96);
+      stroke-width: 6px;
+    }
+
+    .link-label {
+      font-size: 20px;
+    }
+
+    .node-label {
+      font-size: 15px;
+      fill: #334155;
+      stroke-width: 5px;
+    }
+
+    .manhole-label {
+      font-size: 22px;
+      fill: #111827;
+      stroke-width: 7px;
+    }
+
+    body.hide-labels .link-label,
+    body.hide-labels .manhole-label {
+      display: none;
+    }
+
+    body.hide-node-labels .node-label {
+      display: none;
+    }
+
+    body.hide-offscreen .is-offscreen {
+      display: none;
+    }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #334155;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 3px solid currentColor;
+      background: var(--swatch-fill);
+    }
+
+    .side-section {
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .side-section h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .stat {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fafc;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 18px;
+      color: #0f172a;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      font-size: 13px;
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: 112px minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      padding: 8px 0;
+      border-bottom: 1px dashed #e2e8f0;
+    }
+
+    .detail-row dt {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .detail-row dd {
+      margin: 0;
+      min-width: 0;
+      overflow-wrap: anywhere;
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    .empty {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .selected .pipe-outline,
+    .selected .node-circle {
+      stroke: #f59e0b;
+      stroke-width: 8;
+    }
+
+    @media (max-width: 1100px) {
+      header,
+      main {
+        display: block;
+      }
+
+      .controls {
+        justify-content: flex-start;
+        min-width: 0;
+        margin-top: 12px;
+      }
+
+      main {
+        padding: 10px;
+      }
+
+      .side-panel {
+        margin-top: 12px;
+      }
+    }
+  </style>
+</head>
+<body class="hide-offscreen hide-node-labels">
+  <header>
+    <div>
+      <h1>SWMM 모델 디버그 뷰어</h1>
+      <p class="subtitle">SWMM contract의 노드 좌표, 링크 연결, 관경, 고도 경사를 그대로 확인하는 디버그 전용 화면입니다.</p>
+    </div>
+    <div class="controls" aria-label="디버그 표시 설정">
+      <label class="control">
+        <input id="show-offscreen" type="checkbox">
+        화면 밖 관 표시
+      </label>
+      <label class="control">
+        <input id="show-labels" type="checkbox" checked>
+        관 이름 표시
+      </label>
+      <label class="control">
+        <input id="show-node-labels" type="checkbox">
+        노드 ID 표시
+      </label>
+      <label class="control">
+        <input id="exaggerate-slope" type="checkbox" checked>
+        경사 강조
+      </label>
+      <label class="control">
+        경사 배율
+        <input id="slope-scale" type="range" min="0" max="80" step="5" value="35">
+        <output id="slope-scale-output">35x</output>
+      </label>
+    </div>
+  </header>
+
+  <main>
+    <section class="canvas-shell">
+      <div class="canvas-toolbar">
+        <span id="model-summary">모델 로딩 중</span>
+        <span>색상: 우수 / 오수 / 합류 / 월류 / 처리수</span>
+      </div>
+      <div class="canvas-wrap">
+        <svg id="debug-svg" role="img" aria-label="SWMM 모델 디버그 관망"></svg>
+      </div>
+    </section>
+
+    <aside class="side-panel">
+      <div class="legend" aria-label="색상 범례">
+        <div class="legend-item" style="color: var(--storm-stroke); --swatch-fill: var(--storm-fill);"><span class="swatch"></span>우수</div>
+        <div class="legend-item" style="color: var(--sewer-stroke); --swatch-fill: var(--sewer-fill);"><span class="swatch"></span>오수</div>
+        <div class="legend-item" style="color: var(--combined-stroke); --swatch-fill: var(--combined-fill);"><span class="swatch"></span>합류</div>
+        <div class="legend-item" style="color: var(--overflow-stroke); --swatch-fill: var(--overflow-fill);"><span class="swatch"></span>월류</div>
+        <div class="legend-item" style="color: var(--treated-stroke); --swatch-fill: var(--treated-fill);"><span class="swatch"></span>처리수</div>
+        <div class="legend-item" style="color: var(--offscreen-stroke); --swatch-fill: #f8fafc;"><span class="swatch"></span>화면 밖</div>
+      </div>
+      <div class="side-section">
+        <h2>선택 객체</h2>
+        <div id="selected-detail" class="empty">관이나 노드를 클릭하면 SWMM 속성이 표시됩니다.</div>
+      </div>
+      <div class="side-section">
+        <h2>모델 요약</h2>
+        <div class="stats-grid">
+          <div class="stat"><strong id="stat-objects">-</strong><span>HTML 객체</span></div>
+          <div class="stat"><strong id="stat-links">-</strong><span>SWMM 링크</span></div>
+          <div class="stat"><strong id="stat-nodes">-</strong><span>SWMM 노드</span></div>
+          <div class="stat"><strong id="stat-hidden">-</strong><span>화면 밖 링크</span></div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script src="swmm_html_contract.js"></script>
+  <script>
+    const contract = window.SWMM_HTML_CONTRACT;
+    const svg = document.querySelector('#debug-svg');
+    const detailEl = document.querySelector('#selected-detail');
+    const modelSummaryEl = document.querySelector('#model-summary');
+    const slopeScaleInput = document.querySelector('#slope-scale');
+    const slopeScaleOutput = document.querySelector('#slope-scale-output');
+    const showOffscreenInput = document.querySelector('#show-offscreen');
+    const showLabelsInput = document.querySelector('#show-labels');
+    const showNodeLabelsInput = document.querySelector('#show-node-labels');
+    const exaggerateSlopeInput = document.querySelector('#exaggerate-slope');
+    const NS = 'http://www.w3.org/2000/svg';
+
+    const COLOR_BY_WATER_TYPE = {
+      storm: { fill: '#c7e3ff', stroke: '#1684ed' },
+      sewer: { fill: '#fff1d8', stroke: '#aa6a2c' },
+      combined: { fill: '#f3edff', stroke: '#7657d7' },
+      overflow: { fill: '#ead9d7', stroke: '#b75b5b' },
+      treated: { fill: '#d6ead9', stroke: '#42a568' },
+      default: { fill: '#e2e8f0', stroke: '#475569' },
+    };
+
+    const SECTION_LABELS = [
+      { label: '분류식', x: 1700, y: 1220 },
+      { label: '합류식', x: 4050, y: 1220 },
+      { label: '하천', x: 6130, y: 1030 },
+    ];
+
+    let selectedId = null;
+
+    function createSvgElement(tag, attrs = {}) {
+      const element = document.createElementNS(NS, tag);
+      Object.entries(attrs).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) element.setAttribute(key, String(value));
+      });
+      return element;
+    }
+
+    function nodeIndex() {
+      return contract?.swmmIndexes?.nodes || {};
+    }
+
+    function linkIndex() {
+      return contract?.swmmIndexes?.links || {};
+    }
+
+    function visualObjects() {
+      return contract?.visualObjects || [];
+    }
+
+    function isOffscreenId(id = '') {
+      return id.includes('offscreen');
+    }
+
+    function linkIsOffscreen(link) {
+      return isOffscreenId(link?.id) || isOffscreenId(link?.fromNode) || isOffscreenId(link?.toNode);
+    }
+
+    function nodeIsOffscreen(nodeId) {
+      return isOffscreenId(nodeId);
+    }
+
+    function objectForLink(linkId) {
+      return visualObjects().find((object) => (object.resolvedLinks || []).some((link) => link.id === linkId));
+    }
+
+    function objectForNode(nodeId) {
+      const matches = visualObjects().filter((object) => (object.swmmNodes || []).includes(nodeId));
+      return matches.find((object) => object.objectType === 'manhole')
+        || matches.find((object) => object.objectType === 'overflow_facility')
+        || matches.find((object) => object.objectType === 'pump_station')
+        || matches.find((object) => object.objectType === 'treatment_facility')
+        || matches[0];
+    }
+
+    function numberOrNull(value) {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : null;
+    }
+
+    function formatNumber(value, digits = 3, suffix = '') {
+      const parsed = numberOrNull(value);
+      if (parsed === null) return '-';
+      return `${parsed.toFixed(digits)}${suffix}`;
+    }
+
+    function getNodeElevation(nodeId) {
+      return numberOrNull(nodeIndex()[nodeId]?.elevationM) ?? 0;
+    }
+
+    function mapYRange() {
+      const values = Object.values(nodeIndex())
+        .map((node) => numberOrNull(node.map?.y))
+        .filter((value) => value !== null);
+      if (!values.length) return { min: 0, max: 0 };
+      return { min: Math.min(...values), max: Math.max(...values) };
+    }
+
+    function convertSwmmYToSvgY(y) {
+      const range = mapYRange();
+      return range.max - y + range.min;
+    }
+
+    function getRawPoint(nodeId) {
+      const map = nodeIndex()[nodeId]?.map;
+      if (!map) return null;
+      const x = numberOrNull(map.x);
+      const y = numberOrNull(map.y);
+      if (x === null || y === null) return null;
+      return { x, y: convertSwmmYToSvgY(y), sourceY: y };
+    }
+
+    function elevationReference() {
+      const elevations = Object.values(nodeIndex()).map((node) => numberOrNull(node.elevationM)).filter((value) => value !== null);
+      return elevations.length ? Math.max(...elevations) : 0;
+    }
+
+    function getPoint(nodeId) {
+      const raw = getRawPoint(nodeId);
+      if (!raw) return null;
+      if (!exaggerateSlopeInput.checked) return raw;
+      const scale = Number(slopeScaleInput.value || 0);
+      const reference = elevationReference();
+      const elevation = getNodeElevation(nodeId);
+      return {
+        x: raw.x,
+        y: raw.y + (reference - elevation) * scale,
+      };
+    }
+
+    function getLinkDisplayWidth(link) {
+      const geom1 = numberOrNull(link?.crossSection?.geom1);
+      if (geom1 !== null && geom1 > 0) return Math.max(16, Math.min(96, geom1 * 44 + 8));
+      if (link?.linkType === 'PUMP') return 58;
+      if (link?.linkType === 'WEIR' || link?.linkType === 'ORIFICE') return 48;
+      return 32;
+    }
+
+    function getBounds() {
+      const points = [];
+      Object.keys(nodeIndex()).forEach((nodeId) => {
+        if (document.body.classList.contains('hide-offscreen') && nodeIsOffscreen(nodeId)) return;
+        const point = getPoint(nodeId);
+        if (point) points.push(point);
+      });
+      if (!points.length) return { minX: 0, minY: 0, maxX: 6400, maxY: 1900 };
+      return {
+        minX: Math.min(...points.map((point) => point.x)),
+        minY: Math.min(...points.map((point) => point.y)),
+        maxX: Math.max(...points.map((point) => point.x)),
+        maxY: Math.max(...points.map((point) => point.y)),
+      };
+    }
+
+    function makePath(fromNode, toNode) {
+      const from = getPoint(fromNode);
+      const to = getPoint(toNode);
+      if (!from || !to) return null;
+      return { d: `M ${from.x} ${from.y} L ${to.x} ${to.y}`, from, to };
+    }
+
+    function addBackground(bounds) {
+      const pad = 220;
+      const width = bounds.maxX - bounds.minX + pad * 2;
+      const height = bounds.maxY - bounds.minY + pad * 2;
+      svg.setAttribute('viewBox', `${bounds.minX - pad} ${bounds.minY - pad} ${width} ${height}`);
+      svg.setAttribute('width', Math.max(1800, width));
+      svg.setAttribute('height', Math.max(820, height));
+
+      svg.appendChild(createSvgElement('rect', {
+        class: 'ground-sky',
+        x: bounds.minX - pad,
+        y: bounds.minY - pad,
+        width,
+        height: 310,
+      }));
+      svg.appendChild(createSvgElement('rect', {
+        class: 'ground-soil',
+        x: bounds.minX - pad,
+        y: bounds.minY - pad + 310,
+        width,
+        height,
+      }));
+      svg.appendChild(createSvgElement('rect', {
+        class: 'river',
+        x: 6035,
+        y: bounds.minY - pad,
+        width: 430,
+        height,
+      }));
+      for (let y = bounds.minY - pad + 18; y < bounds.maxY + pad; y += 40) {
+        const wave = createSvgElement('path', {
+          class: 'river-line',
+          d: `M 6058 ${y} C 6085 ${y - 10}, 6112 ${y + 10}, 6139 ${y} S 6194 ${y - 10}, 6221 ${y}`,
+        });
+        svg.appendChild(wave);
+      }
+      svg.appendChild(createSvgElement('line', {
+        class: 'axis-line',
+        x1: 3340,
+        y1: bounds.minY - pad,
+        x2: 3340,
+        y2: bounds.maxY + pad,
+      }));
+      SECTION_LABELS.forEach((item) => {
+        const text = createSvgElement('text', {
+          class: 'section-title',
+          x: item.x,
+          y: bounds.minY + 92,
+        });
+        text.textContent = item.label;
+        svg.appendChild(text);
+      });
+    }
+
+    function addPipe(link, object) {
+      const path = makePath(link.fromNode, link.toNode);
+      if (!path) return;
+      const offscreen = linkIsOffscreen(link);
+      const width = getLinkDisplayWidth(link);
+      const colors = COLOR_BY_WATER_TYPE[object?.waterType || object?.system] || COLOR_BY_WATER_TYPE.default;
+      const group = createSvgElement('g', {
+        class: `debug-link${offscreen ? ' is-offscreen' : ''}${selectedId === link.id ? ' selected' : ''}`,
+        'data-id': link.id,
+        'data-type': 'link',
+      });
+
+      group.appendChild(createSvgElement('path', {
+        class: 'pipe-outline',
+        d: path.d,
+        stroke: colors.stroke,
+        'stroke-width': width + 12,
+      }));
+      group.appendChild(createSvgElement('path', {
+        class: 'pipe-fill',
+        d: path.d,
+        stroke: colors.fill,
+        'stroke-width': width,
+      }));
+      group.appendChild(createSvgElement('path', {
+        class: 'pipe-center',
+        d: path.d,
+        'stroke-width': Math.max(4, Math.min(10, width * .14)),
+      }));
+
+      const midX = (path.from.x + path.to.x) / 2;
+      const midY = (path.from.y + path.to.y) / 2;
+      const label = createSvgElement('text', {
+        class: 'link-label',
+        x: midX,
+        y: midY - width * .75,
+      });
+      label.textContent = object?.label || link.id;
+      group.appendChild(label);
+      group.addEventListener('click', () => selectItem('link', link.id));
+      svg.appendChild(group);
+    }
+
+    function addNode(nodeId, node) {
+      const point = getPoint(nodeId);
+      if (!point) return;
+      const offscreen = nodeIsOffscreen(nodeId);
+      const nodeType = node.nodeType || 'NODE';
+      const object = objectForNode(nodeId);
+      const isManhole = object?.objectType === 'manhole';
+      const colors = COLOR_BY_WATER_TYPE[object?.waterType || object?.system] || COLOR_BY_WATER_TYPE.default;
+      const group = createSvgElement('g', {
+        class: `debug-node${offscreen ? ' is-offscreen' : ''}${selectedId === nodeId ? ' selected' : ''}`,
+        'data-id': nodeId,
+        'data-type': 'node',
+      });
+      const r = isManhole ? 32 : nodeType === 'STORAGE' ? 16 : nodeType === 'OUTFALL' ? 14 : 10;
+      group.appendChild(createSvgElement('circle', {
+        class: `node-circle${isManhole ? ' is-manhole' : ''}${nodeType === 'STORAGE' ? ' is-storage' : ''}${nodeType === 'OUTFALL' ? ' is-outfall' : ''}${offscreen ? ' is-offscreen' : ''}`,
+        cx: point.x,
+        cy: point.y,
+        r,
+        fill: isManhole ? colors.fill : undefined,
+        stroke: isManhole ? colors.stroke : undefined,
+      }));
+      if (isManhole) {
+        group.appendChild(createSvgElement('circle', {
+          class: 'manhole-inner',
+          cx: point.x,
+          cy: point.y,
+          r: r * .58,
+          fill: colors.stroke,
+        }));
+        [-10, 0, 10].forEach((offset) => {
+          group.appendChild(createSvgElement('line', {
+            class: 'manhole-grille',
+            x1: point.x - 14,
+            y1: point.y + offset,
+            x2: point.x + 14,
+            y2: point.y + offset,
+          }));
+        });
+      }
+      const label = createSvgElement('text', {
+        class: isManhole ? 'manhole-label' : 'node-label',
+        x: point.x,
+        y: point.y + r + (isManhole ? 28 : 18),
+      });
+      label.textContent = isManhole ? object.label : nodeId;
+      group.appendChild(label);
+      if (isManhole) {
+        const idLabel = createSvgElement('text', {
+          class: 'node-label',
+          x: point.x,
+          y: point.y + r + 52,
+        });
+        idLabel.textContent = nodeId;
+        group.appendChild(idLabel);
+      }
+      group.addEventListener('click', () => selectItem('node', nodeId));
+      svg.appendChild(group);
+    }
+
+    function collectUniqueLinks() {
+      const links = new Map();
+      visualObjects().forEach((object) => {
+        (object.resolvedLinks || []).forEach((link) => {
+          if (!links.has(link.id)) links.set(link.id, { link, object });
+        });
+      });
+      return Array.from(links.values());
+    }
+
+    function render() {
+      if (!contract) {
+        modelSummaryEl.textContent = 'SWMM contract를 찾을 수 없습니다.';
+        return;
+      }
+      svg.replaceChildren();
+      const bounds = getBounds();
+      addBackground(bounds);
+      collectUniqueLinks().forEach(({ link, object }) => addPipe(link, object));
+      Object.entries(nodeIndex()).forEach(([nodeId, node]) => addNode(nodeId, node));
+      updateSummary();
+      if (selectedId) renderSelectedDetail();
+    }
+
+    function updateSummary() {
+      const links = collectUniqueLinks();
+      const hiddenLinks = links.filter(({ link }) => linkIsOffscreen(link)).length;
+      document.querySelector('#stat-objects').textContent = visualObjects().length;
+      document.querySelector('#stat-links').textContent = links.length;
+      document.querySelector('#stat-nodes').textContent = Object.keys(nodeIndex()).length;
+      document.querySelector('#stat-hidden').textContent = hiddenLinks;
+      modelSummaryEl.textContent = `contract ${contract.version || '-'} / 링크 ${links.length}개 / 노드 ${Object.keys(nodeIndex()).length}개`;
+      slopeScaleOutput.textContent = `${slopeScaleInput.value}x`;
+    }
+
+    function renderRows(rows) {
+      return `<dl class="detail-list">${rows.map(([key, value]) => `
+        <div class="detail-row">
+          <dt>${key}</dt>
+          <dd>${value ?? '-'}</dd>
+        </div>
+      `).join('')}</dl>`;
+    }
+
+    function renderSelectedDetail() {
+      if (!selectedId) return;
+      if (linkIndex()[selectedId]) {
+        const link = linkIndex()[selectedId];
+        const object = objectForLink(selectedId);
+        detailEl.className = '';
+        detailEl.innerHTML = renderRows([
+          ['구분', '관 / 링크'],
+          ['화면 이름', object?.label || '-'],
+          ['내부 ID', link.id],
+          ['물 종류', object?.waterType || object?.system || '-'],
+          ['링크 타입', link.linkType],
+          ['상류 노드', link.fromNode],
+          ['하류 노드', link.toNode],
+          ['길이', formatNumber(link.lengthM, 2, ' m')],
+          ['조도계수', formatNumber(link.roughnessN, 4)],
+          ['단면', link.crossSection?.shape || '-'],
+          ['Geom1', formatNumber(link.crossSection?.geom1, 2, ' m')],
+          ['상류 offset', formatNumber(link.inOffsetM, 2, ' m')],
+          ['하류 offset', formatNumber(link.outOffsetM, 2, ' m')],
+          ['최대 유량', Number(link.maxFlowCms || 0) === 0 ? '제한 없음' : formatNumber(link.maxFlowCms, 3, ' m3/s')],
+          ['계산 경사', formatNumber(link.computedSlope, 6)],
+          ['화면 밖 여부', linkIsOffscreen(link) ? '화면 밖/경계 포함' : '화면 내부'],
+        ]);
+        return;
+      }
+      if (nodeIndex()[selectedId]) {
+        const node = nodeIndex()[selectedId];
+        const object = objectForNode(selectedId);
+        detailEl.className = '';
+        detailEl.innerHTML = renderRows([
+          ['구분', '노드'],
+          ['화면 이름', object?.label || '-'],
+          ['내부 ID', selectedId],
+          ['노드 타입', node.nodeType || '-'],
+          ['바닥 고도', formatNumber(node.elevationM, 2, ' m')],
+          ['최대 수심', formatNumber(node.maxDepthM, 2, ' m')],
+          ['초기 수심', formatNumber(node.initialDepthM, 2, ' m')],
+          ['침수 면적', formatNumber(node.pondedAreaM2, 2, ' m2')],
+          ['x/y 좌표', `${formatNumber(node.map?.x, 0)}, ${formatNumber(node.map?.y, 0)}`],
+          ['화면 밖 여부', nodeIsOffscreen(selectedId) ? '화면 밖/경계 노드' : '화면 내부'],
+        ]);
+        return;
+      }
+      detailEl.className = 'empty';
+      detailEl.textContent = '선택한 객체 정보를 찾을 수 없습니다.';
+    }
+
+    function selectItem(type, id) {
+      selectedId = id;
+      render();
+      renderSelectedDetail();
+    }
+
+    function bindControls() {
+      showOffscreenInput.addEventListener('change', () => {
+        document.body.classList.toggle('hide-offscreen', !showOffscreenInput.checked);
+        render();
+      });
+      showLabelsInput.addEventListener('change', () => {
+        document.body.classList.toggle('hide-labels', !showLabelsInput.checked);
+      });
+      showNodeLabelsInput.addEventListener('change', () => {
+        document.body.classList.toggle('hide-node-labels', !showNodeLabelsInput.checked);
+      });
+      exaggerateSlopeInput.addEventListener('change', render);
+      slopeScaleInput.addEventListener('input', render);
+    }
+
+    bindControls();
+    render();
+  </script>
+</body>
+</html>

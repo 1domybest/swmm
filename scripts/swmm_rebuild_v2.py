@@ -104,6 +104,29 @@ class Orifice:
 
 
 @dataclass(frozen=True)
+class Weir:
+    link_id: str
+    from_node: str
+    to_node: str
+    weir_type: str
+    crest_height: float
+    qcoeff: float
+    gated: str = "NO"
+    end_contractions: int = 0
+    end_coeff: float = 0.0
+    surcharge: str = "YES"
+    road_width: float = 0.0
+    road_surface: str = ""
+    shape: str = "RECT_OPEN"
+    geom1: float = 1.00
+    geom2: float = 2.40
+    geom3: float = 0.0
+    geom4: float = 0.0
+    barrels: int = 1
+    culvert: int = 0
+
+
+@dataclass(frozen=True)
 class Pump:
     link_id: str
     from_node: str
@@ -242,6 +265,69 @@ JUNCTIONS = [
         x=2170,
         y=825,
     ),
+    Junction(
+        "sep_sewer_main_to_interceptor_elbow_connector",
+        elevation=8.07,
+        max_depth=2.40,
+        sur_depth=0.50,
+        ponded_area=0.0,
+        x=2264,
+        y=825,
+    ),
+    Junction(
+        "sep_interceptor_upstream",
+        elevation=6.55,
+        max_depth=3.20,
+        sur_depth=0.80,
+        ponded_area=0.0,
+        x=0,
+        y=1669,
+    ),
+    Junction(
+        "sep_interceptor_join",
+        elevation=6.20,
+        max_depth=3.20,
+        sur_depth=1.00,
+        ponded_area=20.0,
+        x=2264,
+        y=1669,
+    ),
+    Junction(
+        "overflow_interceptor_join",
+        elevation=5.65,
+        max_depth=3.20,
+        sur_depth=1.00,
+        ponded_area=20.0,
+        x=4753,
+        y=1669,
+    ),
+    Junction(
+        "sep_interceptor_downstream",
+        elevation=5.60,
+        max_depth=3.20,
+        sur_depth=0.80,
+        ponded_area=0.0,
+        x=4978,
+        y=1669,
+    ),
+    Junction(
+        "treatment_process_outlet_node",
+        elevation=4.95,
+        max_depth=3.20,
+        sur_depth=0.80,
+        ponded_area=0.0,
+        x=5578,
+        y=1677,
+    ),
+    Junction(
+        "treated_outfall_gate_node",
+        elevation=4.86,
+        max_depth=3.20,
+        sur_depth=0.80,
+        ponded_area=0.0,
+        x=5870,
+        y=1677,
+    ),
     # Outlet-side node just outside the catch-basin box.
     Junction(
         "sep_storm_lateral_catch_basin_1_start",
@@ -286,7 +372,7 @@ JUNCTIONS = [
         elevation=8.75,
         max_depth=2.40,
         sur_depth=0.50,
-        ponded_area=0.0,
+        ponded_area=30.0,
         x=1370,
         y=530,
     ),
@@ -306,7 +392,7 @@ JUNCTIONS = [
         elevation=8.65,
         max_depth=3.55,
         sur_depth=0.50,
-        ponded_area=20.0,
+        ponded_area=50.0,
         x=1704,
         y=530,
     ),
@@ -316,7 +402,7 @@ JUNCTIONS = [
         elevation=8.38,
         max_depth=2.40,
         sur_depth=0.50,
-        ponded_area=0.0,
+        ponded_area=30.0,
         x=2160,
         y=530,
     ),
@@ -326,7 +412,7 @@ JUNCTIONS = [
         elevation=8.32,
         max_depth=2.40,
         sur_depth=0.50,
-        ponded_area=0.0,
+        ponded_area=50.0,
         x=2240,
         y=530,
     ),
@@ -336,7 +422,7 @@ JUNCTIONS = [
         elevation=8.29,
         max_depth=2.40,
         sur_depth=0.50,
-        ponded_area=0.0,
+        ponded_area=50.0,
         x=2355,
         y=530,
     ),
@@ -398,6 +484,214 @@ JUNCTIONS = [
         x=5870,
         y=1139,
     ),
+    # Combined system: visible houses/catch basins plus model-only offscreen inflows.
+    Junction(
+        "road_runoff_offscreen_comb_catch_basin",
+        elevation=12.20,
+        max_depth=0.35,
+        sur_depth=0.40,
+        ponded_area=18.0,
+        x=2440,
+        y=246,
+    ),
+    Junction(
+        "offscreen_comb_sewer_source",
+        elevation=8.88,
+        max_depth=1.20,
+        sur_depth=0.40,
+        ponded_area=0.0,
+        x=2440,
+        y=638,
+    ),
+    Junction(
+        "offscreen_comb_storm_lateral_start",
+        elevation=11.33,
+        max_depth=0.80,
+        sur_depth=0.30,
+        ponded_area=0.0,
+        x=2480,
+        y=314,
+    ),
+    Junction(
+        "offscreen_comb_storm_lateral_elbow_connector",
+        elevation=11.31,
+        max_depth=0.80,
+        sur_depth=0.30,
+        ponded_area=0.0,
+        x=2510,
+        y=314,
+    ),
+    Junction(
+        "comb_upstream",
+        elevation=8.82,
+        max_depth=2.60,
+        sur_depth=0.50,
+        ponded_area=0.0,
+        x=2440,
+        y=677,
+    ),
+    Junction(
+        "comb_house_1",
+        elevation=11.10,
+        max_depth=1.00,
+        sur_depth=0.50,
+        ponded_area=0.0,
+        x=2645,
+        y=218,
+    ),
+    Junction(
+        "comb_sewer_lateral_house_1_elbow_connector",
+        elevation=11.08,
+        max_depth=0.80,
+        sur_depth=0.30,
+        ponded_area=0.0,
+        x=2850,
+        y=218,
+    ),
+    Junction(
+        "comb_main_house_1_connector",
+        elevation=8.60,
+        max_depth=2.60,
+        sur_depth=0.50,
+        ponded_area=0.0,
+        x=2850,
+        y=677,
+    ),
+    Junction(
+        "comb_house_2",
+        elevation=11.00,
+        max_depth=1.00,
+        sur_depth=0.50,
+        ponded_area=0.0,
+        x=3075,
+        y=218,
+    ),
+    Junction(
+        "comb_sewer_lateral_house_2_elbow_connector",
+        elevation=10.98,
+        max_depth=0.80,
+        sur_depth=0.30,
+        ponded_area=0.0,
+        x=3280,
+        y=218,
+    ),
+    Junction(
+        "comb_main_house_2_connector",
+        elevation=8.54,
+        max_depth=2.60,
+        sur_depth=0.50,
+        ponded_area=0.0,
+        x=3280,
+        y=677,
+    ),
+    Junction(
+        "road_runoff_comb_catch_basin_1",
+        elevation=12.20,
+        max_depth=0.35,
+        sur_depth=0.40,
+        ponded_area=18.0,
+        x=3475,
+        y=246,
+    ),
+    Junction(
+        "comb_storm_lateral_catch_basin_1_start",
+        elevation=11.33,
+        max_depth=0.80,
+        sur_depth=0.30,
+        ponded_area=0.0,
+        x=3530,
+        y=314,
+    ),
+    Junction(
+        "comb_storm_lateral_catch_basin_1_elbow_connector",
+        elevation=11.31,
+        max_depth=0.80,
+        sur_depth=0.30,
+        ponded_area=0.0,
+        x=3650,
+        y=314,
+    ),
+    Junction(
+        "comb_main_catch_basin_1_connector",
+        elevation=8.43,
+        max_depth=2.60,
+        sur_depth=0.50,
+        ponded_area=0.0,
+        x=3650,
+        y=677,
+    ),
+    Junction(
+        "combined_manhole",
+        elevation=8.35,
+        max_depth=3.50,
+        sur_depth=1.20,
+        ponded_area=20.0,
+        x=3900,
+        y=677,
+    ),
+    Junction(
+        "road_runoff_comb_catch_basin_2",
+        elevation=12.20,
+        max_depth=0.35,
+        sur_depth=0.40,
+        ponded_area=18.0,
+        x=4225,
+        y=246,
+    ),
+    Junction(
+        "comb_storm_lateral_catch_basin_2_start",
+        elevation=11.28,
+        max_depth=0.80,
+        sur_depth=0.30,
+        ponded_area=0.0,
+        x=4280,
+        y=314,
+    ),
+    Junction(
+        "comb_storm_lateral_catch_basin_2_elbow_connector",
+        elevation=11.26,
+        max_depth=0.80,
+        sur_depth=0.30,
+        ponded_area=0.0,
+        x=4400,
+        y=314,
+    ),
+    Junction(
+        "comb_main_catch_basin_2_connector",
+        elevation=8.18,
+        max_depth=2.60,
+        sur_depth=0.50,
+        ponded_area=0.0,
+        x=4400,
+        y=677,
+    ),
+    Junction(
+        "overflow_normal_flow_node",
+        elevation=7.62,
+        max_depth=2.80,
+        sur_depth=0.50,
+        ponded_area=0.0,
+        x=4753,
+        y=846,
+    ),
+    Junction(
+        "overflow_weir_outlet_node",
+        elevation=7.70,
+        max_depth=2.40,
+        sur_depth=0.50,
+        ponded_area=0.0,
+        x=5012,
+        y=677,
+    ),
+    Junction(
+        "overflow_outfall_gate_node",
+        elevation=6.30,
+        max_depth=2.40,
+        sur_depth=0.50,
+        ponded_area=0.0,
+        x=5870,
+        y=677,
+    ),
 ]
 
 
@@ -420,6 +714,42 @@ STORAGES = [
         x=1985,
         y=324,
     ),
+    Storage(
+        "offscreen_comb_catch_basin",
+        elevation=11.00,
+        max_depth=1.20,
+        init_depth=0.00,
+        storage_param=2.0,
+        x=2440,
+        y=324,
+    ),
+    Storage(
+        "comb_catch_basin_1",
+        elevation=11.00,
+        max_depth=1.20,
+        init_depth=0.00,
+        storage_param=2.0,
+        x=3475,
+        y=324,
+    ),
+    Storage(
+        "comb_catch_basin_2",
+        elevation=10.95,
+        max_depth=1.20,
+        init_depth=0.00,
+        storage_param=2.0,
+        x=4225,
+        y=324,
+    ),
+    Storage(
+        "overflow_chamber",
+        elevation=7.75,
+        max_depth=2.80,
+        init_depth=0.00,
+        storage_param=45.0,
+        x=4752,
+        y=680,
+    ),
     # Visible storm pump station. In SWMM this is the wet well that receives trunk flow.
     Storage(
         "storm_pump_station",
@@ -430,14 +760,24 @@ STORAGES = [
         x=5092,
         y=1138,
     ),
+    # Visible water reclamation center. In this first model it stores incoming sewage
+    # and releases it through a limited treatment-capacity link.
+    Storage(
+        "water_reclamation_center",
+        elevation=5.05,
+        max_depth=4.00,
+        init_depth=0.15,
+        storage_param=120.0,
+        x=5270,
+        y=1672,
+    ),
 ]
 
 
 OUTFALLS = [
+    Outfall("overflow_outfall", 6.25, x=6028, y=677),
     Outfall("pump_outfall", 5.02, x=6054, y=1139),
-    # Temporary model boundary for the separated sanitary main.
-    # The water reclamation center is intentionally not modeled in this step.
-    Outfall("sep_sewer_boundary_outfall", 8.05, x=2240, y=825),
+    Outfall("treated_outfall", 4.85, x=6028, y=1677),
 ]
 
 
@@ -503,6 +843,118 @@ ORIFICES = [
         qcoeff=0.75,
         shape="CIRCULAR",
         geom1=1.80,
+    ),
+    Orifice(
+        "treated_outfall_gate",
+        "treated_outfall_gate_node",
+        "treated_outfall",
+        orifice_type="SIDE",
+        offset=0.00,
+        qcoeff=0.75,
+        shape="CIRCULAR",
+        geom1=1.80,
+    ),
+    Orifice(
+        "offscreen_comb_catch_basin_inlet_connector",
+        "road_runoff_offscreen_comb_catch_basin",
+        "offscreen_comb_catch_basin",
+        orifice_type="BOTTOM",
+        offset=0.00,
+        qcoeff=0.65,
+        shape="RECT_CLOSED",
+        geom1=0.60,
+        geom2=0.60,
+    ),
+    Orifice(
+        "offscreen_comb_catch_basin_outlet_connector",
+        "offscreen_comb_catch_basin",
+        "offscreen_comb_storm_lateral_start",
+        orifice_type="SIDE",
+        offset=0.33,
+        qcoeff=0.65,
+        shape="CIRCULAR",
+        geom1=0.45,
+    ),
+    Orifice(
+        "comb_catch_basin_1_inlet_connector",
+        "road_runoff_comb_catch_basin_1",
+        "comb_catch_basin_1",
+        orifice_type="BOTTOM",
+        offset=0.00,
+        qcoeff=0.65,
+        shape="RECT_CLOSED",
+        geom1=0.60,
+        geom2=0.60,
+    ),
+    Orifice(
+        "comb_catch_basin_1_outlet_connector",
+        "comb_catch_basin_1",
+        "comb_storm_lateral_catch_basin_1_start",
+        orifice_type="SIDE",
+        offset=0.33,
+        qcoeff=0.65,
+        shape="CIRCULAR",
+        geom1=0.45,
+    ),
+    Orifice(
+        "comb_catch_basin_2_inlet_connector",
+        "road_runoff_comb_catch_basin_2",
+        "comb_catch_basin_2",
+        orifice_type="BOTTOM",
+        offset=0.00,
+        qcoeff=0.65,
+        shape="RECT_CLOSED",
+        geom1=0.60,
+        geom2=0.60,
+    ),
+    Orifice(
+        "comb_catch_basin_2_outlet_connector",
+        "comb_catch_basin_2",
+        "comb_storm_lateral_catch_basin_2_start",
+        orifice_type="SIDE",
+        offset=0.33,
+        qcoeff=0.65,
+        shape="CIRCULAR",
+        geom1=0.45,
+    ),
+    Orifice(
+        "overflow_normal_flow_gate",
+        "overflow_chamber",
+        "overflow_normal_flow_node",
+        orifice_type="SIDE",
+        offset=0.20,
+        qcoeff=0.65,
+        shape="CIRCULAR",
+        geom1=0.95,
+    ),
+    Orifice(
+        "overflow_outfall_gate",
+        "overflow_outfall_gate_node",
+        "overflow_outfall",
+        orifice_type="SIDE",
+        offset=0.00,
+        qcoeff=0.75,
+        shape="CIRCULAR",
+        geom1=1.80,
+    ),
+]
+
+
+WEIRS = [
+    Weir(
+        "overflow_excess_weir",
+        "overflow_chamber",
+        "overflow_weir_outlet_node",
+        weir_type="TRANSVERSE",
+        crest_height=1.60,
+        qcoeff=1.84,
+        gated="NO",
+        end_contractions=0,
+        end_coeff=0.0,
+        surcharge="YES",
+        shape="RECT_OPEN",
+        geom1=1.00,
+        geom2=2.40,
     ),
 ]
 
@@ -575,12 +1027,70 @@ CONDUITS = [
         diameter=1.05,
     ),
     Conduit(
-        "sep_sewer_downstream_boundary_pipe",
+        "sep_sewer_main_to_interceptor_horizontal",
         "sep_sewer_downstream",
-        "sep_sewer_boundary_outfall",
-        length=45.0,
+        "sep_sewer_main_to_interceptor_elbow_connector",
+        length=24.0,
         roughness=0.015,
         diameter=1.05,
+    ),
+    Conduit(
+        "sep_sewer_main_to_interceptor_vertical",
+        "sep_sewer_main_to_interceptor_elbow_connector",
+        "sep_interceptor_join",
+        length=MEDIUM_DROP_EQUIVALENT_LENGTH,
+        roughness=0.015,
+        diameter=1.05,
+        average_loss=1.50,
+    ),
+    Conduit(
+        "sep_interceptor_upstream_segment",
+        "sep_interceptor_upstream",
+        "sep_interceptor_join",
+        length=460.0,
+        roughness=0.016,
+        diameter=1.80,
+    ),
+    Conduit(
+        "sep_interceptor_join_to_overflow_segment",
+        "sep_interceptor_join",
+        "overflow_interceptor_join",
+        length=570.0,
+        roughness=0.016,
+        diameter=1.80,
+    ),
+    Conduit(
+        "sep_interceptor_downstream_segment",
+        "overflow_interceptor_join",
+        "sep_interceptor_downstream",
+        length=50.0,
+        roughness=0.016,
+        diameter=1.80,
+    ),
+    Conduit(
+        "sep_interceptor_to_reclamation_inlet",
+        "sep_interceptor_downstream",
+        "water_reclamation_center",
+        length=45.0,
+        roughness=0.016,
+        diameter=1.80,
+    ),
+    Conduit(
+        "treatment_process_limited_outlet",
+        "water_reclamation_center",
+        "treatment_process_outlet_node",
+        length=30.0,
+        roughness=0.014,
+        diameter=1.20,
+        max_flow=0.020,
+    ),
+    Conduit(
+        "treatment_effluent_pipe",
+        "treatment_process_outlet_node",
+        "treated_outfall_gate_node",
+        length=300.0,
+        roughness=0.014,
+        diameter=1.80,
     ),
     Conduit(
         "sep_storm_lateral_catch_basin_1_horizontal",
@@ -697,6 +1207,164 @@ CONDUITS = [
         roughness=0.015,
         diameter=1.80,
     ),
+    Conduit(
+        "offscreen_comb_sewer_lateral",
+        "offscreen_comb_sewer_source",
+        "comb_upstream",
+        length=24.0,
+        roughness=0.015,
+        diameter=0.45,
+    ),
+    Conduit(
+        "offscreen_comb_storm_lateral_horizontal",
+        "offscreen_comb_storm_lateral_start",
+        "offscreen_comb_storm_lateral_elbow_connector",
+        length=18.0,
+        roughness=0.018,
+        diameter=0.45,
+    ),
+    Conduit(
+        "offscreen_comb_storm_lateral_vertical",
+        "offscreen_comb_storm_lateral_elbow_connector",
+        "comb_upstream",
+        length=SMALL_DROP_EQUIVALENT_LENGTH,
+        roughness=0.018,
+        diameter=0.45,
+        average_loss=1.20,
+    ),
+    Conduit(
+        "comb_sewer_lateral_house_1_horizontal",
+        "comb_house_1",
+        "comb_sewer_lateral_house_1_elbow_connector",
+        length=18.0,
+        roughness=0.015,
+        diameter=0.45,
+    ),
+    Conduit(
+        "comb_sewer_lateral_house_1_vertical",
+        "comb_sewer_lateral_house_1_elbow_connector",
+        "comb_main_house_1_connector",
+        length=SMALL_DROP_EQUIVALENT_LENGTH,
+        roughness=0.015,
+        diameter=0.45,
+        average_loss=1.20,
+    ),
+    Conduit(
+        "comb_sewer_lateral_house_2_horizontal",
+        "comb_house_2",
+        "comb_sewer_lateral_house_2_elbow_connector",
+        length=18.0,
+        roughness=0.015,
+        diameter=0.45,
+    ),
+    Conduit(
+        "comb_sewer_lateral_house_2_vertical",
+        "comb_sewer_lateral_house_2_elbow_connector",
+        "comb_main_house_2_connector",
+        length=SMALL_DROP_EQUIVALENT_LENGTH,
+        roughness=0.015,
+        diameter=0.45,
+        average_loss=1.20,
+    ),
+    Conduit(
+        "comb_storm_lateral_catch_basin_1_horizontal",
+        "comb_storm_lateral_catch_basin_1_start",
+        "comb_storm_lateral_catch_basin_1_elbow_connector",
+        length=18.0,
+        roughness=0.018,
+        diameter=0.45,
+    ),
+    Conduit(
+        "comb_storm_lateral_catch_basin_1_vertical",
+        "comb_storm_lateral_catch_basin_1_elbow_connector",
+        "comb_main_catch_basin_1_connector",
+        length=SMALL_DROP_EQUIVALENT_LENGTH,
+        roughness=0.018,
+        diameter=0.45,
+        average_loss=1.20,
+    ),
+    Conduit(
+        "comb_storm_lateral_catch_basin_2_horizontal",
+        "comb_storm_lateral_catch_basin_2_start",
+        "comb_storm_lateral_catch_basin_2_elbow_connector",
+        length=18.0,
+        roughness=0.018,
+        diameter=0.45,
+    ),
+    Conduit(
+        "comb_storm_lateral_catch_basin_2_vertical",
+        "comb_storm_lateral_catch_basin_2_elbow_connector",
+        "comb_main_catch_basin_2_connector",
+        length=SMALL_DROP_EQUIVALENT_LENGTH,
+        roughness=0.018,
+        diameter=0.45,
+        average_loss=1.20,
+    ),
+    Conduit(
+        "comb_main_1_upstream_segment",
+        "comb_upstream",
+        "comb_main_house_1_connector",
+        length=220.0,
+        roughness=0.015,
+        diameter=1.20,
+    ),
+    Conduit(
+        "comb_main_1_house_1_to_house_2_segment",
+        "comb_main_house_1_connector",
+        "comb_main_house_2_connector",
+        length=60.0,
+        roughness=0.015,
+        diameter=1.20,
+    ),
+    Conduit(
+        "comb_main_1_house_2_to_catch_basin_1_segment",
+        "comb_main_house_2_connector",
+        "comb_main_catch_basin_1_connector",
+        length=110.0,
+        roughness=0.015,
+        diameter=1.20,
+    ),
+    Conduit(
+        "comb_main_1_to_manhole_segment",
+        "comb_main_catch_basin_1_connector",
+        "combined_manhole",
+        length=80.0,
+        roughness=0.015,
+        diameter=1.20,
+    ),
+    Conduit(
+        "comb_main_2_manhole_to_catch_basin_2_segment",
+        "combined_manhole",
+        "comb_main_catch_basin_2_connector",
+        length=120.0,
+        roughness=0.015,
+        diameter=1.20,
+    ),
+    Conduit(
+        "comb_main_2_downstream_segment",
+        "comb_main_catch_basin_2_connector",
+        "overflow_chamber",
+        length=70.0,
+        roughness=0.015,
+        diameter=1.20,
+    ),
+    Conduit(
+        "overflow_to_interceptor_drop",
+        "overflow_normal_flow_node",
+        "overflow_interceptor_join",
+        length=MEDIUM_DROP_EQUIVALENT_LENGTH,
+        roughness=0.016,
+        diameter=0.95,
+        average_loss=1.50,
+    ),
+    Conduit(
+        "overflow_pipe",
+        "overflow_weir_outlet_node",
+        "overflow_outfall_gate_node",
+        length=280.0,
+        roughness=0.016,
+        diameter=1.80,
+    ),
 ]
 
 
@@ -735,6 +1403,12 @@ INFLOWS = [
     ("sep_sewer_upstream", "FLOW", "TS_SEWER_DWF", "FLOW", 3.00, 1.00, 0.0),
     ("sep_apartment_1", "FLOW", "TS_SEWER_DWF", "FLOW", 1.40, 1.00, 0.0),
     ("sep_apartment_2", "FLOW", "TS_SEWER_DWF", "FLOW", 1.50, 1.00, 0.0),
+    ("road_runoff_offscreen_comb_catch_basin", "FLOW", "TS_STORM_RAIN", "FLOW", 0.85, 1.00, 0.0),
+    ("road_runoff_comb_catch_basin_1", "FLOW", "TS_STORM_RAIN", "FLOW", 0.90, 1.00, 0.0),
+    ("road_runoff_comb_catch_basin_2", "FLOW", "TS_STORM_RAIN", "FLOW", 0.95, 1.00, 0.0),
+    ("offscreen_comb_sewer_source", "FLOW", "TS_SEWER_DWF", "FLOW", 1.20, 1.00, 0.0),
+    ("comb_house_1", "FLOW", "TS_SEWER_DWF", "FLOW", 1.00, 1.00, 0.0),
+    ("comb_house_2", "FLOW", "TS_SEWER_DWF", "FLOW", 1.10, 1.00, 0.0),
 ]
 
 
@@ -771,6 +1445,10 @@ def conduit_by_id(link_id: str) -> Conduit:
 
 def orifice_by_id(link_id: str) -> Orifice:
     return next(link for link in ORIFICES if link.link_id == link_id)
+
+
+def weir_by_id(link_id: str) -> Weir:
+    return next(link for link in WEIRS if link.link_id == link_id)
 
 
 def pump_by_id(link_id: str) -> Pump:
@@ -859,6 +1537,11 @@ def build_inp() -> str:
     for link in ORIFICES:
         add(f"{link.link_id:<42} {link.from_node:<42} {link.to_node:<42} {link.orifice_type:<6} {link.offset:<6.2f} {link.qcoeff:<6.2f} {link.gated:<5} {link.close_time:.0f}")
     add("")
+    add("[WEIRS]")
+    add(";;Name                         From Node                    To Node                      Type       CrestHt Qcoeff Gated EndCon EndCoeff Surcharge RoadWidth RoadSurf")
+    for link in WEIRS:
+        add(f"{link.link_id:<42} {link.from_node:<42} {link.to_node:<42} {link.weir_type:<10} {link.crest_height:<7.2f} {link.qcoeff:<6.2f} {link.gated:<5} {link.end_contractions:<6} {link.end_coeff:<8.2f} {link.surcharge:<9} {link.road_width:<9.2f} {link.road_surface}")
+    add("")
     add("[PUMPS]")
     add(";;Name                         From Node                    To Node                      Pump Curve        Status Startup Shutoff")
     for link in PUMPS:
@@ -875,6 +1558,8 @@ def build_inp() -> str:
         add(f"{link.link_id:<42} {link.shape:<10} {link.geom1:<5.2f} {link.geom2:<5.2f} {link.geom3:<5.2f} {link.geom4:<5.2f} {link.barrels:<7} {link.culvert}")
     for link in CONDUITS:
         add(f"{link.link_id:<42} {link.shape:<10} {link.diameter:<5.2f} {link.geom2:<5.2f} {link.geom3:<5.2f} {link.geom4:<5.2f} {link.barrels:<7} {link.culvert}")
+    for link in WEIRS:
+        add(f"{link.link_id:<42} {link.shape:<10} {link.geom1:<5.2f} {link.geom2:<5.2f} {link.geom3:<5.2f} {link.geom4:<5.2f} {link.barrels:<7} {link.culvert}")
     add("")
     add("[LOSSES]")
     add(";;Link                         InletLoss OutletLoss AverageLoss FlapGate SeepageRate")
@@ -1039,6 +1724,51 @@ def _orifice_doc(link: Orifice) -> str:
 """
 
 
+def _weir_doc(link: Weir) -> str:
+    return f"""링크 ID: `{link.link_id}`
+→ 이 월류 링크의 고유 이름입니다.
+
+상류 노드, 물이 들어오는 곳: `{link.from_node}`
+→ 수위가 올라가는 우수토실 본체입니다.
+
+하류 노드, 물이 빠지는 곳: `{link.to_node}`
+→ 월류턱을 넘은 물이 도착하는 월류관 입구 노드입니다.
+
+링크 종류: WEIR
+→ 관이 아니라 물이 일정 높이를 넘으면 넘어가는 월류턱입니다.
+
+위어 타입: {link.weir_type}
+→ 횡월류 형태로, 수위가 월류턱보다 높아지면 초과 유량이 넘어갑니다.
+
+월류턱 높이: {link.crest_height:.2f} m
+→ 우수토실 바닥에서 이 높이까지는 월류가 발생하지 않습니다.
+
+유량 계수: {link.qcoeff:.2f}
+→ 월류 유량 계산에 쓰는 계수입니다.
+
+역류 방지문: {'있음' if link.gated == 'YES' else '없음'}
+→ 하류 물이 역류하는 것을 막는 게이트 여부입니다.
+
+말단 수축 개수: {link.end_contractions}
+→ 월류턱 양끝 수축 효과입니다.
+
+말단 수축 계수: {link.end_coeff:.2f}
+→ 말단 수축이 있을 때 쓰는 보정 계수입니다.
+
+잠김 월류 보정: {link.surcharge}
+→ 하류 수위 영향으로 월류가 잠기는 상황을 보정할지 여부입니다.
+
+단면 형태: {link.shape}
+→ 월류부를 열린 직사각형 단면으로 봅니다.
+
+월류부 깊이: {link.geom1:.2f} m
+→ 월류턱을 넘은 뒤 물이 통과할 수 있는 단면의 세로 치수입니다.
+
+월류부 폭: {link.geom2:.2f} m
+→ 월류턱을 따라 물이 넘어갈 수 있는 가로 폭입니다.
+"""
+
+
 def _pump_doc(link: Pump) -> str:
     return f"""펌프 ID: `{link.link_id}`
 → 이 펌프의 고유 이름입니다.
@@ -1102,7 +1832,57 @@ def build_doc() -> str:
     sewer_main1_down = conduit_by_id("sep_sewer_main_1_downstream_segment")
     sewer_main2_up = conduit_by_id("sep_sewer_main_2_upstream_segment")
     sewer_main2_down = conduit_by_id("sep_sewer_main_2_downstream_segment")
-    sewer_boundary = conduit_by_id("sep_sewer_downstream_boundary_pipe")
+    sewer_to_interceptor_h = conduit_by_id("sep_sewer_main_to_interceptor_horizontal")
+    sewer_to_interceptor_v = conduit_by_id("sep_sewer_main_to_interceptor_vertical")
+    interceptor_up = conduit_by_id("sep_interceptor_upstream_segment")
+    interceptor_to_overflow_join = conduit_by_id("sep_interceptor_join_to_overflow_segment")
+    interceptor_down = conduit_by_id("sep_interceptor_downstream_segment")
+    interceptor_to_center = conduit_by_id("sep_interceptor_to_reclamation_inlet")
+    treatment_process = conduit_by_id("treatment_process_limited_outlet")
+    treatment_effluent = conduit_by_id("treatment_effluent_pipe")
+    water_reclamation = storage_by_id("water_reclamation_center")
+    assert water_reclamation is not None
+    treated_gate = orifice_by_id("treated_outfall_gate")
+    treated_outfall = outfall_by_id("treated_outfall")
+    assert treated_outfall is not None
+    offscreen_comb_cb = storage_by_id("offscreen_comb_catch_basin")
+    comb_cb1 = storage_by_id("comb_catch_basin_1")
+    comb_cb2 = storage_by_id("comb_catch_basin_2")
+    assert offscreen_comb_cb is not None
+    assert comb_cb1 is not None
+    assert comb_cb2 is not None
+    offscreen_comb_cb_inlet = orifice_by_id("offscreen_comb_catch_basin_inlet_connector")
+    offscreen_comb_cb_outlet = orifice_by_id("offscreen_comb_catch_basin_outlet_connector")
+    comb_cb1_inlet = orifice_by_id("comb_catch_basin_1_inlet_connector")
+    comb_cb1_outlet = orifice_by_id("comb_catch_basin_1_outlet_connector")
+    comb_cb2_inlet = orifice_by_id("comb_catch_basin_2_inlet_connector")
+    comb_cb2_outlet = orifice_by_id("comb_catch_basin_2_outlet_connector")
+    offscreen_comb_sewer_lateral = conduit_by_id("offscreen_comb_sewer_lateral")
+    offscreen_comb_storm_h = conduit_by_id("offscreen_comb_storm_lateral_horizontal")
+    offscreen_comb_storm_v = conduit_by_id("offscreen_comb_storm_lateral_vertical")
+    comb_sewer1_h = conduit_by_id("comb_sewer_lateral_house_1_horizontal")
+    comb_sewer1_v = conduit_by_id("comb_sewer_lateral_house_1_vertical")
+    comb_sewer2_h = conduit_by_id("comb_sewer_lateral_house_2_horizontal")
+    comb_sewer2_v = conduit_by_id("comb_sewer_lateral_house_2_vertical")
+    comb_storm1_h = conduit_by_id("comb_storm_lateral_catch_basin_1_horizontal")
+    comb_storm1_v = conduit_by_id("comb_storm_lateral_catch_basin_1_vertical")
+    comb_storm2_h = conduit_by_id("comb_storm_lateral_catch_basin_2_horizontal")
+    comb_storm2_v = conduit_by_id("comb_storm_lateral_catch_basin_2_vertical")
+    comb_main1_up = conduit_by_id("comb_main_1_upstream_segment")
+    comb_main1_h1_h2 = conduit_by_id("comb_main_1_house_1_to_house_2_segment")
+    comb_main1_h2_cb1 = conduit_by_id("comb_main_1_house_2_to_catch_basin_1_segment")
+    comb_main1_to_manhole = conduit_by_id("comb_main_1_to_manhole_segment")
+    comb_main2_to_cb2 = conduit_by_id("comb_main_2_manhole_to_catch_basin_2_segment")
+    comb_main2_down = conduit_by_id("comb_main_2_downstream_segment")
+    overflow_chamber = storage_by_id("overflow_chamber")
+    assert overflow_chamber is not None
+    overflow_normal_gate = orifice_by_id("overflow_normal_flow_gate")
+    overflow_normal_drop = conduit_by_id("overflow_to_interceptor_drop")
+    overflow_excess_weir = weir_by_id("overflow_excess_weir")
+    overflow_pipe = conduit_by_id("overflow_pipe")
+    overflow_gate = orifice_by_id("overflow_outfall_gate")
+    overflow_outfall = outfall_by_id("overflow_outfall")
+    assert overflow_outfall is not None
 
     return f"""# SWMM 모델 재설계 v2
 
@@ -1141,6 +1921,9 @@ def build_doc() -> str:
 - 빗물펌프장: `x=4842 -> 5342`, `y=1035 -> 1240`, 중심 대략 `x=5092`, `y=1138`
 - 펌프 토출관: 대략 `x=5400 -> 5870`, 중심선 `y=1139`
 - 펌프 방류구: `x=5928 -> 6180`, 중심 대략 `x=6054`, `y=1139`
+- 물재생센터: `x=5020 -> 5520`, `y=1587 -> 1757`, 중심 대략 `x=5270`, `y=1672`
+- 처리수 방류관: `x=5578 -> 5870`, 중심선 `y=1677`
+- 처리수 방류구: `x=5928 -> 6180`, 중심 대략 `x=6028`, `y=1677`
 
 주의: 이 x/y는 SWMM GUI 표시용입니다. 유속 계산은 좌표가 아니라 길이, 고도, 단면, 조도, 손실계수로 계산됩니다.
 
@@ -1561,10 +2344,10 @@ SWMM 노드 종류: STORAGE
 5. 우수연결관2 수직부: `sep_storm_lateral_catch_basin_2_vertical`
 6. 우수본관2 접합부: `sep_storm_main_2_catch_basin_2_connector`
 
-## 분류식 오수본관 1차 정의
+## 분류식 오수본관, 차집관거, 물재생센터 1차 정의
 
-이번 단계에서는 물재생센터를 아직 연결하지 않았습니다.
-오수본관2 하류는 `sep_sewer_boundary_outfall`이라는 임시 계산 경계로 빠지게 했습니다.
+오수본관2 하류는 중형 ㄱ자 연결관을 통해 차집관거로 내려가고, 차집관거 하류는 물재생센터로 들어갑니다.
+물재생센터는 들어온 물을 즉시 그대로 내보내는 관이 아니라, STORAGE에 저장한 뒤 처리 가능량 제한 링크를 통해 처리수 방류관으로 내보내게 했습니다.
 
 화면 기준:
 
@@ -1573,6 +2356,11 @@ SWMM 노드 종류: STORAGE
 - 오수본관1 중심선: `y=825`, `x=0 -> 489`
 - 오수맨홀 축: `x=546`
 - 오수본관2 중심선: `y=825`, `x=603 -> 2170`
+- 오수본관2에서 차집관거로 내려가는 연결관: `M2170 825 H2242 Q2264 825 2264 984 V1620`
+- 차집관거 중심선: `y=1669`, `x=0 -> 4978`
+- 물재생센터: `x=5020 -> 5520`, `y=1587 -> 1757`
+- 처리수 방류관 중심선: `y=1677`, `x=5578 -> 5870`
+- 처리수 방류구: `x=5928 -> 6180`, 중심 대략 `x=6028`, `y=1677`
 
 생활오수 유입원:
 
@@ -1618,9 +2406,407 @@ SWMM 노드 종류: STORAGE
 
 {_conduit_doc(sewer_main2_down)}
 
-### 오수 하류 임시 경계관
+### 오수본관2-차집관거 수평 연결관
 
-{_conduit_doc(sewer_boundary)}
+{_conduit_doc(sewer_to_interceptor_h)}
+
+### 오수본관2-차집관거 수직 연결관
+
+{_conduit_doc(sewer_to_interceptor_v)}
+
+수직관 해석:
+→ 화면에서는 ㄱ자로 꺾여 아래 차집관거로 내려가는 관입니다.
+→ SWMM에서는 90도 꺾인 한 관으로 계산하지 않고, 수평 연결관과 수직 낙차 연결관으로 나누었습니다.
+→ 이 수직 연결관은 중형 연결관이므로 오수본관과 같은 1.05m 원형관으로 두고, 꺾임/낙차 손실은 평균 손실계수에 반영했습니다.
+
+### 차집관거 상류 표시 구간
+
+{_conduit_doc(interceptor_up)}
+
+### 차집관거 중간 구간
+
+{_conduit_doc(interceptor_to_overflow_join)}
+
+### 우수토실 일반유량 접합 이후 차집관거 구간
+
+{_conduit_doc(interceptor_down)}
+
+### 차집관거에서 물재생센터로 들어가는 유입관
+
+{_conduit_doc(interceptor_to_center)}
+
+해석:
+→ 차집관거 하류의 물이 물재생센터 STORAGE로 들어가는 짧은 대형 유입관입니다.
+→ 이 관까지는 차집관거의 연장으로 보고, 이후부터 물재생센터 내부 처리 제한이 적용됩니다.
+
+### 물재생센터
+
+노드 ID: `water_reclamation_center`
+→ 물재생센터 시설의 고유 이름입니다.
+
+SWMM 노드 종류: STORAGE
+→ 관이 아니라 물이 잠시 모이고 수위가 변할 수 있는 저장/처리 시설로 둡니다.
+
+역할:
+→ 차집관거에서 들어온 오수를 바로 내보내지 않고, 처리 가능량에 따라 천천히 처리수 방류관으로 넘깁니다.
+
+바닥 고도: {water_reclamation.elevation:.2f} m
+→ 물재생센터 수조의 기준 바닥 높이입니다.
+
+최대 수심: {water_reclamation.max_depth:.2f} m
+→ 물재생센터에 물이 찰 수 있는 최대 깊이입니다.
+
+초기 수심: {water_reclamation.init_depth:.2f} m
+→ 시작 시점에는 약간의 기본 수위를 둡니다.
+
+저류 면적 계수: {water_reclamation.storage_param:.1f}
+→ 물재생센터가 차집관거보다 큰 저장/완충 용량을 가진 시설임을 표현합니다.
+
+좌표: HTML x={water_reclamation.x}, y={water_reclamation.y} / SWMM x={water_reclamation.x}, y={swmm_y(water_reclamation.y)}
+→ HTML 물재생센터 중심에 맞춘 뒤, SWMM GUI에 넣을 때는 y축을 뒤집습니다.
+
+역류/정체 해석:
+→ 차집관거 유입량이 물재생센터 처리 가능량보다 크면 물재생센터 수위가 올라갑니다.
+→ 물재생센터 수위가 높아지면 하류로 빨리 빠지지 못하는 상태가 되고, 차집관거 쪽 정체/만관 가능성이 커집니다.
+→ 처리수 방류구가 막히거나 하천 수위가 높아지는 조건을 추가하면 처리수 방류관과 물재생센터 수위 상승을 통해 상류 정체를 볼 수 있습니다.
+
+### 물재생센터 처리 가능량 제한 링크
+
+{_conduit_doc(treatment_process)}
+
+중요:
+→ 이 링크의 `최대 유량 제한`을 {treatment_process.max_flow:.3f} m3/s로 두었습니다.
+→ 그래서 차집관거에서 더 많은 물이 들어와도 물재생센터가 처리수 방류관으로 즉시 내보낼 수 있는 양은 제한됩니다.
+→ 이 차이가 물재생센터 내부 수위 상승으로 쌓이고, 필요하면 차집관거 정체로 이어질 수 있습니다.
+
+### 처리수 방류관
+
+{_conduit_doc(treatment_effluent)}
+
+### 처리수 방류구 게이트
+
+{_orifice_doc(treated_gate)}
+
+해석:
+→ 현재는 열려 있는 상태의 방류구 커넥터입니다.
+→ 이후 하천 수위 상승 또는 방류구 막힘 테스트를 할 때 이 링크의 개도를 낮추면 처리수 방류관이 막히는 상황을 만들 수 있습니다.
+
+### 처리수 방류구
+
+노드 ID: `treated_outfall`
+→ 처리수가 최종적으로 하천으로 빠지는 방류구입니다.
+
+SWMM 노드 종류: OUTFALL
+→ 모델의 최종 배출구입니다.
+
+바닥 고도: {treated_outfall.elevation:.2f} m
+→ 처리수 방류구의 기준 높이입니다.
+
+방류 조건: {treated_outfall.outfall_type}
+→ 현재는 자유 방류로 두었습니다. 이후 하천 수위 역류를 반영할 때는 고정 수위 또는 시계열 수위 방류구로 바꿀 수 있습니다.
+
+좌표: HTML x={treated_outfall.x}, y={treated_outfall.y} / SWMM x={treated_outfall.x}, y={swmm_y(treated_outfall.y)}
+→ HTML의 처리수 방류구 중심에 맞췄습니다.
+
+## 합류식 본관 1차 정의
+
+이번 단계에서는 합류식 본관 끝에 우수토실-월류시설을 붙입니다.
+우수토실은 하나의 SWMM 타입으로 존재하지 않으므로 STORAGE, ORIFICE, WEIR, CONDUIT, OUTFALL 조합으로 표현합니다.
+
+화면 기준:
+
+- 화면밖 합류식 상류 시작점: 대략 `x=2440`, `y=677`
+- 주거지1 오수연결관: `M2730 218 H2850 V642`
+- 주거지2 오수연결관: `M3160 218 H3280 V642`
+- 빗물받이1 우수연결관: `M3530 314 H3650 V642`
+- 합류식 맨홀 축: `x=3900`
+- 빗물받이2 우수연결관: `M4280 314 H4400 V642`
+- 합류식 본관 중심선: `y=677`
+- 우수토실-월류시설: 대략 `x=4492 -> 5012`, 중심 `x=4752`, `y=680`
+- 일반 유량 차집관거 하강 경로: 대략 `x=4753`, `y=846 -> 1620`
+- 월류관: 대략 `x=5070 -> 5870`, 중심선 `y=677`
+- 월류 방류구: 대략 `x=5928 -> 6180`, 중심 `x=6028`, `y=677`
+
+중요:
+→ 합류식 본관은 화면에서는 하나의 관처럼 보이지만, SWMM에서는 유입 지점마다 본관을 끊었습니다.
+→ 그래야 주거지 오수와 빗물받이 우수가 본관 중간으로 들어오는 구조를 물리적으로 계산할 수 있습니다.
+
+### 화면밖 합류식 오수 유입
+
+{_conduit_doc(offscreen_comb_sewer_lateral)}
+
+해석:
+→ 화면 왼쪽 밖에서 이미 모여 들어오는 생활오수 연결관 역할입니다.
+→ 화면에는 보이지 않지만, SWMM에서는 `offscreen_comb_sewer_source`에 생활오수 시계열을 넣고 `comb_upstream`으로 합류시킵니다.
+
+### 화면밖 합류식 빗물받이
+
+노드 ID: `offscreen_comb_catch_basin`
+→ 화면 밖에 있는 대표 빗물받이 박스입니다.
+
+SWMM 노드 종류: STORAGE
+→ 화면에는 보이지 않지만, 빗물받이처럼 물이 잠깐 저장되고 차오를 수 있습니다.
+
+바닥 고도: {offscreen_comb_cb.elevation:.2f} m
+→ 화면에 보이는 빗물받이들과 같은 기준으로 둡니다.
+
+최대 수심: {offscreen_comb_cb.max_depth:.2f} m
+→ 빗물받이 내부에서 물이 찰 수 있는 깊이입니다.
+
+좌표: HTML x={offscreen_comb_cb.x}, y={offscreen_comb_cb.y} / SWMM x={offscreen_comb_cb.x}, y={swmm_y(offscreen_comb_cb.y)}
+→ 표시용 좌표입니다.
+
+#### 화면밖 빗물받이 입구
+
+{_orifice_doc(offscreen_comb_cb_inlet)}
+
+#### 화면밖 빗물받이 출구
+
+{_orifice_doc(offscreen_comb_cb_outlet)}
+
+#### 화면밖 우수연결관 수평부
+
+{_conduit_doc(offscreen_comb_storm_h)}
+
+#### 화면밖 우수연결관 수직부
+
+{_conduit_doc(offscreen_comb_storm_v)}
+
+### 합류식 주거지1 오수연결관
+
+{_conduit_doc(comb_sewer1_h)}
+
+{_conduit_doc(comb_sewer1_v)}
+
+### 합류식 주거지2 오수연결관
+
+{_conduit_doc(comb_sewer2_h)}
+
+{_conduit_doc(comb_sewer2_v)}
+
+### 합류식 빗물받이1
+
+노드 ID: `comb_catch_basin_1`
+→ 합류식 구역의 첫 번째 빗물받이 박스입니다.
+
+SWMM 노드 종류: STORAGE
+→ 도로 빗물이 들어와 잠시 저장되고, 중간 벽면 출구를 통해 우수연결관으로 빠집니다.
+
+바닥 고도: {comb_cb1.elevation:.2f} m
+→ 빗물받이 내부 바닥 높이입니다.
+
+최대 수심: {comb_cb1.max_depth:.2f} m
+→ 빗물받이가 차오를 수 있는 깊이입니다.
+
+좌표: HTML x={comb_cb1.x}, y={comb_cb1.y} / SWMM x={comb_cb1.x}, y={swmm_y(comb_cb1.y)}
+→ HTML의 빗물받이1 위치에 맞췄습니다.
+
+#### 합류식 빗물받이1 입구
+
+{_orifice_doc(comb_cb1_inlet)}
+
+#### 합류식 빗물받이1 출구
+
+{_orifice_doc(comb_cb1_outlet)}
+
+#### 합류식 빗물받이1 우수연결관 수평부
+
+{_conduit_doc(comb_storm1_h)}
+
+#### 합류식 빗물받이1 우수연결관 수직부
+
+{_conduit_doc(comb_storm1_v)}
+
+### 합류식 본관1 분할 구간
+
+HTML ID: `comb_main_1`
+→ 화면에서는 합류식 본관1로 보입니다.
+
+SWMM 계산 구조:
+
+1. `comb_main_1_upstream_segment`
+2. `comb_main_1_house_1_to_house_2_segment`
+3. `comb_main_1_house_2_to_catch_basin_1_segment`
+4. `comb_main_1_to_manhole_segment`
+
+#### 합류식 본관1 상류 구간
+
+{_conduit_doc(comb_main1_up)}
+
+#### 합류식 본관1 주거지1-주거지2 사이 구간
+
+{_conduit_doc(comb_main1_h1_h2)}
+
+#### 합류식 본관1 주거지2-빗물받이1 사이 구간
+
+{_conduit_doc(comb_main1_h2_cb1)}
+
+#### 합류식 본관1 빗물받이1-합류식 맨홀 사이 구간
+
+{_conduit_doc(comb_main1_to_manhole)}
+
+### 합류식 맨홀
+
+노드 ID: `combined_manhole`
+→ 합류식 본관1에서 온 물을 받아 합류식 본관2로 넘기는 대표 맨홀입니다.
+
+SWMM 노드 종류: JUNCTION
+→ 합류식 본관1, 합류식 본관2가 만나는 접합 노드입니다.
+
+바닥 고도: {node_elevation("combined_manhole"):.2f} m
+→ 합류식 맨홀 바닥 높이입니다.
+
+최대 수심: 3.50 m
+→ 지표면까지의 여유를 반영한 맨홀 깊이입니다.
+
+좌표: x=3900, y=677
+→ HTML에서는 맨홀뚜껑이 지상에 있지만, SWMM GUI에서는 본관이 접속되는 중심선에 맞춥니다.
+
+### 합류식 빗물받이2
+
+노드 ID: `comb_catch_basin_2`
+→ 합류식 구역의 두 번째 빗물받이 박스입니다.
+
+SWMM 노드 종류: STORAGE
+→ 빗물받이1과 동일하게 도로 빗물이 저장되고 우수연결관으로 빠집니다.
+
+바닥 고도: {comb_cb2.elevation:.2f} m
+→ 빗물받이 내부 바닥 높이입니다.
+
+최대 수심: {comb_cb2.max_depth:.2f} m
+→ 빗물받이가 차오를 수 있는 깊이입니다.
+
+좌표: HTML x={comb_cb2.x}, y={comb_cb2.y} / SWMM x={comb_cb2.x}, y={swmm_y(comb_cb2.y)}
+→ HTML의 빗물받이2 위치에 맞췄습니다.
+
+#### 합류식 빗물받이2 입구
+
+{_orifice_doc(comb_cb2_inlet)}
+
+#### 합류식 빗물받이2 출구
+
+{_orifice_doc(comb_cb2_outlet)}
+
+#### 합류식 빗물받이2 우수연결관 수평부
+
+{_conduit_doc(comb_storm2_h)}
+
+#### 합류식 빗물받이2 우수연결관 수직부
+
+{_conduit_doc(comb_storm2_v)}
+
+### 합류식 본관2 분할 구간
+
+HTML ID: `comb_main_2`
+→ 화면에서는 합류식 본관2로 보입니다.
+
+SWMM 계산 구조:
+
+1. `comb_main_2_manhole_to_catch_basin_2_segment`
+2. `comb_main_2_downstream_segment`
+
+#### 합류식 본관2 맨홀-빗물받이2 사이 구간
+
+{_conduit_doc(comb_main2_to_cb2)}
+
+#### 합류식 본관2 하류 구간
+
+{_conduit_doc(comb_main2_down)}
+
+### 우수토실-월류시설 본체
+
+노드 ID: `overflow_chamber`
+→ 합류식 본관2에서 들어온 물을 받아 일반 유량과 폭우 초과분을 나누는 시설입니다.
+
+SWMM 노드 종류: STORAGE
+→ 관이 아니라 물이 차오를 수 있는 저장/분기 시설로 둡니다.
+
+바닥 고도: {overflow_chamber.elevation:.2f} m
+→ 우수토실 내부 바닥 높이입니다.
+
+최대 수심: {overflow_chamber.max_depth:.2f} m
+→ 우수토실 내부에서 물이 찰 수 있는 최대 깊이입니다.
+
+초기 수심: {overflow_chamber.init_depth:.2f} m
+→ 시작 시점에는 비어 있다고 봅니다.
+
+저류 면적 계수: {overflow_chamber.storage_param:.1f}
+→ 우수토실 내부의 간이 저장 용량입니다.
+
+좌표: HTML x={overflow_chamber.x}, y={overflow_chamber.y} / SWMM x={overflow_chamber.x}, y={swmm_y(overflow_chamber.y)}
+→ HTML 우수토실-월류시설 위치에 맞춘 표시용 좌표입니다.
+
+### 일반 유량부 제어 링크
+
+{_orifice_doc(overflow_normal_gate)}
+
+해석:
+→ 우수토실에서 차집관거로 내려가는 일반 유량의 입구입니다.
+→ 유량조절판 또는 일반 유량 개구부 역할을 합니다.
+→ 이후 PySWMM 제어에서는 이 링크의 개도값을 조절할 수 있습니다.
+
+### 우수토실에서 차집관거로 내려가는 관
+
+{_conduit_doc(overflow_normal_drop)}
+
+해석:
+→ 화면에서는 우수토실 아래에서 차집관거로 내려가는 세로 관입니다.
+→ SWMM에서는 일반 유량부 ORIFICE를 지난 뒤, 실제 관인 CONDUIT로 차집관거 접합부에 연결합니다.
+
+### 폭우 초과분 월류 기준
+
+{_weir_doc(overflow_excess_weir)}
+
+해석:
+→ 폭우 초과분 기준은 강수량 자체가 아니라 우수토실 내부 수위입니다.
+→ 우수토실 수심이 {overflow_excess_weir.crest_height:.2f}m보다 낮으면 월류관으로 빠지지 않습니다.
+→ 우수토실 수심이 {overflow_excess_weir.crest_height:.2f}m를 넘으면 초과 물이 월류턱을 넘어 월류관 방향으로 빠집니다.
+
+### 월류관
+
+{_conduit_doc(overflow_pipe)}
+
+### 월류 방류구 게이트
+
+{_orifice_doc(overflow_gate)}
+
+해석:
+→ 현재는 열려 있는 방류구 커넥터입니다.
+→ 이후 하천 수위 상승이나 방류구 막힘을 테스트할 때 이 링크의 개도를 낮추면 월류관 하류가 막히는 상황을 만들 수 있습니다.
+
+### 월류 방류구
+
+노드 ID: `overflow_outfall`
+→ 월류수가 최종적으로 하천으로 빠지는 방류구입니다.
+
+SWMM 노드 종류: OUTFALL
+→ 모델의 최종 배출구입니다.
+
+바닥 고도: {overflow_outfall.elevation:.2f} m
+→ 월류 방류구의 기준 높이입니다.
+
+방류 조건: {overflow_outfall.outfall_type}
+→ 현재는 자유 방류로 두었습니다. 이후 하천 수위 역류를 반영할 때는 고정 수위 또는 시계열 수위 방류구로 바꿀 수 있습니다.
+
+좌표: HTML x={overflow_outfall.x}, y={overflow_outfall.y} / SWMM x={overflow_outfall.x}, y={swmm_y(overflow_outfall.y)}
+→ HTML의 월류 방류구 위치에 맞췄습니다.
+
+### 합류식 현재 흐름
+
+```text
+화면밖 오수 + 화면밖 빗물받이
+→ comb_upstream
+→ 합류식 본관1 상류 구간
+→ 주거지1 오수 합류
+→ 주거지2 오수 합류
+→ 빗물받이1 우수 합류
+→ 합류식 맨홀
+→ 빗물받이2 우수 합류
+→ 합류식 본관2
+→ 우수토실-월류시설
+   ├─ 일반 유량: 차집관거
+   └─ 폭우 초과분: 월류관 → 월류 방류구
+```
 
 ### 분류식 오수 흐름
 
@@ -1633,16 +2819,23 @@ SWMM 노드 종류: STORAGE
 → 오수본관2 상류 구간
 → 아파트2 오수 유입 접합부
 → 오수본관2 하류 구간
-→ 오수 하류 임시 경계
+→ 오수본관2-차집관거 수평 연결관
+→ 오수본관2-차집관거 수직 연결관
+→ 차집관거 접합부
+→ 차집관거 하류 구간
+→ 물재생센터 유입관
+→ 물재생센터
+→ 처리 가능량 제한 링크
+→ 처리수 방류관
+→ 처리수 방류구
 ```
 
 ## 다음 작업 후보
 
-1. 오수본관2에서 차집관거로 내려가는 중형 ㄱ자 연결관 정의
-2. 차집관거 정의
-3. 합류식 본관과 우수토실-월류시설을 같은 기준으로 재정의
-4. HTML 컨트롤러의 막힘률을 `ORIFICE target_setting` 또는 PySWMM 제어값에 연결
-5. 펌프 방류구에 하천 수위 조건을 연결해 역류 조건을 추가
+1. 처리수 방류구 막힘 또는 하천 수위 상승 조건 테스트
+2. 우수토실 일반 유량부 개도와 월류 방류구 막힘 테스트
+3. HTML 컨트롤러의 막힘률을 `ORIFICE target_setting` 또는 PySWMM 제어값에 연결
+4. 물재생센터 처리 가능량을 화면 컨트롤러에서 조절하는 구조 추가
 """
 
 

@@ -27,8 +27,8 @@ OVERFLOW_GATE_START_LEVEL = 0.68
 OVERFLOW_GATE_CLOSED_LEVEL = 0.92
 OVERFLOW_GATE_MIN_SETTING = 0.12
 BACKFLOW_FULLNESS_RATIO = 0.98
-BACKFLOW_BLOCKAGE_RATIO = 0.85
 BACKFLOW_INFLOW_CMS = 0.002
+DISCHARGE_FAILURE_RATIO = 0.05
 
 PIPE_FLOW_ORDER = [
     "sep_sewer_lateral_apartment_1",
@@ -215,11 +215,25 @@ def gate_setting_from_level(level: float) -> float:
     return 1.0 - ratio * (1.0 - OVERFLOW_GATE_MIN_SETTING)
 
 
-def should_reverse(fullness: float, upstream_inflow_cms: float, blockage_ratio: float) -> bool:
+def has_discharge_failure(upstream_inflow_cms: float, outflow_cms: float, effective_capacity_cms: float) -> bool:
+    """Return true when water is trying to enter but the link cannot release it."""
+    if upstream_inflow_cms <= BACKFLOW_INFLOW_CMS:
+        return False
+    if effective_capacity_cms <= BACKFLOW_INFLOW_CMS:
+        return True
+    return outflow_cms <= BACKFLOW_INFLOW_CMS or outflow_cms < upstream_inflow_cms * DISCHARGE_FAILURE_RATIO
+
+
+def should_reverse(
+    fullness: float,
+    upstream_inflow_cms: float,
+    outflow_cms: float,
+    effective_capacity_cms: float,
+) -> bool:
     return (
         fullness >= BACKFLOW_FULLNESS_RATIO
         and upstream_inflow_cms > BACKFLOW_INFLOW_CMS
-        and blockage_ratio >= BACKFLOW_BLOCKAGE_RATIO
+        and has_discharge_failure(upstream_inflow_cms, outflow_cms, effective_capacity_cms)
     )
 
 
@@ -386,11 +400,11 @@ def run_step(control_payload: dict[str, Any]) -> dict[str, Any]:
         pipe_storage[pipe_id] = current_storage
         fullness = clamp(current_storage / storage_capacity if storage_capacity else 0.0, 0.0, 1.18)
         waiting_upstream_cms = max(node_storage.get(from_node, 0.0), 0.0) / step_sec
-        reverse = should_reverse(fullness, waiting_upstream_cms, blockage)
+        outflow = discharge_volume / step_sec
+        reverse = should_reverse(fullness, waiting_upstream_cms, outflow, effective_capacity)
         direction = "reverse" if reverse else "forward"
 
         area = pipe_area(float(physics.get("diameterM") or 0.1)) * max(1 - blockage, 0.05)
-        outflow = discharge_volume / step_sec
         inflow = accepted_volume / step_sec
         velocity = outflow / max(area, 0.001)
         if blockage > 0:

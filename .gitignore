@@ -3,4 +3,7 @@
 *.tmp
 *.bak
 .DS_Store
+.venv/
+__pycache__/
+*.pyc
 run-results/

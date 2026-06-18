@@ -55,16 +55,6 @@ h1 { margin: 0 0 6px; font-size: 23px; }
   gap: 8px;
   flex: 0 0 auto;
 }
-.view-mode-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 0 0 auto;
-  padding: 6px;
-  border: 1px solid #d8e0ec;
-  border-radius: 10px;
-  background: #f8fafc;
-}
 .header-controls {
   display: flex;
   align-items: center;
@@ -190,21 +180,6 @@ h1 { margin: 0 0 6px; font-size: 23px; }
   font-weight: 850;
   cursor: pointer;
 }
-.view-mode-controls button {
-  border: 1px solid transparent;
-  background: transparent;
-  color: #334155;
-  border-radius: 8px;
-  padding: 9px 14px;
-  font-size: 13px;
-  font-weight: 850;
-  cursor: pointer;
-}
-.view-mode-controls button.is-active {
-  border-color: #172033;
-  background: #172033;
-  color: #fff;
-}
 .flow-mode-controls button.is-active {
   border-color: #172033;
   background: #172033;
@@ -224,26 +199,6 @@ main { padding: 18px; }
   box-shadow: var(--shadow);
   overflow: auto;
   max-height: calc(100vh - 104px);
-}
-.debug-stage {
-  display: none;
-  grid-column: 1 / -1;
-  overflow: hidden;
-}
-.debug-frame {
-  display: block;
-  width: 100%;
-  height: calc(100vh - 124px);
-  min-height: 720px;
-  border: 0;
-  background: #fff;
-}
-body[data-view-mode="debug"] .diagram-stage,
-body[data-view-mode="debug"] .object-panel {
-  display: none;
-}
-body[data-view-mode="debug"] .debug-stage {
-  display: block;
 }
 .object-panel {
   position: sticky;
@@ -386,7 +341,6 @@ svg {
   fill: #172033;
   font-size: 22px;
   font-weight: 900;
-  pointer-events: none;
   paint-order: stroke;
   stroke: rgba(255,255,255,.92);
   stroke-width: 6px;
@@ -396,7 +350,6 @@ svg {
   fill: #4d5d70;
   font-size: 15px;
   font-weight: 800;
-  pointer-events: none;
   paint-order: stroke;
   stroke: rgba(255,255,255,.92);
   stroke-width: 5px;
@@ -435,12 +388,9 @@ svg {
   stroke: transparent;
   stroke-width: 62;
   stroke-linecap: butt;
-  stroke-linejoin: miter;
+  stroke-linejoin: round;
   pointer-events: stroke;
   cursor: pointer;
-}
-.pipe-elbow-connector {
-  pointer-events: none;
 }
 .pipe-hit-area.medium { stroke-width: 84; }
 .pipe-hit-area.large { stroke-width: 116; }
@@ -474,45 +424,6 @@ svg {
 .water-flow.backflow.large { --backflow-offset: 56; }
 .water-flow.is-hidden-flow {
   display: none;
-}
-.swmm-model-layer {
-  pointer-events: none;
-  opacity: .82;
-  mix-blend-mode: multiply;
-}
-body[data-view-mode="ui"] .swmm-model-layer {
-  display: none;
-}
-.swmm-model-pipe-outline,
-.swmm-model-pipe-fill,
-.swmm-model-pipe-center {
-  fill: none;
-  stroke-linecap: butt;
-  stroke-linejoin: round;
-}
-.swmm-model-pipe-outline {
-  stroke: rgba(15, 23, 42, .52);
-}
-.swmm-model-pipe-fill {
-  opacity: .78;
-}
-.swmm-model-pipe-center {
-  stroke: rgba(255, 255, 255, .58);
-  stroke-dasharray: 18 16;
-  opacity: .78;
-}
-.swmm-model-node {
-  fill: #fff;
-  stroke: rgba(15, 23, 42, .62);
-  stroke-width: 3;
-}
-.swmm-model-layer-label {
-  font-size: 18px;
-  font-weight: 900;
-  fill: #172033;
-  paint-order: stroke;
-  stroke: rgba(255, 255, 255, .92);
-  stroke-width: 5px;
 }
 .pipe-fullness {
   pointer-events: none;
@@ -695,7 +606,6 @@ body[data-playback-paused="true"] .pipe-wave-line {
   fill: #172033;
   font-size: 29px;
   font-weight: 950;
-  pointer-events: none;
 }
 .rail-desc {
   fill: #3f4e62;
@@ -734,7 +644,6 @@ body[data-playback-paused="true"] .pipe-wave-line {
   fill: #f8fafc;
   font-size: 24px;
   font-weight: 950;
-  pointer-events: none;
   paint-order: stroke;
   stroke: rgba(15, 23, 42, .88);
   stroke-width: 4px;
@@ -744,7 +653,6 @@ body[data-playback-paused="true"] .pipe-wave-line {
   fill: #ffffff;
   font-size: 18px;
   font-weight: 950;
-  pointer-events: none;
   paint-order: stroke;
   stroke: rgba(15, 23, 42, .82);
   stroke-width: 4px;
@@ -754,7 +662,6 @@ body[data-playback-paused="true"] .pipe-wave-line {
   fill: #172033;
   font-size: 14px;
   font-weight: 950;
-  pointer-events: none;
   paint-order: stroke;
   stroke: rgba(255,255,255,.9);
   stroke-width: 4px;
@@ -762,17 +669,13 @@ body[data-playback-paused="true"] .pipe-wave-line {
 }
 </style>
 </head>
-<body data-view-mode="ui">
+<body>
 <header>
   <div>
     <h1>전체 도시 배수도</h1>
     <div class="sub">분류식, 합류식, 하천을 각각 약 1200px 이상 폭으로 잡았습니다. 가로로 스크롤하면서 한 영역씩 크게 볼 수 있습니다.</div>
   </div>
   <div class="header-controls">
-    <div class="view-mode-controls" aria-label="화면 모드 선택">
-      <button type="button" data-view-mode-button="ui">UI 모드</button>
-      <button type="button" data-view-mode-button="debug">디버그 모드</button>
-    </div>
     <div class="playback-controls" aria-label="시나리오 플레이백">
       <label class="playback-control">
         <span>시나리오</span>
@@ -828,7 +731,7 @@ body[data-playback-paused="true"] .pipe-wave-line {
 
 <main>
   <div class="workbench">
-  <section class="stage diagram-stage" aria-label="분류식 합류식 하천 기본 배수도">
+  <section class="stage" aria-label="분류식 합류식 하천 기본 배수도">
     <svg viewBox="0 0 7600 1870" role="img" aria-label="분류식, 합류식, 하천으로 구분된 전체 도시 배수도">
       <defs>
         <pattern id="soilPattern" width="38" height="24" patternUnits="userSpaceOnUse">
@@ -859,16 +762,6 @@ body[data-playback-paused="true"] .pipe-wave-line {
         <symbol id="pipeMediumStraightV" viewBox="0 0 70 1" preserveAspectRatio="none">
           <rect x="0" y="0" width="70" height="1" rx="0" fill="var(--pipe-fill)" stroke="var(--pipe-stroke)" stroke-width="4" vector-effect="non-scaling-stroke"></rect>
         </symbol>
-        <symbol id="pipeMediumElbowConnector" viewBox="0 0 70 70" preserveAspectRatio="none" overflow="visible">
-          <path d="M-34 35 H21 Q35 35 35 49 V104" fill="none" stroke="var(--pipe-stroke)" stroke-width="78" stroke-linecap="butt" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
-          <path d="M-34 35 H21 Q35 35 35 49 V104" fill="none" stroke="var(--pipe-fill)" stroke-width="68" stroke-linecap="butt" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
-          <path d="M-20 28 H22 Q42 28 42 48 V88" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
-        </symbol>
-        <symbol id="pipeMediumElbowLeftDown" viewBox="0 0 70 70" preserveAspectRatio="none" overflow="visible">
-          <path d="M104 35 H49 Q35 35 35 49 V104" fill="none" stroke="var(--pipe-stroke)" stroke-width="78" stroke-linecap="butt" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
-          <path d="M104 35 H49 Q35 35 35 49 V104" fill="none" stroke="var(--pipe-fill)" stroke-width="68" stroke-linecap="butt" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
-          <path d="M90 28 H48 Q28 28 28 48 V88" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
-        </symbol>
         <symbol id="pipeMediumBendDropRight" viewBox="0 0 100 100" preserveAspectRatio="none" overflow="visible">
           <path d="M0 0 H65 Q85 0 85 20 V100" fill="none" stroke="var(--pipe-stroke)" stroke-width="78" stroke-linecap="butt" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
           <path d="M0 0 H65 Q85 0 85 20 V100" fill="none" stroke="var(--pipe-fill)" stroke-width="70" stroke-linecap="butt" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
@@ -884,35 +777,6 @@ body[data-playback-paused="true"] .pipe-wave-line {
         </symbol>
         <symbol id="pipeSmallStraightV" viewBox="0 0 58 1" preserveAspectRatio="none">
           <rect x="0" y="0" width="58" height="1" rx="0" fill="var(--small-pipe-fill, #516071)" stroke="var(--small-pipe-edge, #111827)" stroke-width="5" vector-effect="non-scaling-stroke"></rect>
-        </symbol>
-        <symbol id="pipeSmallElbowConnector" viewBox="0 0 58 58" preserveAspectRatio="none" overflow="visible">
-          <path d="M-28 29 H17 Q29 29 29 41 V86" fill="none" stroke="var(--small-pipe-edge, #111827)" stroke-width="45" stroke-linecap="butt" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
-          <path d="M-28 29 H17 Q29 29 29 41 V86" fill="none" stroke="var(--small-pipe-fill, #566270)" stroke-width="32" stroke-linecap="butt" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
-          <path d="M-16 24 H18 Q35 24 35 41 V74" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="4" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
-        </symbol>
-        <symbol id="pipeSmallElbowLeftDown" viewBox="0 0 58 58" preserveAspectRatio="none" overflow="visible">
-          <path d="M86 29 H41 Q29 29 29 41 V86" fill="none" stroke="var(--small-pipe-edge, #111827)" stroke-width="45" stroke-linecap="butt" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
-          <path d="M86 29 H41 Q29 29 29 41 V86" fill="none" stroke="var(--small-pipe-fill, #566270)" stroke-width="32" stroke-linecap="butt" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
-          <path d="M74 24 H40 Q23 24 23 41 V74" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="4" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
-        </symbol>
-        <g id="pipeElbowFittingCore">
-          <path d="M28 43 H96 Q126 43 126 73 V116" fill="none" stroke="var(--small-pipe-edge, #111827)" stroke-width="var(--elbow-outer, 50)" stroke-linecap="butt" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
-          <path d="M28 43 H96 Q126 43 126 73 V116" fill="none" stroke="var(--small-pipe-fill, #566270)" stroke-width="var(--elbow-inner, 34)" stroke-linecap="butt" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
-          <path d="M45 36 H96 Q134 36 134 74 V106" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
-          <use href="#pipeSmallDropConnector" x="0" y="6" width="56" height="76"></use>
-          <use href="#pipeSmallDropConnectorH" x="86" y="100" width="92" height="46"></use>
-        </g>
-        <symbol id="pipeElbowFittingRightDown" viewBox="-22 0 148 132" preserveAspectRatio="xMidYMid meet" overflow="visible">
-          <use href="#pipeElbowFittingCore"></use>
-        </symbol>
-        <symbol id="pipeElbowFittingLeftDown" viewBox="-22 0 148 132" preserveAspectRatio="xMidYMid meet" overflow="visible">
-          <use href="#pipeElbowFittingCore" transform="translate(104 0) scale(-1 1)"></use>
-        </symbol>
-        <symbol id="pipeElbowFittingRightUp" viewBox="-22 0 148 132" preserveAspectRatio="xMidYMid meet" overflow="visible">
-          <use href="#pipeElbowFittingCore" transform="translate(0 124) scale(1 -1)"></use>
-        </symbol>
-        <symbol id="pipeElbowFittingLeftUp" viewBox="-22 0 148 132" preserveAspectRatio="xMidYMid meet" overflow="visible">
-          <use href="#pipeElbowFittingCore" transform="translate(104 124) scale(-1 -1)"></use>
         </symbol>
         <symbol id="pipeSmallDropRight" viewBox="0 0 120 100" preserveAspectRatio="none" overflow="visible">
           <path d="M0 0 H120 V100" fill="none" stroke="var(--small-pipe-edge, #111827)" stroke-width="45" stroke-linecap="butt" stroke-linejoin="miter" vector-effect="non-scaling-stroke"></path>
@@ -989,9 +853,6 @@ body[data-playback-paused="true"] .pipe-wave-line {
       <text x="3675" y="64" class="page-title" text-anchor="middle">합류식</text>
       <text x="6850" y="64" class="page-title" text-anchor="middle">하천</text>
 
-      <!-- ㄱ자 배관 연결 커넥터 프로토타입: data-pipe-size와 data-direction만 바꿔 재사용합니다. -->
-      <g id="elbow-connector-prototype" transform="translate(2240,8)" data-pipe-elbow-connector data-pipe-size="34" data-direction="right-down" data-pipe-fill="#f8faf7" data-connector-fill="#cfd6de" data-edge-color="#68717d" aria-label="ㄱ자 배관 연결 커넥터 프로토타입"></g>
-
       <!-- 분류식 지상: 아파트 + 도로/빗물받이 -->
       <g>
         <g transform="translate(75,68)">
@@ -1024,22 +885,16 @@ body[data-playback-paused="true"] .pipe-wave-line {
           <text x="85" y="-10" class="building-label" text-anchor="middle" style="font-size:21px; stroke-width:5px;">아파트 생활오수 발생</text>
         </g>
 
-        <use href="#pipeSmallStraightH" x="245" y="189" width="120" height="58" style="--small-pipe-fill:#5e5a54;"></use>
+        <use href="#pipeSmallDropRight" x="245" y="218" width="120" height="572" style="--small-pipe-fill:#5e5a54;"></use>
         <rect class="pipe-fullness" x="245" y="208" width="120" height="20" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M245 218 H365" class="water-flow small" data-pipe-id="sep_sewer_lateral_apartment_1"></path>
-        <g class="pipe-elbow-connector" transform="translate(336,189)" data-pipe-elbow-connector data-pipe-size="34" data-direction="right-down" data-pipe-fill="#5e5a54" data-connector-fill="#5e5a54" data-edge-color="#111827"></g>
-        <use href="#pipeSmallStraightV" x="336" y="218" width="58" height="572" style="--small-pipe-fill:#5e5a54;"></use>
         <rect class="pipe-fullness" x="355" y="218" width="20" height="572" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M365 218 V790" class="water-flow small" data-pipe-id="sep_sewer_lateral_apartment_1"></path>
+        <path d="M245 218 H365 V790" class="water-flow small"></path>
         <text x="306" y="223" class="pipe-label" text-anchor="middle" style="font-size:18px; stroke-width:4px;">오수연결관</text>
 
-        <use href="#pipeSmallStraightH" x="727" y="189" width="120" height="58" style="--small-pipe-fill:#5e5a54;"></use>
+        <use href="#pipeSmallDropLeft" x="727" y="218" width="120" height="572" style="--small-pipe-fill:#5e5a54;"></use>
         <rect class="pipe-fullness" x="727" y="208" width="120" height="20" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M847 218 H727" class="water-flow small" data-pipe-id="sep_sewer_lateral_apartment_2"></path>
-        <g class="pipe-elbow-connector" transform="translate(698,189)" data-pipe-elbow-connector data-pipe-size="34" data-direction="left-down" data-pipe-fill="#5e5a54" data-connector-fill="#5e5a54" data-edge-color="#111827"></g>
-        <use href="#pipeSmallStraightV" x="698" y="218" width="58" height="572" style="--small-pipe-fill:#5e5a54;"></use>
         <rect class="pipe-fullness" x="717" y="218" width="20" height="572" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M727 218 V790" class="water-flow small" data-pipe-id="sep_sewer_lateral_apartment_2"></path>
+        <path d="M847 218 H727 V790" class="water-flow small"></path>
         <text x="787" y="223" class="pipe-label" text-anchor="middle" style="font-size:18px; stroke-width:4px;">오수연결관</text>
       </g>
 
@@ -1057,13 +912,10 @@ body[data-playback-paused="true"] .pipe-wave-line {
         <path d="M36 46 H114 M36 70 H114 M36 94 H114 M36 118 H114" stroke="#334155" stroke-width="2" opacity=".9"></path>
         <rect class="catch-basin-fullness" data-asset-level-for="sep_catch_basin_1" x="23" y="46" width="104" height="95" rx="5"></rect>
         <text x="75" y="92" class="object-label" text-anchor="middle">빗물받이</text>
-        <use href="#pipeSmallStraightH" x="130" y="53" width="120" height="58" style="--small-pipe-fill:#586a78;"></use>
+        <use href="#pipeSmallDropRight" x="130" y="82" width="120" height="181" style="--small-pipe-fill:#586a78;"></use>
         <rect class="pipe-fullness" x="130" y="72" width="120" height="20" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M130 82 H250" class="water-flow small" data-pipe-id="sep_storm_lateral_catch_basin_1"></path>
-        <g class="pipe-elbow-connector" transform="translate(221,53)" data-pipe-elbow-connector data-pipe-size="34" data-direction="right-down" data-pipe-fill="#586a78" data-connector-fill="#586a78" data-edge-color="#111827"></g>
-        <use href="#pipeSmallStraightV" x="221" y="82" width="58" height="181" style="--small-pipe-fill:#586a78;"></use>
         <rect class="pipe-fullness" x="240" y="82" width="20" height="181" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M250 82 V263" class="water-flow small" data-pipe-id="sep_storm_lateral_catch_basin_1"></path>
+        <path d="M130 82 H250 V263" class="water-flow small"></path>
         <text x="190" y="88" class="pipe-label" text-anchor="middle">우수연결관</text>
       </g>
 
@@ -1074,13 +926,10 @@ body[data-playback-paused="true"] .pipe-wave-line {
         <path d="M36 46 H114 M36 70 H114 M36 94 H114 M36 118 H114" stroke="#334155" stroke-width="2" opacity=".9"></path>
         <rect class="catch-basin-fullness" data-asset-level-for="sep_catch_basin_2" x="23" y="46" width="104" height="95" rx="5"></rect>
         <text x="75" y="92" class="object-label" text-anchor="middle">빗물받이</text>
-        <use href="#pipeSmallStraightH" x="130" y="53" width="120" height="58" style="--small-pipe-fill:#586a78;"></use>
+        <use href="#pipeSmallDropRight" x="130" y="82" width="120" height="181" style="--small-pipe-fill:#586a78;"></use>
         <rect class="pipe-fullness" x="130" y="72" width="120" height="20" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M130 82 H250" class="water-flow small" data-pipe-id="sep_storm_lateral_catch_basin_2"></path>
-        <g class="pipe-elbow-connector" transform="translate(221,53)" data-pipe-elbow-connector data-pipe-size="34" data-direction="right-down" data-pipe-fill="#586a78" data-connector-fill="#586a78" data-edge-color="#111827"></g>
-        <use href="#pipeSmallStraightV" x="221" y="82" width="58" height="181" style="--small-pipe-fill:#586a78;"></use>
         <rect class="pipe-fullness" x="240" y="82" width="20" height="181" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M250 82 V263" class="water-flow small" data-pipe-id="sep_storm_lateral_catch_basin_2"></path>
+        <path d="M130 82 H250 V263" class="water-flow small"></path>
         <text x="190" y="88" class="pipe-label" text-anchor="middle">우수연결관</text>
       </g>
 
@@ -1108,13 +957,10 @@ body[data-playback-paused="true"] .pipe-wave-line {
         <path d="M1629 495 V565 M1637 495 V565" stroke="#9fcfff" stroke-width="3"></path>
         <rect x="1761" y="491" width="30" height="78" rx="0" fill="#e9f5ff" stroke="var(--storm)" stroke-width="4"></rect>
         <path d="M1771 495 V565 M1779 495 V565" stroke="#9fcfff" stroke-width="3"></path>
-        <use href="#pipeMediumH" x="2240" y="495" width="115" height="70" style="--pipe-fill:#bfdbfe; --pipe-stroke:#0f2f6f;"></use>
-        <rect class="pipe-fullness" x="2245" y="500" width="110" height="60" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M2240 530 H2355" class="water-flow medium" data-pipe-id="sep_storm_main_to_trunk"></path>
-        <g class="pipe-elbow-connector" transform="translate(2320,495)" data-pipe-elbow-connector data-pipe-size="68" data-direction="right-down" data-pipe-fill="#bfdbfe" data-connector-fill="#bfdbfe" data-edge-color="#0f2f6f"></g>
-        <use href="#pipeMediumStraightV" x="2320" y="530" width="70" height="555" style="--pipe-fill:#bfdbfe; --pipe-stroke:#0f2f6f;"></use>
-        <rect class="pipe-fullness" x="2325" y="530" width="60" height="555" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M2355 530 V1085" class="water-flow medium" data-pipe-id="sep_storm_main_to_trunk"></path>
+        <use href="#pipeMediumBendDropRight" x="2240" y="530" width="135" height="555" style="--pipe-fill:#bfdbfe; --pipe-stroke:#0f2f6f;"></use>
+        <rect class="pipe-fullness" x="2245" y="500" width="100" height="60" fill="url(#pipeFullWavePattern)"></rect>
+        <rect class="pipe-fullness" x="2324" y="535" width="62" height="544" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M2240 530 H2328 Q2355 530 2355 641 V1085" class="water-flow medium"></path>
         <rect x="2240" y="488" width="42" height="84" rx="0" fill="#e9f5ff" stroke="var(--storm)" stroke-width="4"></rect>
         <path d="M2252 492 V568 M2266 492 V568 M2280 492 V568" stroke="#9fcfff" stroke-width="5"></path>
         <rect x="2296" y="1039" width="116" height="46" rx="0" fill="#c7e3ff" stroke="#0f5fc7" stroke-width="5"></rect>
@@ -1134,13 +980,10 @@ body[data-playback-paused="true"] .pipe-wave-line {
         <path d="M471 790 V860 M479 790 V860" stroke="#d3a06d" stroke-width="3"></path>
         <rect x="603" y="786" width="30" height="78" rx="0" fill="#fff4e3" stroke="var(--sewer)" stroke-width="4"></rect>
         <path d="M613 790 V860 M621 790 V860" stroke="#d3a06d" stroke-width="3"></path>
-        <use href="#pipeMediumH" x="2170" y="790" width="94" height="70" style="--pipe-fill:#fed7aa; --pipe-stroke:#7c3f12;"></use>
-        <rect class="pipe-fullness" x="2175" y="795" width="89" height="60" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M2170 825 H2264" class="water-flow medium" data-pipe-id="sep_sewer_main_to_interceptor"></path>
-        <g class="pipe-elbow-connector" transform="translate(2229,790)" data-pipe-elbow-connector data-pipe-size="68" data-direction="right-down" data-pipe-fill="#fed7aa" data-connector-fill="#fed7aa" data-edge-color="#7c3f12"></g>
-        <use href="#pipeMediumStraightV" x="2229" y="825" width="70" height="795" style="--pipe-fill:#fed7aa; --pipe-stroke:#7c3f12;"></use>
-        <rect class="pipe-fullness" x="2234" y="825" width="60" height="795" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M2264 825 V1620" class="water-flow medium" data-pipe-id="sep_sewer_main_to_interceptor"></path>
+        <use href="#pipeMediumBendDropRight" x="2170" y="825" width="110" height="795" style="--pipe-fill:#fed7aa; --pipe-stroke:#7c3f12;"></use>
+        <rect class="pipe-fullness" x="2175" y="795" width="88" height="60" fill="url(#pipeFullWavePattern)"></rect>
+        <rect class="pipe-fullness" x="2233" y="830" width="62" height="784" fill="url(#pipeFullWavePattern)"></rect>
+        <path d="M2170 825 H2242 Q2264 825 2264 984 V1620" class="water-flow medium"></path>
         <rect x="2170" y="783" width="42" height="84" rx="0" fill="#fff4e3" stroke="var(--sewer)" stroke-width="4"></rect>
         <path d="M2182 787 V863 M2196 787 V863 M2210 787 V863" stroke="#d3a06d" stroke-width="5"></path>
         <rect x="2206" y="1574" width="116" height="46" rx="0" fill="#f2c28f" stroke="#7c3f12" stroke-width="5"></rect>
@@ -1221,13 +1064,10 @@ body[data-playback-paused="true"] .pipe-wave-line {
         <rect x="2600" y="190" width="28" height="32" fill="#bfe3ff" stroke="#5b9bd5" stroke-width="1.8"></rect>
         <rect x="2666" y="190" width="28" height="32" fill="#bfe3ff" stroke="#5b9bd5" stroke-width="1.8"></rect>
         <text x="2645" y="84" class="building-label" text-anchor="middle" style="font-size:21px; stroke-width:5px;">주거지 생활오수 발생</text>
-        <use href="#pipeSmallStraightH" x="2730" y="189" width="120" height="58" style="--small-pipe-fill:#5e5a54;"></use>
+        <use href="#pipeSmallDropRight" x="2730" y="218" width="120" height="424" style="--small-pipe-fill:#5e5a54;"></use>
         <rect class="pipe-fullness" x="2730" y="208" width="120" height="20" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M2730 218 H2850" class="water-flow small" data-pipe-id="comb_sewer_lateral_house_1"></path>
-        <g class="pipe-elbow-connector" transform="translate(2821,189)" data-pipe-elbow-connector data-pipe-size="34" data-direction="right-down" data-pipe-fill="#5e5a54" data-connector-fill="#5e5a54" data-edge-color="#111827"></g>
-        <use href="#pipeSmallStraightV" x="2821" y="218" width="58" height="424" style="--small-pipe-fill:#5e5a54;"></use>
         <rect class="pipe-fullness" x="2840" y="218" width="20" height="424" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M2850 218 V642" class="water-flow small" data-pipe-id="comb_sewer_lateral_house_1"></path>
+        <path d="M2730 218 H2850 V642" class="water-flow small"></path>
         <text x="2790" y="223" class="pipe-label" text-anchor="middle" style="font-size:18px; stroke-width:4px;">오수연결관</text>
       </g>
 
@@ -1237,13 +1077,10 @@ body[data-playback-paused="true"] .pipe-wave-line {
         <rect x="3030" y="190" width="28" height="32" fill="#bfe3ff" stroke="#5b9bd5" stroke-width="1.8"></rect>
         <rect x="3096" y="190" width="28" height="32" fill="#bfe3ff" stroke="#5b9bd5" stroke-width="1.8"></rect>
         <text x="3075" y="84" class="building-label" text-anchor="middle" style="font-size:21px; stroke-width:5px;">주거지 생활오수 발생</text>
-        <use href="#pipeSmallStraightH" x="3160" y="189" width="120" height="58" style="--small-pipe-fill:#5e5a54;"></use>
+        <use href="#pipeSmallDropRight" x="3160" y="218" width="120" height="424" style="--small-pipe-fill:#5e5a54;"></use>
         <rect class="pipe-fullness" x="3160" y="208" width="120" height="20" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M3160 218 H3280" class="water-flow small" data-pipe-id="comb_sewer_lateral_house_2"></path>
-        <g class="pipe-elbow-connector" transform="translate(3251,189)" data-pipe-elbow-connector data-pipe-size="34" data-direction="right-down" data-pipe-fill="#5e5a54" data-connector-fill="#5e5a54" data-edge-color="#111827"></g>
-        <use href="#pipeSmallStraightV" x="3251" y="218" width="58" height="424" style="--small-pipe-fill:#5e5a54;"></use>
         <rect class="pipe-fullness" x="3270" y="218" width="20" height="424" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M3280 218 V642" class="water-flow small" data-pipe-id="comb_sewer_lateral_house_2"></path>
+        <path d="M3160 218 H3280 V642" class="water-flow small"></path>
         <text x="3220" y="223" class="pipe-label" text-anchor="middle" style="font-size:18px; stroke-width:4px;">오수연결관</text>
       </g>
 
@@ -1261,13 +1098,10 @@ body[data-playback-paused="true"] .pipe-wave-line {
         <path d="M36 46 H114 M36 70 H114 M36 94 H114 M36 118 H114" stroke="#334155" stroke-width="2" opacity=".9"></path>
         <rect class="catch-basin-fullness" data-asset-level-for="comb_catch_basin_1" x="23" y="46" width="104" height="95" rx="5"></rect>
         <text x="75" y="92" class="object-label" text-anchor="middle">빗물받이</text>
-        <use href="#pipeSmallStraightH" x="130" y="53" width="120" height="58" style="--small-pipe-fill:#586a78;"></use>
+        <use href="#pipeSmallDropRight" x="130" y="82" width="120" height="328" style="--small-pipe-fill:#586a78;"></use>
         <rect class="pipe-fullness" x="130" y="72" width="120" height="20" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M130 82 H250" class="water-flow small" data-pipe-id="comb_storm_lateral_catch_basin_1"></path>
-        <g class="pipe-elbow-connector" transform="translate(221,53)" data-pipe-elbow-connector data-pipe-size="34" data-direction="right-down" data-pipe-fill="#586a78" data-connector-fill="#586a78" data-edge-color="#111827"></g>
-        <use href="#pipeSmallStraightV" x="221" y="82" width="58" height="328" style="--small-pipe-fill:#586a78;"></use>
         <rect class="pipe-fullness" x="240" y="82" width="20" height="328" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M250 82 V410" class="water-flow small" data-pipe-id="comb_storm_lateral_catch_basin_1"></path>
+        <path d="M130 82 H250 V410" class="water-flow small"></path>
         <text x="190" y="88" class="pipe-label" text-anchor="middle">우수연결관</text>
       </g>
 
@@ -1335,13 +1169,10 @@ body[data-playback-paused="true"] .pipe-wave-line {
         <path d="M36 46 H114 M36 70 H114 M36 94 H114 M36 118 H114" stroke="#334155" stroke-width="2" opacity=".9"></path>
         <rect class="catch-basin-fullness" data-asset-level-for="comb_catch_basin_2" x="23" y="46" width="104" height="95" rx="5"></rect>
         <text x="75" y="92" class="object-label" text-anchor="middle">빗물받이</text>
-        <use href="#pipeSmallStraightH" x="130" y="53" width="120" height="58" style="--small-pipe-fill:#586a78;"></use>
+        <use href="#pipeSmallDropRight" x="130" y="82" width="120" height="328" style="--small-pipe-fill:#586a78;"></use>
         <rect class="pipe-fullness" x="130" y="72" width="120" height="20" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M130 82 H250" class="water-flow small" data-pipe-id="comb_storm_lateral_catch_basin_2"></path>
-        <g class="pipe-elbow-connector" transform="translate(221,53)" data-pipe-elbow-connector data-pipe-size="34" data-direction="right-down" data-pipe-fill="#586a78" data-connector-fill="#586a78" data-edge-color="#111827"></g>
-        <use href="#pipeSmallStraightV" x="221" y="82" width="58" height="328" style="--small-pipe-fill:#586a78;"></use>
         <rect class="pipe-fullness" x="240" y="82" width="20" height="328" fill="url(#pipeFullWavePattern)"></rect>
-        <path d="M250 82 V410" class="water-flow small" data-pipe-id="comb_storm_lateral_catch_basin_2"></path>
+        <path d="M130 82 H250 V410" class="water-flow small"></path>
         <text x="190" y="88" class="pipe-label" text-anchor="middle">우수연결관</text>
       </g>
 
@@ -1422,14 +1253,6 @@ body[data-playback-paused="true"] .pipe-wave-line {
         </g>
       </g>
     </svg>
-  </section>
-  <section class="stage debug-stage" aria-label="SWMM 모델 디버그 보기">
-    <iframe
-      class="debug-frame"
-      src="swmm_model_debug_viewer.html"
-      title="SWMM 모델 디버그 보기"
-      data-debug-frame
-    ></iframe>
   </section>
   <aside class="object-panel object-empty" aria-label="선택 객체 상태와 예외상황 제어">
     <div class="object-panel-kicker">객체 제어</div>
@@ -1850,243 +1673,6 @@ body[data-playback-paused="true"] .pipe-wave-line {
 
   const flowModes = new Set(['forward', 'backflow']);
   const params = new URLSearchParams(window.location.search);
-  const SHOW_SWMM_MODEL_GEOMETRY = params.get('swmmGeometry') !== '0';
-  const SWMM_SVG_NS = 'http://www.w3.org/2000/svg';
-  const SWMM_MODEL_GEOMETRY_COLORS = Object.freeze({
-    storm: { fill: '#c7e3ff', stroke: '#0f5fc7' },
-    sewer: { fill: '#fff4e3', stroke: '#a4672b' },
-    combined: { fill: '#f5f1ff', stroke: '#7657d7' },
-    overflow: { fill: '#e8d9d7', stroke: '#a54f4f' },
-    treated: { fill: '#d4ded6', stroke: '#51936b' },
-    default: { fill: '#e2e8f0', stroke: '#475467' },
-  });
-
-  function swmmClamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-  }
-
-  function getSwmmNodePoint(nodeId) {
-    const node = SWMM_HTML_CONTRACT?.swmmIndexes?.nodes?.[nodeId];
-    const map = node?.map;
-    if (!map || !Number.isFinite(Number(map.x)) || !Number.isFinite(Number(map.y))) return null;
-    return { x: Number(map.x), y: Number(map.y) };
-  }
-
-  function getSwmmLinkWidthPx(link = {}) {
-    const xsection = link.crossSection || {};
-    const geom1 = Number(xsection.geom1 || 0);
-    if (geom1 > 0) return swmmClamp(geom1 * 40 + 8, 18, 88);
-    if (link.linkType === 'PUMP') return 58;
-    if (link.linkType === 'WEIR' || link.linkType === 'ORIFICE') return 44;
-    return 34;
-  }
-
-  function getSwmmWaterColors(waterType) {
-    return SWMM_MODEL_GEOMETRY_COLORS[waterType] || SWMM_MODEL_GEOMETRY_COLORS.default;
-  }
-
-  function createSwmmSvgElement(tag, attributes = {}) {
-    const element = document.createElementNS(SWMM_SVG_NS, tag);
-    Object.entries(attributes).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) element.setAttribute(key, String(value));
-    });
-    return element;
-  }
-
-  function getElbowDirectionTransform(direction, width, height) {
-    const normalized = String(direction || 'right-down').toLowerCase();
-    if (normalized === 'left-down') return `translate(${width} 0) scale(-1 1)`;
-    if (normalized === 'right-up') return `translate(0 ${height}) scale(1 -1)`;
-    if (normalized === 'left-up') return `translate(${width} ${height}) scale(-1 -1)`;
-    return '';
-  }
-
-  function createElbowConnectorStripePath(x, y, width, height) {
-    const a = x + width * 0.28;
-    const b = x + width * 0.50;
-    const c = x + width * 0.72;
-    const top = y + height * 0.18;
-    const bottom = y + height * 0.82;
-    return `M${a} ${top} V${bottom} M${b} ${top} V${bottom} M${c} ${top} V${bottom}`;
-  }
-
-  function appendElbowConnectorCap(group, x, y, longSide, shortSide, colors, rotation = 0, strokeWidth = 4) {
-    const cap = createSwmmSvgElement('g', {
-      transform: `translate(${x} ${y}) rotate(${rotation})`,
-    });
-    cap.appendChild(createSwmmSvgElement('rect', {
-      x: 0,
-      y: 0,
-      width: longSide,
-      height: shortSide,
-      rx: 0,
-      fill: colors.connectorFill,
-      stroke: colors.edge,
-      'stroke-width': strokeWidth,
-      'vector-effect': 'non-scaling-stroke',
-    }));
-    cap.appendChild(createSwmmSvgElement('path', {
-      d: createElbowConnectorStripePath(0, 0, longSide, shortSide),
-      fill: 'none',
-      stroke: colors.stripe,
-      'stroke-width': Math.max(2, strokeWidth),
-      'stroke-linecap': 'butt',
-      'vector-effect': 'non-scaling-stroke',
-    }));
-    group.appendChild(cap);
-  }
-
-  function renderPipeElbowConnector(target, options = {}) {
-    if (!target) return null;
-    
-    const pipeSize = clampNumber(options.pipeSize ?? target.dataset.pipeSize, 14, 120, 34); // 내부 파이프의 실제 굵기입니다.
-    const pipeLength = pipeSize * 0.1; // 시작 커넥터 뒤에서 꺾임 전까지 이어지는 가로 직관 길이입니다.
-    const bendRadius = pipeSize * 0.82; // ㄱ자로 방향이 바뀌는 곡선 구간의 반지름입니다.
-    const verticalLength = pipeSize * 0.1; // 꺾임 이후 끝 커넥터 전까지 이어지는 세로 직관 길이입니다.
-    const strokeOuter = pipeSize + Math.max(8, pipeSize * 0.18); // 테두리까지 포함한 파이프의 화면상 전체 굵기입니다.
-    const pipeBorder = (strokeOuter - pipeSize) / 2; // 파이프 한쪽 테두리 두께입니다.
-    const connectorStroke = Math.max(2, pipeBorder); // 커넥터 사각형의 테두리 두께입니다.
-    const connectorLongOuter = strokeOuter * 0.5; // 테두리 포함 커넥터의 긴 방향 전체 길이입니다.
-    const connectorThicknessOuter = strokeOuter * 1.1; // 테두리 포함 커넥터의 짧은 방향 전체 두께입니다.
-    const connectorLong = Math.max(2, connectorLongOuter - connectorStroke); // SVG rect에 실제로 넣는 커넥터 긴 방향 길이입니다.
-    const connectorThickness = Math.max(2, connectorThicknessOuter - connectorStroke); // SVG rect에 실제로 넣는 커넥터 짧은 방향 두께입니다.
-    const startX = connectorLong; // ㄱ자 파이프 path가 시작되는 내부 x 좌표입니다.
-    const startY = Math.max(strokeOuter * 0.5, connectorThickness * 0.5) + 2; // ㄱ자 파이프 path가 시작되는 내부 y 좌표입니다.
-    const bendX = startX + pipeLength; // 가로 직관이 끝나고 곡선 꺾임이 시작되는 x 좌표입니다.
-    const endX = bendX + bendRadius; // 곡선 꺾임이 끝나고 세로 직관이 시작되는 x 좌표입니다.
-    const endY = startY + bendRadius + verticalLength; // 세로 직관이 끝나는 y 좌표입니다.
-    const drawingWidth = endX + connectorThickness * 0.5 + 8; // 방향 반전 계산에 쓰는 컴포넌트 전체 가로 범위입니다.
-    const drawingHeight = endY + connectorLong + 8; // 방향 반전 계산에 쓰는 컴포넌트 전체 세로 범위입니다.
-    const direction = options.direction ?? target.dataset.direction ?? 'right-down'; // ㄱ자 방향입니다. right-down, left-down, right-up, left-up을 사용합니다.
-    const colors = {
-      pipeFill: options.pipeFill ?? target.dataset.pipeFill ?? '#f8faf7',
-      connectorFill: options.connectorFill ?? target.dataset.connectorFill ?? '#cfd6de',
-      edge: options.edgeColor ?? target.dataset.edgeColor ?? '#68717d',
-      stripe: options.stripeColor ?? target.dataset.stripeColor ?? '#f8fafc',
-    };
-
-    target.textContent = ''; // 기존에 렌더링된 ㄱ자 내부 SVG를 지우고 다시 그립니다.
-    target.dataset.renderedPipeSize = String(pipeSize); // 디버깅용: 내부 파이프 굵기를 DOM dataset에 기록합니다.
-    target.dataset.renderedPipeVisualSize = String(Math.round(strokeOuter * 10) / 10); // 디버깅용: 테두리 포함 전체 파이프 굵기를 기록합니다.
-    target.dataset.renderedPipeBorder = String(Math.round(pipeBorder * 10) / 10); // 디버깅용: 한쪽 파이프 테두리 두께를 기록합니다.
-    target.dataset.renderedConnectorSize = String(Math.round(connectorLongOuter * 10) / 10); // 디버깅용: 커넥터 긴 방향의 화면상 전체 길이를 기록합니다.
-    target.dataset.renderedConnectorThickness = String(Math.round(connectorThicknessOuter * 10) / 10); // 디버깅용: 커넥터 짧은 방향의 화면상 전체 두께를 기록합니다.
-    target.dataset.renderedConnectorBorder = String(Math.round(connectorStroke * 10) / 10); // 디버깅용: 커넥터 테두리 두께를 기록합니다.
-
-    const drawing = createSwmmSvgElement('g', {
-      transform: getElbowDirectionTransform(direction, drawingWidth, drawingHeight), // 방향값에 따라 ㄱ자 전체를 좌우/상하 반전합니다.
-    });
-    const pathData = `M${startX} ${startY} H${bendX} Q${endX} ${startY} ${endX} ${startY + bendRadius} V${endY}`; // 가로 직관(H) + 곡선 꺾임(Q) + 세로 직관(V)을 하나의 path로 정의합니다.
-    drawing.appendChild(createSwmmSvgElement('path', {
-      d: pathData,
-      fill: 'none',
-      stroke: colors.edge,
-      'stroke-width': strokeOuter, // 먼저 테두리 포함 전체 굵기의 바깥 파이프를 그립니다.
-      'stroke-linecap': 'butt',
-      'stroke-linejoin': 'round',
-      'vector-effect': 'non-scaling-stroke',
-    }));
-    drawing.appendChild(createSwmmSvgElement('path', {
-      d: pathData,
-      fill: 'none',
-      stroke: colors.pipeFill,
-      'stroke-width': pipeSize, // 같은 path 위에 내부 파이프 색을 더 얇게 덮어서 테두리가 보이게 합니다.
-      'stroke-linecap': 'butt',
-      'stroke-linejoin': 'round',
-      'vector-effect': 'non-scaling-stroke',
-    }));
-    appendElbowConnectorCap(drawing, 0, startY - connectorThickness * 0.5, connectorLong, connectorThickness, colors, 0, connectorStroke); // 가로관 시작부에 첫 번째 커넥터를 붙입니다.
-    appendElbowConnectorCap(drawing, endX + connectorThickness * 0.5, endY, connectorLong, connectorThickness, colors, 90, connectorStroke); // 세로관 끝부분에 두 번째 커넥터를 90도 회전해서 붙입니다.
-    target.appendChild(drawing); // 완성된 ㄱ자 배관 그룹을 대상 g 안에 삽입합니다.
-    target.parentNode?.appendChild(target); // 같은 부모의 마지막 자식으로 올려 겹침 시 위에 보이도록 합니다.
-    return target; // 렌더링된 대상 g를 반환합니다.
-  }
-
-  function renderPipeElbowConnectors(root = document) {
-    root.querySelectorAll('[data-pipe-elbow-connector]').forEach((target) => renderPipeElbowConnector(target));
-  }
-
-  function createSwmmLinkPath(link, object) {
-    const from = getSwmmNodePoint(link.fromNode);
-    const to = getSwmmNodePoint(link.toNode);
-    if (!from || !to) return null;
-    const width = getSwmmLinkWidthPx(link);
-    const colors = getSwmmWaterColors(object.waterType || object.system);
-    const pathData = `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
-    const group = createSwmmSvgElement('g', {
-      'data-swmm-html-id': object.htmlId,
-      'data-swmm-link-id': link.id,
-      'data-swmm-water-type': object.waterType || '',
-    });
-
-    const outline = createSwmmSvgElement('path', {
-      class: 'swmm-model-pipe-outline',
-      d: pathData,
-      stroke: colors.stroke,
-      'stroke-width': width + 10,
-    });
-    const fill = createSwmmSvgElement('path', {
-      class: 'swmm-model-pipe-fill',
-      d: pathData,
-      stroke: colors.fill,
-      'stroke-width': width,
-    });
-    const center = createSwmmSvgElement('path', {
-      class: 'swmm-model-pipe-center',
-      d: pathData,
-      'stroke-width': swmmClamp(width * 0.13, 3, 8),
-    });
-    group.append(outline, fill, center);
-    return group;
-  }
-
-  function renderSwmmModelGeometryLayer() {
-    const world = document.querySelector('#drainage-world');
-    if (!world || !SWMM_HTML_CONTRACT || !SHOW_SWMM_MODEL_GEOMETRY) return;
-    document.querySelector('#swmm-model-geometry-layer')?.remove();
-
-    const layer = createSwmmSvgElement('g', {
-      id: 'swmm-model-geometry-layer',
-      class: 'swmm-model-layer',
-      'aria-label': 'SWMM 모델 좌표 기반 관망 레이어',
-    });
-
-    const drawnNodes = new Set();
-    (SWMM_HTML_CONTRACT.visualObjects || []).forEach((object) => {
-      (object.resolvedLinks || []).forEach((link) => {
-        const linkPath = createSwmmLinkPath(link, object);
-        if (linkPath) layer.appendChild(linkPath);
-      });
-
-      (object.swmmNodes || []).forEach((nodeId) => {
-        if (drawnNodes.has(nodeId)) return;
-        const point = getSwmmNodePoint(nodeId);
-        if (!point) return;
-        drawnNodes.add(nodeId);
-        const node = createSwmmSvgElement('circle', {
-          class: 'swmm-model-node',
-          cx: point.x,
-          cy: point.y,
-          r: 7,
-          'data-swmm-node-id': nodeId,
-        });
-        const title = createSwmmSvgElement('title');
-        title.textContent = nodeId;
-        node.appendChild(title);
-        layer.appendChild(node);
-      });
-    });
-
-    const label = createSwmmSvgElement('text', {
-      class: 'swmm-model-layer-label',
-      x: 30,
-      y: 42,
-    });
-    label.textContent = 'SWMM 모델 좌표 레이어';
-    layer.appendChild(label);
-    world.appendChild(layer);
-  }
-
   const initialFlowMode = flowModes.has(params.get('flow')) ? params.get('flow') : 'forward';
   const ENABLE_LOCAL_HYDRAULIC_DEMO = params.get('demoHydraulics') === '1';
   let currentFlowMode = initialFlowMode;
@@ -2692,11 +2278,7 @@ body[data-playback-paused="true"] .pipe-wave-line {
 	    if (waterTypeOutput) waterTypeOutput.textContent = getWaterTypeLabel(definition?.waterType);
 	    if (levelOutput) levelOutput.textContent = formatPercent(runtimeState.waterLevel);
 	    if (flowOutput) flowOutput.textContent = formatRate(runtimeState.flowRate, '');
-	    if (velocityOutput) {
-	      velocityOutput.textContent = Number.isFinite(Number(runtimeState.velocity))
-	        ? formatRate(runtimeState.velocity, 'x')
-	        : '-';
-	    }
+	    if (velocityOutput) velocityOutput.textContent = selected.objectType === 'pipe' ? formatRate(runtimeState.velocity, 'x') : '-';
 	    if (directionOutput) directionOutput.textContent = runtimeState.backflow ? '역류' : '정방향';
 	    if (exceptionLabel) {
 	      exceptionLabel.textContent = definition?.type === 'catch_basin' ? '빗물받이 막힘 정도' : '막힘 정도';
@@ -2841,8 +2423,8 @@ body[data-playback-paused="true"] .pipe-wave-line {
 
   function getPipeFlowElements(pipeId) {
     return {
-      forward: Array.from(document.querySelectorAll(`.water-flow[data-pipe-id="${pipeId}"]:not(.backflow)`)),
-      backflow: Array.from(document.querySelectorAll(`.water-flow.backflow[data-pipe-id="${pipeId}"]`)),
+      forward: document.querySelector(`.water-flow[data-pipe-id="${pipeId}"]:not(.backflow)`),
+      backflow: document.querySelector(`.water-flow.backflow[data-pipe-id="${pipeId}"]`),
     };
   }
 
@@ -2861,13 +2443,14 @@ body[data-playback-paused="true"] .pipe-wave-line {
     const baseOpacity = pipe.alwaysFlow ? 0.42 : 0.28;
     const flowOpacity = String(clamp(baseOpacity + safeFlowRate * 0.42, baseOpacity, 0.9));
 
-    [...forward, ...backflow].forEach((flow) => {
+    [forward, backflow].forEach((flow) => {
+      if (!flow) return;
       flow.style.setProperty('--flow-duration', flowDuration);
       flow.style.opacity = flowOpacity;
     });
 
-    forward.forEach((flow) => flow.classList.toggle('is-hidden-flow', isBackflow || !hasVisibleFlow));
-    backflow.forEach((flow) => flow.classList.toggle('is-hidden-flow', !isBackflow || !hasVisibleFlow));
+    if (forward) forward.classList.toggle('is-hidden-flow', isBackflow || !hasVisibleFlow);
+    if (backflow) backflow.classList.toggle('is-hidden-flow', !isBackflow || !hasVisibleFlow);
     applyPipeLevelVisual(pipe);
   }
 
@@ -3239,20 +2822,6 @@ body[data-playback-paused="true"] .pipe-wave-line {
 	    syncGlobalHydraulicControls();
 	  }
 
-  function getAssetRepresentativePipeState(assetId, payload = {}) {
-    const pipes = payload.pipes || {};
-    if (assetId === 'overflow_chamber') {
-      return pipes.comb_main_2 || pipes.overflow_to_interceptor_drop || pipes.overflow_pipe || null;
-    }
-    if (assetId === 'storm_pump_station') {
-      return pipes.sep_storm_trunk || pipes.storm_pump_discharge_pipe || null;
-    }
-    if (assetId === 'water_reclamation_center') {
-      return pipes.sep_interceptor || pipes.treatment_effluent_pipe || null;
-    }
-    return null;
-  }
-
   function applySwmmStatePayload(payload = {}, options = {}) {
     if (Object.prototype.hasOwnProperty.call(payload, 'rainfallRatio')) {
       setRainfallControl(Number(payload.rainfallRatio) || 0, {
@@ -3262,19 +2831,12 @@ body[data-playback-paused="true"] .pipe-wave-line {
     }
 
     Object.entries(payload.assets || {}).forEach(([assetId, state]) => {
-      const fallbackPipeState = getAssetRepresentativePipeState(assetId, payload) || {};
-      const rawVelocity = Math.abs(Number(state.velocity_mps ?? state.velocity ?? fallbackPipeState.velocity_mps ?? fallbackPipeState.velocity ?? 0)) || 0;
-      const flowCms = Number(state.inflow_cms ?? state.flow_cms ?? state.flowRate ?? fallbackPipeState.flow_cms ?? fallbackPipeState.flowRate ?? 0) || 0;
-      const isActive = Object.prototype.hasOwnProperty.call(state, 'active')
-        ? Boolean(state.active)
-        : Number(state.depth_ratio ?? state.fullness ?? state.waterLevel ?? 0) > 0.01 || rawVelocity > 0;
       const nextAssetState = {
         waterLevel: state.depth_ratio ?? state.fullness ?? state.waterLevel ?? 0,
-        flowRate: clamp(Math.abs(flowCms), 0, 1.5),
-        velocity: rawVelocity,
-        backflow: state.direction === 'reverse' || fallbackPipeState.direction === 'reverse' || state.backflow === true,
+        flowRate: clamp(Number(state.inflow_cms ?? state.flow_cms ?? state.flowRate ?? 0), 0, 1.5),
+        backflow: state.direction === 'reverse' || state.backflow === true,
       };
-      nextAssetState.active = isActive;
+      if (Object.prototype.hasOwnProperty.call(state, 'active')) nextAssetState.active = state.active;
       if (Object.prototype.hasOwnProperty.call(state, 'status')) nextAssetState.status = state.status;
       if (Object.prototype.hasOwnProperty.call(state, 'target_setting') || Object.prototype.hasOwnProperty.call(state, 'controlSetting')) {
         nextAssetState.controlSetting = state.target_setting ?? state.controlSetting;
@@ -3319,7 +2881,7 @@ body[data-playback-paused="true"] .pipe-wave-line {
       });
     }
 
-    const overflowControl = payload.controls?.overflow_to_interceptor_drop || payload.controls?.overflow_normal_flow_gate;
+    const overflowControl = payload.controls?.overflow_to_interceptor_drop;
     if (overflowControl) {
       setAssetState('overflow_chamber', {
         controlSetting: Number(overflowControl.target_setting ?? 1),
@@ -3506,79 +3068,37 @@ body[data-playback-paused="true"] .pipe-wave-line {
     }
   }
 
-	  function assignPipeLevelElements(flow, pipeId) {
-	    let cursor = flow.previousElementSibling;
-	    while (
+  function assignPipeLevelElements(flow, pipeId) {
+    let cursor = flow.previousElementSibling;
+    while (
       cursor &&
       cursor.classList?.contains('pipe-fullness') &&
       !cursor.dataset.assetLevelFor
     ) {
       cursor.dataset.pipeLevelFor = pipeId;
       cursor = cursor.previousElementSibling;
-	    }
-	  }
-
-	  function raiseElbowConnectors() {
-	    document.querySelectorAll('.pipe-elbow-connector').forEach((connector) => {
-	      connector.parentNode?.appendChild(connector);
-	    });
-	  }
-
-	  function raiseReadableLabels() {
-	    document
-	      .querySelectorAll('.page-title, .main-title, .label, .small-label, .object-label, .pipe-label, .building-label')
-	      .forEach((label) => {
-	        label.parentNode?.appendChild(label);
-	      });
-	  }
-
-	  const forwardFlows = Array.from(document.querySelectorAll('.water-flow:not(.backflow)'));
-  const forwardFlowPipeIds = new Set();
-  const consumedImplicitPipeIds = new Set();
-  const flowSegmentCounts = new Map();
-  let implicitPipeIndex = 0;
-
-  function resolvePipeForFlow(flow) {
-    const explicitPipeId = flow.dataset.pipeId;
-    if (explicitPipeId) {
-      const pipe = PIPE_BY_ID[explicitPipeId];
-      if (!pipe) {
-        console.warn(`Unknown explicit pipe id on flow path: ${explicitPipeId}`);
-        return null;
-      }
-
-      forwardFlowPipeIds.add(pipe.id);
-      const expectedImplicitPipe = PIPE_DEFINITIONS[implicitPipeIndex];
-      if (
-        expectedImplicitPipe?.id === pipe.id &&
-        !consumedImplicitPipeIds.has(pipe.id)
-      ) {
-        consumedImplicitPipeIds.add(pipe.id);
-        implicitPipeIndex += 1;
-      }
-      return pipe;
     }
-
-    const pipe = PIPE_DEFINITIONS[implicitPipeIndex];
-    implicitPipeIndex += 1;
-    if (!pipe) return null;
-    flow.dataset.pipeId = pipe.id;
-    forwardFlowPipeIds.add(pipe.id);
-    return pipe;
   }
 
-	  forwardFlows.forEach((flow) => {
-	    const pipe = resolvePipeForFlow(flow);
+  const forwardFlows = Array.from(document.querySelectorAll('.water-flow:not(.backflow)'));
+
+  if (forwardFlows.length !== PIPE_DEFINITIONS.length) {
+    console.warn(
+      `Pipe definition count mismatch: ${PIPE_DEFINITIONS.length} definitions, ${forwardFlows.length} flow paths.`
+    );
+  }
+
+	  forwardFlows.forEach((flow, index) => {
+	    const pipe = PIPE_DEFINITIONS[index];
 	    if (!pipe) return;
-	    const segmentIndex = (flowSegmentCounts.get(pipe.id) || 0) + 1;
-	    flowSegmentCounts.set(pipe.id, segmentIndex);
-    flow.id = `${pipe.id}__forward_flow_${segmentIndex}`;
+	    flow.dataset.pipeId = pipe.id;
+    flow.id = `${pipe.id}__forward_flow`;
     flow.setAttribute('aria-label', `${pipe.label} 정방향 흐름`);
     assignPipeLevelElements(flow, pipe.id);
 
     const backflow = flow.cloneNode(false);
     backflow.classList.add('backflow');
-    backflow.id = `${pipe.id}__backflow_flow_${segmentIndex}`;
+    backflow.id = `${pipe.id}__backflow_flow`;
     backflow.setAttribute('aria-hidden', 'true');
 	    flow.after(backflow);
 
@@ -3586,22 +3106,12 @@ body[data-playback-paused="true"] .pipe-wave-line {
 	    hitArea.classList.remove('water-flow', 'backflow', 'is-hidden-flow');
 	    hitArea.classList.add('pipe-hit-area');
 	    hitArea.dataset.pipeId = pipe.id;
-	    hitArea.id = `${pipe.id}__hit_area_${segmentIndex}`;
+	    hitArea.id = `${pipe.id}__hit_area`;
 	    hitArea.setAttribute('aria-label', `${pipe.label} 선택 영역`);
 	    hitArea.setAttribute('role', 'button');
-		    hitArea.setAttribute('tabindex', '0');
-		    backflow.after(hitArea);
-		  });
-
-	  raiseElbowConnectors();
-	  raiseReadableLabels();
-
-	  const missingFlowPipeIds = PIPE_DEFINITIONS
-    .filter((pipe) => !forwardFlowPipeIds.has(pipe.id))
-    .map((pipe) => pipe.id);
-  if (missingFlowPipeIds.length > 0) {
-    console.warn(`Missing visible flow path for pipe ids: ${missingFlowPipeIds.join(', ')}`);
-  }
+	    hitArea.setAttribute('tabindex', '0');
+	    backflow.after(hitArea);
+	  });
 
 	  function setupSelectableObjects() {
 	    document.querySelectorAll('[data-asset-id]').forEach((element) => {
@@ -3648,18 +3158,6 @@ body[data-playback-paused="true"] .pipe-wave-line {
 
   document.querySelectorAll('[data-flow-mode-button]').forEach((button) => {
     button.addEventListener('click', () => setFlowMode(button.dataset.flowModeButton));
-  });
-
-  function setViewMode(mode) {
-    const nextMode = mode === 'debug' ? 'debug' : 'ui';
-    document.body.dataset.viewMode = nextMode;
-    document.querySelectorAll('[data-view-mode-button]').forEach((button) => {
-      button.classList.toggle('is-active', button.dataset.viewModeButton === nextMode);
-    });
-  }
-
-  document.querySelectorAll('[data-view-mode-button]').forEach((button) => {
-    button.addEventListener('click', () => setViewMode(button.dataset.viewModeButton));
   });
 
   document.querySelectorAll('[data-global-hydraulic-control]').forEach((control) => {
@@ -3724,29 +3222,22 @@ body[data-playback-paused="true"] .pipe-wave-line {
 	  window.buildSwmmControlPayload = buildSwmmControlPayload;
 	  window.stepSwmmEngine = stepSwmmEngine;
 	  window.resetSwmmEngine = resetSwmmEngine;
-  window.setGlobalHydraulicState = setGlobalHydraulicState;
-	  window.applyPipeStates = applyPipeStates;
-	  window.applyAssetStates = applyAssetStates;
-	  window.setFlowMode = setFlowMode;
-	  window.setViewMode = setViewMode;
-	  window.renderPipeElbowConnector = renderPipeElbowConnector;
-	  window.renderPipeElbowConnectors = renderPipeElbowConnectors;
-	  window.PLAYBACK_DATA = PLAYBACK_DATA;
-	  window.PLAYBACK_STATE = PLAYBACK_STATE;
-	  window.applySwmmStatePayload = applySwmmStatePayload;
-	  window.applyPlaybackFrame = applyPlaybackFrame;
-	  window.startPlayback = startPlayback;
-	  window.stopPlayback = stopPlayback;
-	  window.setPlaybackScenario = setPlaybackScenario;
-	  window.renderSwmmModelGeometryLayer = renderSwmmModelGeometryLayer;
+	  window.setGlobalHydraulicState = setGlobalHydraulicState;
+  window.applyPipeStates = applyPipeStates;
+  window.applyAssetStates = applyAssetStates;
+  window.setFlowMode = setFlowMode;
+  window.PLAYBACK_DATA = PLAYBACK_DATA;
+  window.PLAYBACK_STATE = PLAYBACK_STATE;
+  window.applySwmmStatePayload = applySwmmStatePayload;
+  window.applyPlaybackFrame = applyPlaybackFrame;
+  window.startPlayback = startPlayback;
+  window.stopPlayback = stopPlayback;
+  window.setPlaybackScenario = setPlaybackScenario;
 
 	  setFlowMode(initialFlowMode);
-	  setViewMode(document.body.dataset.viewMode || 'ui');
-		  document.body.dataset.hydraulicMode = ENABLE_LOCAL_HYDRAULIC_DEMO ? 'demo' : 'swmm';
-		  setupSelectableObjects();
-		  renderSwmmModelGeometryLayer();
-		  renderPipeElbowConnectors();
-		  setWeatherState(WEATHER_STATE);
+	  document.body.dataset.hydraulicMode = ENABLE_LOCAL_HYDRAULIC_DEMO ? 'demo' : 'swmm';
+	  setupSelectableObjects();
+	  setWeatherState(WEATHER_STATE);
 	  setGlobalHydraulicState(GLOBAL_HYDRAULIC_STATE);
 	  applyPipeStates();
 	  applyAssetStates();

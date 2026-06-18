@@ -41,33 +41,69 @@ sep_sewer_main_1_apartment_1_connector     8.55     2.40     0.00      0.50     
 sep_sewer_manhole                          8.45     3.60     0.00      1.20     20.0
 sep_sewer_main_2_apartment_2_connector     8.35     2.40     0.00      0.50     0.0
 sep_sewer_downstream                       8.10     2.40     0.00      0.50     0.0
+sep_sewer_main_to_interceptor_elbow_connector 8.07     2.40     0.00      0.50     0.0
+sep_interceptor_upstream                   6.55     3.20     0.00      0.80     0.0
+sep_interceptor_join                       6.20     3.20     0.00      1.00     20.0
+overflow_interceptor_join                  5.65     3.20     0.00      1.00     20.0
+sep_interceptor_downstream                 5.60     3.20     0.00      0.80     0.0
+treatment_process_outlet_node              4.95     3.20     0.00      0.80     0.0
+treated_outfall_gate_node                  4.86     3.20     0.00      0.80     0.0
 sep_storm_lateral_catch_basin_1_start      11.33    0.80     0.00      0.30     0.0
 sep_storm_lateral_catch_basin_1_elbow_connector 11.31    0.80     0.00      0.30     0.0
 sep_storm_lateral_catch_basin_2_start      11.33    0.80     0.00      0.30     0.0
 sep_storm_lateral_catch_basin_2_elbow_connector 11.31    0.80     0.00      0.30     0.0
-sep_storm_main_1_catch_basin_1_connector   8.75     2.40     0.00      0.50     0.0
+sep_storm_main_1_catch_basin_1_connector   8.75     2.40     0.00      0.50     30.0
 offscreen_catch_basin_storm_main_1         8.95     2.40     0.00      0.50     0.0
-sep_storm_manhole                          8.65     3.55     0.00      0.50     20.0
-sep_storm_main_2_catch_basin_2_connector   8.38     2.40     0.00      0.50     0.0
-sep_storm_main_2_outlet_connector          8.32     2.40     0.00      0.50     0.0
-sep_storm_main_to_trunk_elbow_connector    8.29     2.40     0.00      0.50     0.0
+sep_storm_manhole                          8.65     3.55     0.00      0.50     50.0
+sep_storm_main_2_catch_basin_2_connector   8.38     2.40     0.00      0.50     30.0
+sep_storm_main_2_outlet_connector          8.32     2.40     0.00      0.50     50.0
+sep_storm_main_to_trunk_elbow_connector    8.29     2.40     0.00      0.50     50.0
 sep_storm_trunk_upstream                   6.16     3.00     0.00      0.50     0.0
 sep_storm_trunk_main_2_drop_connector      5.60     3.00     0.00      0.50     0.0
 sep_storm_trunk_downstream                 5.01     3.00     0.00      0.50     0.0
 storm_pump_inlet_gate_node                 4.95     2.40     0.00      0.50     0.0
 storm_pump_discharge_node                  5.20     2.40     0.00      0.50     0.0
 pump_outfall_gate_node                     5.03     2.40     0.00      0.50     0.0
+road_runoff_offscreen_comb_catch_basin     12.20    0.35     0.00      0.40     18.0
+offscreen_comb_sewer_source                8.88     1.20     0.00      0.40     0.0
+offscreen_comb_storm_lateral_start         11.33    0.80     0.00      0.30     0.0
+offscreen_comb_storm_lateral_elbow_connector 11.31    0.80     0.00      0.30     0.0
+comb_upstream                              8.82     2.60     0.00      0.50     0.0
+comb_house_1                               11.10    1.00     0.00      0.50     0.0
+comb_sewer_lateral_house_1_elbow_connector 11.08    0.80     0.00      0.30     0.0
+comb_main_house_1_connector                8.60     2.60     0.00      0.50     0.0
+comb_house_2                               11.00    1.00     0.00      0.50     0.0
+comb_sewer_lateral_house_2_elbow_connector 10.98    0.80     0.00      0.30     0.0
+comb_main_house_2_connector                8.54     2.60     0.00      0.50     0.0
+road_runoff_comb_catch_basin_1             12.20    0.35     0.00      0.40     18.0
+comb_storm_lateral_catch_basin_1_start     11.33    0.80     0.00      0.30     0.0
+comb_storm_lateral_catch_basin_1_elbow_connector 11.31    0.80     0.00      0.30     0.0
+comb_main_catch_basin_1_connector          8.43     2.60     0.00      0.50     0.0
+combined_manhole                           8.35     3.50     0.00      1.20     20.0
+road_runoff_comb_catch_basin_2             12.20    0.35     0.00      0.40     18.0
+comb_storm_lateral_catch_basin_2_start     11.28    0.80     0.00      0.30     0.0
+comb_storm_lateral_catch_basin_2_elbow_connector 11.26    0.80     0.00      0.30     0.0
+comb_main_catch_basin_2_connector          8.18     2.60     0.00      0.50     0.0
+overflow_normal_flow_node                  7.62     2.80     0.00      0.50     0.0
+overflow_weir_outlet_node                  7.70     2.40     0.00      0.50     0.0
+overflow_outfall_gate_node                 6.30     2.40     0.00      0.50     0.0
 
 [STORAGE]
 ;;Name                         Elev     MaxDepth InitDepth Shape      Curve/Params          N/A  Fevap Psi Ksat IMD
 sep_catch_basin_1                          11.00    1.20     0.00      FUNCTIONAL 2.0     0      0      0    0
 sep_catch_basin_2                          11.00    1.20     0.00      FUNCTIONAL 2.0     0      0      0    0
+offscreen_comb_catch_basin                 11.00    1.20     0.00      FUNCTIONAL 2.0     0      0      0    0
+comb_catch_basin_1                         11.00    1.20     0.00      FUNCTIONAL 2.0     0      0      0    0
+comb_catch_basin_2                         10.95    1.20     0.00      FUNCTIONAL 2.0     0      0      0    0
+overflow_chamber                           7.75     2.80     0.00      FUNCTIONAL 45.0    0      0      0    0
 storm_pump_station                         4.70     2.40     0.00      FUNCTIONAL 25.0    0      0      0    0
+water_reclamation_center                   5.05     4.00     0.15      FUNCTIONAL 120.0   0      0      0    0
 
 [OUTFALLS]
 ;;Name                         Elev     Type       Stage Data       Gated
+overflow_outfall                           6.25     FREE                        NO
 pump_outfall                               5.02     FREE                        NO
-sep_sewer_boundary_outfall                 8.05     FREE                        NO
+treated_outfall                            4.85     FREE                        NO
 
 [ORIFICES]
 ;;Name                         From Node                    To Node                      Type   Offset Qcoeff Gated CloseTime
@@ -77,6 +113,19 @@ sep_catch_basin_2_inlet_connector          road_runoff_sep_catch_basin_2        
 sep_catch_basin_2_outlet_connector         sep_catch_basin_2                          sep_storm_lateral_catch_basin_2_start      SIDE   0.33   0.65   NO    0
 storm_pump_inlet_gate                      storm_pump_inlet_gate_node                 storm_pump_station                         SIDE   0.00   0.75   NO    0
 pump_outfall_gate                          pump_outfall_gate_node                     pump_outfall                               SIDE   0.00   0.75   NO    0
+treated_outfall_gate                       treated_outfall_gate_node                  treated_outfall                            SIDE   0.00   0.75   NO    0
+offscreen_comb_catch_basin_inlet_connector road_runoff_offscreen_comb_catch_basin     offscreen_comb_catch_basin                 BOTTOM 0.00   0.65   NO    0
+offscreen_comb_catch_basin_outlet_connector offscreen_comb_catch_basin                 offscreen_comb_storm_lateral_start         SIDE   0.33   0.65   NO    0
+comb_catch_basin_1_inlet_connector         road_runoff_comb_catch_basin_1             comb_catch_basin_1                         BOTTOM 0.00   0.65   NO    0
+comb_catch_basin_1_outlet_connector        comb_catch_basin_1                         comb_storm_lateral_catch_basin_1_start     SIDE   0.33   0.65   NO    0
+comb_catch_basin_2_inlet_connector         road_runoff_comb_catch_basin_2             comb_catch_basin_2                         BOTTOM 0.00   0.65   NO    0
+comb_catch_basin_2_outlet_connector        comb_catch_basin_2                         comb_storm_lateral_catch_basin_2_start     SIDE   0.33   0.65   NO    0
+overflow_normal_flow_gate                  overflow_chamber                           overflow_normal_flow_node                  SIDE   0.20   0.65   NO    0
+overflow_outfall_gate                      overflow_outfall_gate_node                 overflow_outfall                           SIDE   0.00   0.75   NO    0
+
+[WEIRS]
+;;Name                         From Node                    To Node                      Type       CrestHt Qcoeff Gated EndCon EndCoeff Surcharge RoadWidth RoadSurf
+overflow_excess_weir                       overflow_chamber                           overflow_weir_outlet_node                  TRANSVERSE 1.60    1.84   NO    0      0.00     YES       0.00      
 
 [PUMPS]
 ;;Name                         From Node                    To Node                      Pump Curve        Status Startup Shutoff
@@ -92,7 +141,14 @@ sep_sewer_main_1_upstream_segment          sep_sewer_upstream                   
 sep_sewer_main_1_downstream_segment        sep_sewer_main_1_apartment_1_connector     sep_sewer_manhole                          45.00  0.015     0.00     0.00      0.00     0.00
 sep_sewer_main_2_upstream_segment          sep_sewer_manhole                          sep_sewer_main_2_apartment_2_connector     60.00  0.015     0.00     0.00      0.00     0.00
 sep_sewer_main_2_downstream_segment        sep_sewer_main_2_apartment_2_connector     sep_sewer_downstream                       200.00 0.015     0.00     0.00      0.00     0.00
-sep_sewer_downstream_boundary_pipe         sep_sewer_downstream                       sep_sewer_boundary_outfall                 45.00  0.015     0.00     0.00      0.00     0.00
+sep_sewer_main_to_interceptor_horizontal   sep_sewer_downstream                       sep_sewer_main_to_interceptor_elbow_connector 24.00  0.015     0.00     0.00      0.00     0.00
+sep_sewer_main_to_interceptor_vertical     sep_sewer_main_to_interceptor_elbow_connector sep_interceptor_join                       40.00  0.015     0.00     0.00      0.00     0.00
+sep_interceptor_upstream_segment           sep_interceptor_upstream                   sep_interceptor_join                       460.00 0.016     0.00     0.00      0.00     0.00
+sep_interceptor_join_to_overflow_segment   sep_interceptor_join                       overflow_interceptor_join                  570.00 0.016     0.00     0.00      0.00     0.00
+sep_interceptor_downstream_segment         overflow_interceptor_join                  sep_interceptor_downstream                 50.00  0.016     0.00     0.00      0.00     0.00
+sep_interceptor_to_reclamation_inlet       sep_interceptor_downstream                 water_reclamation_center                   45.00  0.016     0.00     0.00      0.00     0.00
+treatment_process_limited_outlet           water_reclamation_center                   treatment_process_outlet_node              30.00  0.014     0.00     0.00      0.00     0.02
+treatment_effluent_pipe                    treatment_process_outlet_node              treated_outfall_gate_node                  300.00 0.014     0.00     0.00      0.00     0.00
 sep_storm_lateral_catch_basin_1_horizontal sep_storm_lateral_catch_basin_1_start      sep_storm_lateral_catch_basin_1_elbow_connector 18.00  0.018     0.00     0.00      0.00     0.00
 sep_storm_lateral_catch_basin_1_vertical   sep_storm_lateral_catch_basin_1_elbow_connector sep_storm_main_1_catch_basin_1_connector   30.00  0.018     0.00     0.00      0.00     0.00
 sep_storm_lateral_catch_basin_2_horizontal sep_storm_lateral_catch_basin_2_start      sep_storm_lateral_catch_basin_2_elbow_connector 18.00  0.018     0.00     0.00      0.00     0.00
@@ -107,6 +163,25 @@ sep_storm_trunk_upstream_segment           sep_storm_trunk_upstream             
 sep_storm_trunk_downstream_segment         sep_storm_trunk_main_2_drop_connector      sep_storm_trunk_downstream                 510.00 0.015     0.00     0.00      0.00     0.00
 sep_storm_trunk_to_pump_station            sep_storm_trunk_downstream                 storm_pump_inlet_gate_node                 35.00  0.015     0.00     0.00      0.00     0.00
 storm_pump_discharge_pipe                  storm_pump_discharge_node                  pump_outfall_gate_node                     145.00 0.015     0.00     0.00      0.00     0.00
+offscreen_comb_sewer_lateral               offscreen_comb_sewer_source                comb_upstream                              24.00  0.015     0.00     0.00      0.00     0.00
+offscreen_comb_storm_lateral_horizontal    offscreen_comb_storm_lateral_start         offscreen_comb_storm_lateral_elbow_connector 18.00  0.018     0.00     0.00      0.00     0.00
+offscreen_comb_storm_lateral_vertical      offscreen_comb_storm_lateral_elbow_connector comb_upstream                              30.00  0.018     0.00     0.00      0.00     0.00
+comb_sewer_lateral_house_1_horizontal      comb_house_1                               comb_sewer_lateral_house_1_elbow_connector 18.00  0.015     0.00     0.00      0.00     0.00
+comb_sewer_lateral_house_1_vertical        comb_sewer_lateral_house_1_elbow_connector comb_main_house_1_connector                30.00  0.015     0.00     0.00      0.00     0.00
+comb_sewer_lateral_house_2_horizontal      comb_house_2                               comb_sewer_lateral_house_2_elbow_connector 18.00  0.015     0.00     0.00      0.00     0.00
+comb_sewer_lateral_house_2_vertical        comb_sewer_lateral_house_2_elbow_connector comb_main_house_2_connector                30.00  0.015     0.00     0.00      0.00     0.00
+comb_storm_lateral_catch_basin_1_horizontal comb_storm_lateral_catch_basin_1_start     comb_storm_lateral_catch_basin_1_elbow_connector 18.00  0.018     0.00     0.00      0.00     0.00
+comb_storm_lateral_catch_basin_1_vertical  comb_storm_lateral_catch_basin_1_elbow_connector comb_main_catch_basin_1_connector          30.00  0.018     0.00     0.00      0.00     0.00
+comb_storm_lateral_catch_basin_2_horizontal comb_storm_lateral_catch_basin_2_start     comb_storm_lateral_catch_basin_2_elbow_connector 18.00  0.018     0.00     0.00      0.00     0.00
+comb_storm_lateral_catch_basin_2_vertical  comb_storm_lateral_catch_basin_2_elbow_connector comb_main_catch_basin_2_connector          30.00  0.018     0.00     0.00      0.00     0.00
+comb_main_1_upstream_segment               comb_upstream                              comb_main_house_1_connector                220.00 0.015     0.00     0.00      0.00     0.00
+comb_main_1_house_1_to_house_2_segment     comb_main_house_1_connector                comb_main_house_2_connector                60.00  0.015     0.00     0.00      0.00     0.00
+comb_main_1_house_2_to_catch_basin_1_segment comb_main_house_2_connector                comb_main_catch_basin_1_connector          110.00 0.015     0.00     0.00      0.00     0.00
+comb_main_1_to_manhole_segment             comb_main_catch_basin_1_connector          combined_manhole                           80.00  0.015     0.00     0.00      0.00     0.00
+comb_main_2_manhole_to_catch_basin_2_segment combined_manhole                           comb_main_catch_basin_2_connector          120.00 0.015     0.00     0.00      0.00     0.00
+comb_main_2_downstream_segment             comb_main_catch_basin_2_connector          overflow_chamber                           70.00  0.015     0.00     0.00      0.00     0.00
+overflow_to_interceptor_drop               overflow_normal_flow_node                  overflow_interceptor_join                  40.00  0.016     0.00     0.00      0.00     0.00
+overflow_pipe                              overflow_weir_outlet_node                  overflow_outfall_gate_node                 280.00 0.016     0.00     0.00      0.00     0.00
 
 [XSECTIONS]
 ;;Link                         Shape      Geom1 Geom2 Geom3 Geom4 Barrels Culvert
@@ -116,6 +191,15 @@ sep_catch_basin_2_inlet_connector          RECT_CLOSED 0.60  0.60  0.00  0.00  1
 sep_catch_basin_2_outlet_connector         CIRCULAR   0.45  0.00  0.00  0.00  1       0
 storm_pump_inlet_gate                      CIRCULAR   1.80  0.00  0.00  0.00  1       0
 pump_outfall_gate                          CIRCULAR   1.80  0.00  0.00  0.00  1       0
+treated_outfall_gate                       CIRCULAR   1.80  0.00  0.00  0.00  1       0
+offscreen_comb_catch_basin_inlet_connector RECT_CLOSED 0.60  0.60  0.00  0.00  1       0
+offscreen_comb_catch_basin_outlet_connector CIRCULAR   0.45  0.00  0.00  0.00  1       0
+comb_catch_basin_1_inlet_connector         RECT_CLOSED 0.60  0.60  0.00  0.00  1       0
+comb_catch_basin_1_outlet_connector        CIRCULAR   0.45  0.00  0.00  0.00  1       0
+comb_catch_basin_2_inlet_connector         RECT_CLOSED 0.60  0.60  0.00  0.00  1       0
+comb_catch_basin_2_outlet_connector        CIRCULAR   0.45  0.00  0.00  0.00  1       0
+overflow_normal_flow_gate                  CIRCULAR   0.95  0.00  0.00  0.00  1       0
+overflow_outfall_gate                      CIRCULAR   1.80  0.00  0.00  0.00  1       0
 sep_sewer_lateral_apartment_1_horizontal   CIRCULAR   0.45  0.00  0.00  0.00  1       0
 sep_sewer_lateral_apartment_1_vertical     CIRCULAR   0.45  0.00  0.00  0.00  1       0
 sep_sewer_lateral_apartment_2_horizontal   CIRCULAR   0.45  0.00  0.00  0.00  1       0
@@ -124,7 +208,14 @@ sep_sewer_main_1_upstream_segment          CIRCULAR   1.05  0.00  0.00  0.00  1 
 sep_sewer_main_1_downstream_segment        CIRCULAR   1.05  0.00  0.00  0.00  1       0
 sep_sewer_main_2_upstream_segment          CIRCULAR   1.05  0.00  0.00  0.00  1       0
 sep_sewer_main_2_downstream_segment        CIRCULAR   1.05  0.00  0.00  0.00  1       0
-sep_sewer_downstream_boundary_pipe         CIRCULAR   1.05  0.00  0.00  0.00  1       0
+sep_sewer_main_to_interceptor_horizontal   CIRCULAR   1.05  0.00  0.00  0.00  1       0
+sep_sewer_main_to_interceptor_vertical     CIRCULAR   1.05  0.00  0.00  0.00  1       0
+sep_interceptor_upstream_segment           CIRCULAR   1.80  0.00  0.00  0.00  1       0
+sep_interceptor_join_to_overflow_segment   CIRCULAR   1.80  0.00  0.00  0.00  1       0
+sep_interceptor_downstream_segment         CIRCULAR   1.80  0.00  0.00  0.00  1       0
+sep_interceptor_to_reclamation_inlet       CIRCULAR   1.80  0.00  0.00  0.00  1       0
+treatment_process_limited_outlet           CIRCULAR   1.20  0.00  0.00  0.00  1       0
+treatment_effluent_pipe                    CIRCULAR   1.80  0.00  0.00  0.00  1       0
 sep_storm_lateral_catch_basin_1_horizontal CIRCULAR   0.45  0.00  0.00  0.00  1       0
 sep_storm_lateral_catch_basin_1_vertical   CIRCULAR   0.45  0.00  0.00  0.00  1       0
 sep_storm_lateral_catch_basin_2_horizontal CIRCULAR   0.45  0.00  0.00  0.00  1       0
@@ -139,6 +230,26 @@ sep_storm_trunk_upstream_segment           CIRCULAR   1.80  0.00  0.00  0.00  1 
 sep_storm_trunk_downstream_segment         CIRCULAR   1.80  0.00  0.00  0.00  1       0
 sep_storm_trunk_to_pump_station            CIRCULAR   1.80  0.00  0.00  0.00  1       0
 storm_pump_discharge_pipe                  CIRCULAR   1.80  0.00  0.00  0.00  1       0
+offscreen_comb_sewer_lateral               CIRCULAR   0.45  0.00  0.00  0.00  1       0
+offscreen_comb_storm_lateral_horizontal    CIRCULAR   0.45  0.00  0.00  0.00  1       0
+offscreen_comb_storm_lateral_vertical      CIRCULAR   0.45  0.00  0.00  0.00  1       0
+comb_sewer_lateral_house_1_horizontal      CIRCULAR   0.45  0.00  0.00  0.00  1       0
+comb_sewer_lateral_house_1_vertical        CIRCULAR   0.45  0.00  0.00  0.00  1       0
+comb_sewer_lateral_house_2_horizontal      CIRCULAR   0.45  0.00  0.00  0.00  1       0
+comb_sewer_lateral_house_2_vertical        CIRCULAR   0.45  0.00  0.00  0.00  1       0
+comb_storm_lateral_catch_basin_1_horizontal CIRCULAR   0.45  0.00  0.00  0.00  1       0
+comb_storm_lateral_catch_basin_1_vertical  CIRCULAR   0.45  0.00  0.00  0.00  1       0
+comb_storm_lateral_catch_basin_2_horizontal CIRCULAR   0.45  0.00  0.00  0.00  1       0
+comb_storm_lateral_catch_basin_2_vertical  CIRCULAR   0.45  0.00  0.00  0.00  1       0
+comb_main_1_upstream_segment               CIRCULAR   1.20  0.00  0.00  0.00  1       0
+comb_main_1_house_1_to_house_2_segment     CIRCULAR   1.20  0.00  0.00  0.00  1       0
+comb_main_1_house_2_to_catch_basin_1_segment CIRCULAR   1.20  0.00  0.00  0.00  1       0
+comb_main_1_to_manhole_segment             CIRCULAR   1.20  0.00  0.00  0.00  1       0
+comb_main_2_manhole_to_catch_basin_2_segment CIRCULAR   1.20  0.00  0.00  0.00  1       0
+comb_main_2_downstream_segment             CIRCULAR   1.20  0.00  0.00  0.00  1       0
+overflow_to_interceptor_drop               CIRCULAR   0.95  0.00  0.00  0.00  1       0
+overflow_pipe                              CIRCULAR   1.80  0.00  0.00  0.00  1       0
+overflow_excess_weir                       RECT_OPEN  1.00  2.40  0.00  0.00  1       0
 
 [LOSSES]
 ;;Link                         InletLoss OutletLoss AverageLoss FlapGate SeepageRate
@@ -150,7 +261,14 @@ sep_sewer_main_1_upstream_segment          0.00      0.00       0.00        NO  
 sep_sewer_main_1_downstream_segment        0.00      0.00       0.00        NO       0.00
 sep_sewer_main_2_upstream_segment          0.00      0.00       0.00        NO       0.00
 sep_sewer_main_2_downstream_segment        0.00      0.00       0.00        NO       0.00
-sep_sewer_downstream_boundary_pipe         0.00      0.00       0.00        NO       0.00
+sep_sewer_main_to_interceptor_horizontal   0.00      0.00       0.00        NO       0.00
+sep_sewer_main_to_interceptor_vertical     0.00      0.00       1.50        NO       0.00
+sep_interceptor_upstream_segment           0.00      0.00       0.00        NO       0.00
+sep_interceptor_join_to_overflow_segment   0.00      0.00       0.00        NO       0.00
+sep_interceptor_downstream_segment         0.00      0.00       0.00        NO       0.00
+sep_interceptor_to_reclamation_inlet       0.00      0.00       0.00        NO       0.00
+treatment_process_limited_outlet           0.00      0.00       0.00        NO       0.00
+treatment_effluent_pipe                    0.00      0.00       0.00        NO       0.00
 sep_storm_lateral_catch_basin_1_horizontal 0.00      0.00       0.00        NO       0.00
 sep_storm_lateral_catch_basin_1_vertical   0.00      0.00       1.20        NO       0.00
 sep_storm_lateral_catch_basin_2_horizontal 0.00      0.00       0.00        NO       0.00
@@ -165,6 +283,25 @@ sep_storm_trunk_upstream_segment           0.00      0.00       0.00        NO  
 sep_storm_trunk_downstream_segment         0.00      0.00       0.00        NO       0.00
 sep_storm_trunk_to_pump_station            0.00      0.00       0.00        NO       0.00
 storm_pump_discharge_pipe                  0.00      0.00       0.00        NO       0.00
+offscreen_comb_sewer_lateral               0.00      0.00       0.00        NO       0.00
+offscreen_comb_storm_lateral_horizontal    0.00      0.00       0.00        NO       0.00
+offscreen_comb_storm_lateral_vertical      0.00      0.00       1.20        NO       0.00
+comb_sewer_lateral_house_1_horizontal      0.00      0.00       0.00        NO       0.00
+comb_sewer_lateral_house_1_vertical        0.00      0.00       1.20        NO       0.00
+comb_sewer_lateral_house_2_horizontal      0.00      0.00       0.00        NO       0.00
+comb_sewer_lateral_house_2_vertical        0.00      0.00       1.20        NO       0.00
+comb_storm_lateral_catch_basin_1_horizontal 0.00      0.00       0.00        NO       0.00
+comb_storm_lateral_catch_basin_1_vertical  0.00      0.00       1.20        NO       0.00
+comb_storm_lateral_catch_basin_2_horizontal 0.00      0.00       0.00        NO       0.00
+comb_storm_lateral_catch_basin_2_vertical  0.00      0.00       1.20        NO       0.00
+comb_main_1_upstream_segment               0.00      0.00       0.00        NO       0.00
+comb_main_1_house_1_to_house_2_segment     0.00      0.00       0.00        NO       0.00
+comb_main_1_house_2_to_catch_basin_1_segment 0.00      0.00       0.00        NO       0.00
+comb_main_1_to_manhole_segment             0.00      0.00       0.00        NO       0.00
+comb_main_2_manhole_to_catch_basin_2_segment 0.00      0.00       0.00        NO       0.00
+comb_main_2_downstream_segment             0.00      0.00       0.00        NO       0.00
+overflow_to_interceptor_drop               0.00      0.00       1.50        NO       0.00
+overflow_pipe                              0.00      0.00       0.00        NO       0.00
 
 [INFLOWS]
 ;;Node                         Constituent Time Series       Type   Mfactor Sfactor Baseline Pattern
@@ -174,6 +311,12 @@ road_runoff_sep_catch_basin_2              FLOW        TS_STORM_RAIN     FLOW   
 sep_sewer_upstream                         FLOW        TS_SEWER_DWF      FLOW   3.00    1.00     0.00
 sep_apartment_1                            FLOW        TS_SEWER_DWF      FLOW   1.40    1.00     0.00
 sep_apartment_2                            FLOW        TS_SEWER_DWF      FLOW   1.50    1.00     0.00
+road_runoff_offscreen_comb_catch_basin     FLOW        TS_STORM_RAIN     FLOW   0.85    1.00     0.00
+road_runoff_comb_catch_basin_1             FLOW        TS_STORM_RAIN     FLOW   0.90    1.00     0.00
+road_runoff_comb_catch_basin_2             FLOW        TS_STORM_RAIN     FLOW   0.95    1.00     0.00
+offscreen_comb_sewer_source                FLOW        TS_SEWER_DWF      FLOW   1.20    1.00     0.00
+comb_house_1                               FLOW        TS_SEWER_DWF      FLOW   1.00    1.00     0.00
+comb_house_2                               FLOW        TS_SEWER_DWF      FLOW   1.10    1.00     0.00
 
 [TIMESERIES]
 ;;Name                         Time      Value
@@ -220,6 +363,13 @@ sep_sewer_main_1_apartment_1_connector     365              1075
 sep_sewer_manhole                          546              1075
 sep_sewer_main_2_apartment_2_connector     727              1075
 sep_sewer_downstream                       2170             1075
+sep_sewer_main_to_interceptor_elbow_connector 2264             1075
+sep_interceptor_upstream                   0                231
+sep_interceptor_join                       2264             231
+overflow_interceptor_join                  4753             231
+sep_interceptor_downstream                 4978             231
+treatment_process_outlet_node              5578             223
+treated_outfall_gate_node                  5870             223
 sep_storm_lateral_catch_basin_1_start      1250             1586
 sep_storm_lateral_catch_basin_1_elbow_connector 1370             1586
 sep_storm_lateral_catch_basin_2_start      2040             1586
@@ -236,9 +386,38 @@ sep_storm_trunk_downstream                 4800             766
 storm_pump_inlet_gate_node                 4885             762
 storm_pump_discharge_node                  5400             761
 pump_outfall_gate_node                     5870             761
+road_runoff_offscreen_comb_catch_basin     2440             1654
+offscreen_comb_sewer_source                2440             1262
+offscreen_comb_storm_lateral_start         2480             1586
+offscreen_comb_storm_lateral_elbow_connector 2510             1586
+comb_upstream                              2440             1223
+comb_house_1                               2645             1682
+comb_sewer_lateral_house_1_elbow_connector 2850             1682
+comb_main_house_1_connector                2850             1223
+comb_house_2                               3075             1682
+comb_sewer_lateral_house_2_elbow_connector 3280             1682
+comb_main_house_2_connector                3280             1223
+road_runoff_comb_catch_basin_1             3475             1654
+comb_storm_lateral_catch_basin_1_start     3530             1586
+comb_storm_lateral_catch_basin_1_elbow_connector 3650             1586
+comb_main_catch_basin_1_connector          3650             1223
+combined_manhole                           3900             1223
+road_runoff_comb_catch_basin_2             4225             1654
+comb_storm_lateral_catch_basin_2_start     4280             1586
+comb_storm_lateral_catch_basin_2_elbow_connector 4400             1586
+comb_main_catch_basin_2_connector          4400             1223
+overflow_normal_flow_node                  4753             1054
+overflow_weir_outlet_node                  5012             1223
+overflow_outfall_gate_node                 5870             1223
 sep_catch_basin_1                          1195             1576
 sep_catch_basin_2                          1985             1576
+offscreen_comb_catch_basin                 2440             1576
+comb_catch_basin_1                         3475             1576
+comb_catch_basin_2                         4225             1576
+overflow_chamber                           4752             1220
 storm_pump_station                         5092             762
+water_reclamation_center                   5270             228
+overflow_outfall                           6028             1223
 pump_outfall                               6054             761
-sep_sewer_boundary_outfall                 2240             1075
+treated_outfall                            6028             223
 
