@@ -144,6 +144,7 @@ import {
   normalizeNodePorts,
 } from './editorNodeHelpers'
 import { clearEditorLayout, isEditorLayout, loadEditorLayout, saveEditorLayout } from './layoutStorage'
+import { clampPercent } from '../../services/swmm/editorRuntime'
 import {
   SURFACE_NODE_TYPES,
   type EditorAttachPoint,
@@ -1138,7 +1139,7 @@ function syncRelationTapEndpointPortIds(layout: EditorLayout, link: EditorLink):
 }
 
 /** 모든 relation의 attach metadata와 tap endpoint를 최신 layout 기준으로 정규화한다. */
-function normalizeRelationAttachments(layout: EditorLayout): EditorLayout {
+export function normalizeRelationAttachments(layout: EditorLayout): EditorLayout {
   const linksWithSyncedTapPorts = layout.links.map((link) => syncRelationTapEndpointPortIds(layout, link))
   const syncedLayout = linksWithSyncedTapPorts.some((link, index) => link !== layout.links[index])
     ? { ...layout, links: linksWithSyncedTapPorts }
@@ -5073,7 +5074,7 @@ export function EditorCanvas() {
     <>
     <section className="grid grid-cols-[minmax(0,1fr)_380px] gap-4 p-4">
       <div className="h-[calc(100vh-150px)] min-h-[640px] overflow-auto rounded-lg border border-slate-200 bg-white shadow-sm">
-        <div className="flex min-w-[1280px] items-center justify-between border-b border-slate-200 bg-white px-4 py-3">
+        <div className="sticky top-0 z-40 flex min-w-[1280px] items-center justify-between border-b border-slate-200 bg-white px-4 py-3 shadow-sm">
           <div>
             <h2 className="text-base font-black">편집 모드 v1</h2>
             <p className="mt-1 text-xs font-semibold text-slate-500">
@@ -5131,12 +5132,12 @@ export function EditorCanvas() {
           </div>
         </div>
 
-        <div className="bg-[#e8f5ff] p-6" style={{ minWidth: canvasWidth + 48 }}>
+        <div className="bg-[#e8f5ff] p-6" style={{ minWidth: canvasWidth * 0.5 + 48 }}>
           <svg
             ref={svgRef}
             viewBox={`0 0 ${canvasWidth} ${canvasHeight}`}
-            width={canvasWidth}
-            height={canvasHeight}
+            width={canvasWidth * 0.5}
+            height={canvasHeight * 0.5}
             className={`rounded-md border border-dashed border-slate-300 bg-white/60 ${
               coordinateEditAxis === 'x'
                 ? 'cursor-ew-resize'
@@ -5437,12 +5438,12 @@ export function EditorCanvas() {
                     ))}
                   </ul>
                 </div>
-              ) : null}
-            </div>
-          ) : null}
-        </div>
+	              ) : null}
+	            </div>
+	          ) : null}
+	        </div>
 
-        <div className="mt-5">
+	        <div className="mt-5">
           <h3 className="text-sm font-black">모델 요약</h3>
           <div className="mt-2 grid grid-cols-2 gap-2">
             <SummaryCard label="nodes" value={layout.nodes.length} />
@@ -7422,10 +7423,17 @@ function SelectionPanel({
     const hasFacilityType = FACILITY_TYPE_OPTIONS.includes(node.type)
     const hasFacilityKind = node.type === 'facility'
     const hasOutfallKind = node.type === 'outfall'
-    const hasManholeKind = node.type === 'manhole'
-    const hasTerrainKind = node.type === 'terrain'
-    const hasConnectorType = CONNECTOR_TYPE_OPTIONS.includes(node.type)
-    const pipeKind = hasPipeKind ? getNodePipeKind(node) : DEFAULT_PIPE_KIND
+	    const hasManholeKind = node.type === 'manhole'
+	    const hasTerrainKind = node.type === 'terrain'
+	    const hasConnectorType = CONNECTOR_TYPE_OPTIONS.includes(node.type)
+	    const hasNodeBlockageControl = (
+	      node.type === 'pipeSegment' ||
+	      node.type === 'facility' ||
+	      node.type === 'manhole' ||
+	      node.type === 'catchBasin' ||
+	      node.type === 'outfall'
+	    )
+	    const pipeKind = hasPipeKind ? getNodePipeKind(node) : DEFAULT_PIPE_KIND
     const minNodeWidth = node.type === 'road'
       ? MIN_ROAD_WIDTH
       : node.type === 'terrain'
@@ -7550,16 +7558,33 @@ function SelectionPanel({
             />
           </>
         )}
-        {hasPipeSize && (
-          <SelectField
-            label="굵기"
-            value={getNodePipeSize(node)}
-            options={PIPE_SIZE_OPTIONS}
-            onChange={(value) => onUpdateNode(node.id, resizeNodeForPipeSize(node, value as EditorPipeSize))}
-          />
-        )}
+	        {hasPipeSize && (
+	          <SelectField
+	            label="굵기"
+	            value={getNodePipeSize(node)}
+	            options={PIPE_SIZE_OPTIONS}
+	            onChange={(value) => onUpdateNode(node.id, resizeNodeForPipeSize(node, value as EditorPipeSize))}
+	          />
+	        )}
 
-        {(
+	        {hasNodeBlockageControl && (
+	          <div className="mt-3">
+	            <NumberField
+	              label="막힘 정도"
+	              value={clampPercent(node.props.blockage)}
+	              min={0}
+	              max={100}
+	              onChange={(value) => onUpdateNode(node.id, {
+	                props: {
+	                  ...node.props,
+	                  blockage: Math.min(100, Math.max(0, value)),
+	                },
+	              })}
+	            />
+	          </div>
+	        )}
+
+	        {(
           node.type === 'pipeSegment' ||
           node.type === 'connector' ||
           node.type === 'elbowConnector' ||

@@ -1,5 +1,5 @@
 [TITLE]
-;; SWMM model generated from React editor layout
+;; SWMM physics audit generated from React editor layout
 ;; Generated from React editor layout JSON.
 
 [OPTIONS]
@@ -312,6 +312,8 @@ CATCH_BASIN_01                           FLOW        TS_STORM_RAIN    FLOW   1.0
 CATCH_BASIN_02                           FLOW        TS_STORM_RAIN    FLOW   1.00    1.00     0.00
 CATCH_BASIN_03                           FLOW        TS_STORM_RAIN    FLOW   1.00    1.00     0.00
 CATCH_BASIN_04                           FLOW        TS_STORM_RAIN    FLOW   1.00    1.00     0.00
+CONN_STORM_09                            FLOW        TS_STORM_RAIN    FLOW   1.00    1.00     0.00
+CONN_STORM_13                            FLOW        TS_STORM_RAIN    FLOW   1.00    1.00     0.00
 HOUSE_01                                 FLOW        TS_SEWER_DWF     FLOW   1.00    1.00     0.00
 HOUSE_02                                 FLOW        TS_SEWER_DWF     FLOW   1.00    1.00     0.00
 MH_COMB_01                               FLOW        TS_MANHOLE_RAIN  FLOW   1.00    1.00     0.00

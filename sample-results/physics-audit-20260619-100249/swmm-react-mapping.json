@@ -1,0 +1,2775 @@
+{
+  "version": 1,
+  "source": "react-editor-json",
+  "map": {
+    "coordinateMode": "react_layout_bounds_normalized_with_y_inversion",
+    "dimensions": [
+      0.0,
+      0.0,
+      5036.211752632714,
+      1409.0
+    ],
+    "units": "Meters"
+  },
+  "editorNodes": {
+    "apartment_1": {
+      "swmmNodes": [
+        "APT_01"
+      ],
+      "swmmLinks": []
+    },
+    "catchBasin_copy_1781761504445_1": {
+      "swmmNodes": [
+        "CATCH_BASIN_02"
+      ],
+      "swmmLinks": []
+    },
+    "catchBasin_copy_1781761845125_1": {
+      "swmmNodes": [
+        "CATCH_BASIN_03"
+      ],
+      "swmmLinks": []
+    },
+    "catchBasin_copy_1781763961700_1": {
+      "swmmNodes": [
+        "CATCH_BASIN_04"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781708316363_7": {
+      "swmmNodes": [
+        "CONN_SEWER_01"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781708343046_8": {
+      "swmmNodes": [
+        "ELBOW_SEWER_01"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781708402966_12": {
+      "swmmNodes": [
+        "ELBOW_SEWER_02"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781747365514_24": {
+      "swmmNodes": [
+        "CONN_SEWER_09"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781747814091_26": {
+      "swmmNodes": [
+        "CONN_SEWER_08"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781752689793_50": {
+      "swmmNodes": [
+        "CONN_SEWER_10"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781754196566_51": {
+      "swmmNodes": [
+        "CONN_SEWER_02"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781754363469_50": {
+      "swmmNodes": [
+        "ELBOW_SEWER_05"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781754460995_55": {
+      "swmmNodes": [
+        "CONN_SEWER_12"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781754492749_56": {
+      "swmmNodes": [
+        "CONN_TREATED_01"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781761450638_28": {
+      "swmmNodes": [
+        "CONN_STORM_01"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781761463185_30": {
+      "swmmNodes": [
+        "ELBOW_STORM_01"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781761537986_40": {
+      "swmmNodes": [
+        "CONN_STORM_10"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781761589661_41": {
+      "swmmNodes": [
+        "CONN_STORM_09"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781761642405_44": {
+      "swmmNodes": [
+        "ELBOW_STORM_05"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781761671967_47": {
+      "swmmNodes": [
+        "CONN_STORM_12"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781761761675_53": {
+      "swmmNodes": [
+        "CONN_SEWER_03"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781761783893_54": {
+      "swmmNodes": [
+        "ELBOW_SEWER_03"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781761947774_76": {
+      "swmmNodes": [
+        "CONN_COMB_01"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781761955903_77": {
+      "swmmNodes": [
+        "CONN_COMB_02"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781762057095_80": {
+      "swmmNodes": [
+        "CONN_COMB_03"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781762101460_80": {
+      "swmmNodes": [
+        "CONN_OVERFLOW_01"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781762144894_82": {
+      "swmmNodes": [
+        "CONN_OVERFLOW_02"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781762196261_85": {
+      "swmmNodes": [
+        "CONN_STORM_13"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781762207275_87": {
+      "swmmNodes": [
+        "CONN_STORM_14"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781762341779_93": {
+      "swmmNodes": [
+        "CONN_COMB_04"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781770935874_97": {
+      "swmmNodes": [
+        "connector_1781770935874_97"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781771440709_98": {
+      "swmmNodes": [
+        "connector_1781771440709_98"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781771589602_100": {
+      "swmmNodes": [
+        "connector_1781771589602_100"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781771680494_101": {
+      "swmmNodes": [
+        "connector_1781771680494_101"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781771816146_102": {
+      "swmmNodes": [
+        "connector_1781771816146_102"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781771938741_105": {
+      "swmmNodes": [
+        "connector_1781771938741_105"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781772095944_106": {
+      "swmmNodes": [
+        "connector_1781772095944_106"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781772175449_107": {
+      "swmmNodes": [
+        "connector_1781772175449_107"
+      ],
+      "swmmLinks": []
+    },
+    "connector_1781772244702_108": {
+      "swmmNodes": [
+        "connector_1781772244702_108"
+      ],
+      "swmmLinks": []
+    },
+    "connector_copy_1781761504445_1": {
+      "swmmNodes": [
+        "CONN_STORM_02"
+      ],
+      "swmmLinks": []
+    },
+    "connector_copy_1781761822423_1": {
+      "swmmNodes": [
+        "CONN_SEWER_04"
+      ],
+      "swmmLinks": []
+    },
+    "connector_copy_1781761845125_1": {
+      "swmmNodes": [
+        "CONN_STORM_03"
+      ],
+      "swmmLinks": []
+    },
+    "connector_copy_1781762212756_1": {
+      "swmmNodes": [
+        "CONN_TREATED_02"
+      ],
+      "swmmLinks": []
+    },
+    "connector_copy_1781763961700_1": {
+      "swmmNodes": [
+        "CONN_STORM_04"
+      ],
+      "swmmLinks": []
+    },
+    "elbowConnector_copy_1781761504445_1": {
+      "swmmNodes": [
+        "ELBOW_STORM_02"
+      ],
+      "swmmLinks": []
+    },
+    "elbowConnector_copy_1781761822423_1": {
+      "swmmNodes": [
+        "ELBOW_SEWER_04"
+      ],
+      "swmmLinks": []
+    },
+    "elbowConnector_copy_1781761845125_1": {
+      "swmmNodes": [
+        "ELBOW_STORM_03"
+      ],
+      "swmmLinks": []
+    },
+    "elbowConnector_copy_1781763961700_1": {
+      "swmmNodes": [
+        "ELBOW_STORM_04"
+      ],
+      "swmmLinks": []
+    },
+    "facility_1781708438862_15": {
+      "swmmNodes": [
+        "MH_SEWER_01"
+      ],
+      "swmmLinks": []
+    },
+    "facility_1781754450488_54": {
+      "swmmNodes": [
+        "FAC_WATER_RECLAMATION_01"
+      ],
+      "swmmLinks": []
+    },
+    "facility_1781761267489_27": {
+      "swmmNodes": [
+        "CATCH_BASIN_01"
+      ],
+      "swmmLinks": []
+    },
+    "facility_1781761527399_39": {
+      "swmmNodes": [
+        "MH_STORM_01"
+      ],
+      "swmmLinks": []
+    },
+    "facility_1781761685977_48": {
+      "swmmNodes": [
+        "FAC_PUMP_STATION_01"
+      ],
+      "swmmLinks": []
+    },
+    "facility_1781761745724_50": {
+      "swmmNodes": [
+        "HOUSE_01"
+      ],
+      "swmmLinks": []
+    },
+    "facility_1781761857822_72": {
+      "swmmNodes": [
+        "MH_COMB_01"
+      ],
+      "swmmLinks": []
+    },
+    "facility_1781762013717_79": {
+      "swmmNodes": [
+        "FAC_OVERFLOW_CHAMBER_01"
+      ],
+      "swmmLinks": []
+    },
+    "facility_1781762152512_83": {
+      "swmmNodes": [
+        "OVERFLOW_OUTFALL_01"
+      ],
+      "swmmLinks": []
+    },
+    "facility_1781762205277_86": {
+      "swmmNodes": [
+        "PUMP_OUTFALL_01"
+      ],
+      "swmmLinks": []
+    },
+    "facility_1781762259046_90": {
+      "swmmNodes": [
+        "ROAD_02"
+      ],
+      "swmmLinks": []
+    },
+    "house_1": {
+      "swmmNodes": [
+        "APT_02"
+      ],
+      "swmmLinks": []
+    },
+    "house_copy_1781761822423_1": {
+      "swmmNodes": [
+        "HOUSE_02"
+      ],
+      "swmmLinks": []
+    },
+    "outfall_copy_1781762235459_1": {
+      "swmmNodes": [
+        "TREATED_OUTFALL_01"
+      ],
+      "swmmLinks": []
+    },
+    "pipeSegment_copy_1781761504445_1": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_STORM_LATERAL_H_02"
+      ]
+    },
+    "pipeSegment_copy_1781761504445_2": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_STORM_LATERAL_V_02"
+      ]
+    },
+    "pipeSegment_copy_1781761822423_1": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_SEWER_LATERAL_H_04"
+      ]
+    },
+    "pipeSegment_copy_1781761822423_2": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_SEWER_LATERAL_V_04"
+      ]
+    },
+    "pipeSegment_copy_1781761845125_1": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_STORM_LATERAL_H_03"
+      ]
+    },
+    "pipeSegment_copy_1781761845125_2": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_STORM_LATERAL_V_03"
+      ]
+    },
+    "pipeSegment_copy_1781763961700_1": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_STORM_LATERAL_H_04"
+      ]
+    },
+    "pipeSegment_copy_1781763961700_2": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_STORM_LATERAL_V_04"
+      ]
+    },
+    "pipeSegment_copy_1781772027152_1": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "pipeSegment_copy_1781772027152_1"
+      ]
+    },
+    "pipe_free_1781708303838": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_SEWER_LATERAL_H_01"
+      ]
+    },
+    "pipe_free_1781708355304": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_SEWER_LATERAL_V_01"
+      ]
+    },
+    "pipe_free_1781708418875": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_SEWER_LATERAL_V_02"
+      ]
+    },
+    "pipe_free_1781748895553": {
+      "swmmNodes": [
+        "PIPE_SEWER_MAIN_01_station_000"
+      ],
+      "swmmLinks": [
+        "PIPE_SEWER_MAIN_01"
+      ]
+    },
+    "pipe_free_1781752695385": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_SEWER_MAIN_02"
+      ]
+    },
+    "pipe_free_1781754189032": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_SEWER_LATERAL_H_02"
+      ]
+    },
+    "pipe_free_1781754376482": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_SEWER_MAIN_DROP_01"
+      ]
+    },
+    "pipe_free_1781754392036": {
+      "swmmNodes": [
+        "PIPE_INTERCEPTOR_01_station_000"
+      ],
+      "swmmLinks": [
+        "PIPE_INTERCEPTOR_01"
+      ]
+    },
+    "pipe_free_1781761457323": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_STORM_LATERAL_H_01"
+      ]
+    },
+    "pipe_free_1781761477346": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_STORM_LATERAL_V_01"
+      ]
+    },
+    "pipe_free_1781761486031": {
+      "swmmNodes": [
+        "PIPE_STORM_MAIN_01_station_000"
+      ],
+      "swmmLinks": [
+        "PIPE_STORM_MAIN_01"
+      ]
+    },
+    "pipe_free_1781761613473": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_STORM_MAIN_02"
+      ]
+    },
+    "pipe_free_1781761648013": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_STORM_MAIN_DROP_01"
+      ]
+    },
+    "pipe_free_1781761655573": {
+      "swmmNodes": [
+        "PIPE_STORM_TRUNK_01_station_000"
+      ],
+      "swmmLinks": [
+        "PIPE_STORM_TRUNK_01"
+      ]
+    },
+    "pipe_free_1781761760089": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_SEWER_LATERAL_H_03"
+      ]
+    },
+    "pipe_free_1781761803174": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_SEWER_LATERAL_V_03"
+      ]
+    },
+    "pipe_free_1781761867795": {
+      "swmmNodes": [
+        "PIPE_COMB_MAIN_01_station_000"
+      ],
+      "swmmLinks": [
+        "PIPE_COMB_MAIN_01"
+      ]
+    },
+    "pipe_free_1781762108006": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_OVERFLOW_OUTFALL_PIPE_01"
+      ]
+    },
+    "pipe_free_1781762167610": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_STORM_TRUNK_02"
+      ]
+    },
+    "pipe_free_1781762361073": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_OVERFLOW_INTERCEPTOR_DROP_01"
+      ]
+    },
+    "pipe_free_1781762695368": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "PIPE_TREATED_OUTFALL_PIPE_01"
+      ]
+    },
+    "pipe_free_1781771017429": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "pipe_free_1781771017429"
+      ]
+    },
+    "pipe_free_1781771452952": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "pipe_free_1781771452952"
+      ]
+    },
+    "pipe_free_1781771598332": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "pipe_free_1781771598332"
+      ]
+    },
+    "pipe_free_1781771701381": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "pipe_free_1781771701381"
+      ]
+    },
+    "pipe_free_1781771856872": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "pipe_free_1781771856872"
+      ]
+    },
+    "pipe_free_1781771871446": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "pipe_free_1781771871446"
+      ]
+    },
+    "pipe_free_1781771885636": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "pipe_free_1781771885636"
+      ]
+    },
+    "pipe_free_1781772019999": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "pipe_free_1781772019999"
+      ]
+    },
+    "pipe_free_1781772135198": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "pipe_free_1781772135198"
+      ]
+    },
+    "pipe_free_1781772198383": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "pipe_free_1781772198383"
+      ]
+    },
+    "pipe_free_1781772269295": {
+      "swmmNodes": [],
+      "swmmLinks": [
+        "pipe_free_1781772269295"
+      ]
+    },
+    "road_copy_1781762273669_1": {
+      "swmmNodes": [
+        "ROAD_01"
+      ],
+      "swmmLinks": []
+    },
+    "teeConnector_copy_1781771850329_1": {
+      "swmmNodes": [
+        "teeConnector_copy_1781771850329_1"
+      ],
+      "swmmLinks": []
+    },
+    "teeConnector_copy_1781771853047_1": {
+      "swmmNodes": [
+        "teeConnector_copy_1781771853047_1"
+      ],
+      "swmmLinks": []
+    },
+    "terrain_1781772827749_107": {
+      "swmmNodes": [
+        "terrain_1781772827749_107"
+      ],
+      "swmmLinks": []
+    }
+  },
+  "editorLinks": {
+    "link_1781708325059": {
+      "swmmLinks": [
+        "REL_001_CONDUIT"
+      ]
+    },
+    "link_1781748792222": {
+      "swmmLinks": [
+        "REL_006_CONDUIT"
+      ]
+    },
+    "link_1781752693866": {
+      "swmmLinks": [
+        "REL_009_CONDUIT"
+      ]
+    },
+    "link_1781754212047": {
+      "swmmLinks": [
+        "REL_015_CONDUIT"
+      ]
+    },
+    "link_1781754486444": {
+      "swmmLinks": [
+        "REL_019_CONDUIT"
+      ]
+    },
+    "link_1781754504440": {
+      "swmmLinks": [
+        "REL_021_CONDUIT"
+      ]
+    },
+    "link_1781761456041": {
+      "swmmLinks": [
+        "REL_022_CONDUIT"
+      ]
+    },
+    "link_1781761542111": {
+      "swmmLinks": [
+        "REL_029_CONDUIT"
+      ]
+    },
+    "link_1781761591745": {
+      "swmmLinks": [
+        "REL_030_CONDUIT"
+      ]
+    },
+    "link_1781761700672": {
+      "swmmLinks": [
+        "REL_036_CONDUIT"
+      ]
+    },
+    "link_1781761766472": {
+      "swmmLinks": [
+        "REL_038_CONDUIT"
+      ]
+    },
+    "link_1781761954496": {
+      "swmmLinks": [
+        "REL_057_CONDUIT"
+      ]
+    },
+    "link_1781761960975": {
+      "swmmLinks": [
+        "REL_058_CONDUIT"
+      ]
+    },
+    "link_1781762083267": {
+      "swmmLinks": [
+        "REL_061_CONDUIT"
+      ]
+    },
+    "link_1781762200258": {
+      "swmmLinks": [
+        "REL_066_CONDUIT"
+      ]
+    },
+    "link_1781762240045": {
+      "swmmLinks": [
+        "REL_069_CONDUIT"
+      ]
+    },
+    "link_1781762242924": {
+      "swmmLinks": [
+        "REL_070_CONDUIT"
+      ]
+    },
+    "link_1781762359792": {
+      "swmmLinks": [
+        "REL_071_CONDUIT"
+      ]
+    },
+    "link_1781763845675": {
+      "swmmLinks": [
+        "REL_079_CONDUIT"
+      ]
+    },
+    "link_1781772889617": {
+      "swmmLinks": [
+        "link_1781772889617_CONDUIT"
+      ]
+    },
+    "link_1781772899496": {
+      "swmmLinks": [
+        "link_1781772899496_CONDUIT"
+      ]
+    },
+    "link_copy_1781761822423_1": {
+      "swmmLinks": [
+        "REL_042_CONDUIT"
+      ]
+    },
+    "link_copy_1781761845125_1": {
+      "swmmLinks": [
+        "REL_046_CONDUIT"
+      ]
+    },
+    "link_copy_1781763961700_3": {
+      "swmmLinks": [
+        "REL_085_CONDUIT"
+      ]
+    }
+  },
+  "swmmNodes": {
+    "APT_01": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "apartment_1",
+      "sourceEditorType": "apartment",
+      "sourceEditorName": "아파트 01",
+      "reactPoint": {
+        "x": 203.72449510912156,
+        "y": 250.0
+      },
+      "swmmCoordinate": {
+        "x": 176.0740001872747,
+        "y": 1319.0
+      },
+      "invertElevation": 100.0,
+      "maxDepth": 1.0
+    },
+    "APT_02": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "house_1",
+      "sourceEditorType": "apartment",
+      "sourceEditorName": "아파트 02",
+      "reactPoint": {
+        "x": 1540.2760572086509,
+        "y": 250.0
+      },
+      "swmmCoordinate": {
+        "x": 844.3497812370393,
+        "y": 1319.0
+      },
+      "invertElevation": 100.0,
+      "maxDepth": 1.0
+    },
+    "CONN_SEWER_01": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781708316363_7",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "오수 커넥터 01",
+      "reactPoint": {
+        "x": 290.2245,
+        "y": 302.4313
+      },
+      "swmmCoordinate": {
+        "x": 219.3240026327139,
+        "y": 1292.78435
+      },
+      "invertElevation": 100.0,
+      "maxDepth": 1.5
+    },
+    "ELBOW_SEWER_01": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781708343046_8",
+      "sourceEditorType": "elbowConnector",
+      "sourceEditorName": "오수 ㄱ자 커넥터 01",
+      "reactPoint": {
+        "x": 436.1509,
+        "y": 384.9313
+      },
+      "swmmCoordinate": {
+        "x": 292.2872026327139,
+        "y": 1251.53435
+      },
+      "invertElevation": 72.53434999999999,
+      "maxDepth": 27.46565000000001
+    },
+    "ELBOW_SEWER_02": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781708402966_12",
+      "sourceEditorType": "elbowConnector",
+      "sourceEditorName": "오수 ㄱ자 커넥터 02",
+      "reactPoint": {
+        "x": 1271.2613,
+        "y": 387.0
+      },
+      "swmmCoordinate": {
+        "x": 709.8424026327139,
+        "y": 1250.5
+      },
+      "invertElevation": 71.5,
+      "maxDepth": 28.5
+    },
+    "CONN_SEWER_09": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781747365514_24",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "오수 커넥터 09",
+      "reactPoint": {
+        "x": 783.442,
+        "y": 1103.0053
+      },
+      "swmmCoordinate": {
+        "x": 465.9327526327139,
+        "y": 892.49735
+      },
+      "invertElevation": -286.50265,
+      "maxDepth": 386.50265
+    },
+    "CONN_SEWER_08": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781747814091_26",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "오수 커넥터 08",
+      "reactPoint": {
+        "x": 828.3576193163915,
+        "y": 924.9437866210938
+      },
+      "swmmCoordinate": {
+        "x": 488.39056229090966,
+        "y": 981.5281066894531
+      },
+      "invertElevation": -197.47189331054688,
+      "maxDepth": 297.4718933105469
+    },
+    "CONN_SEWER_10": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781752689793_50",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "오수 커넥터 10",
+      "reactPoint": {
+        "x": 913.442,
+        "y": 1106.736
+      },
+      "swmmCoordinate": {
+        "x": 530.9327526327139,
+        "y": 890.632
+      },
+      "invertElevation": -288.36800000000005,
+      "maxDepth": 388.36800000000005
+    },
+    "CONN_SEWER_02": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781754196566_51",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "오수 커넥터 02",
+      "reactPoint": {
+        "x": 1453.7761,
+        "y": 304.5
+      },
+      "swmmCoordinate": {
+        "x": 801.0998026327139,
+        "y": 1291.75
+      },
+      "invertElevation": 100.0,
+      "maxDepth": 1.5
+    },
+    "ELBOW_SEWER_05": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781754363469_50",
+      "sourceEditorType": "elbowConnector",
+      "sourceEditorName": "오수 ㄱ자 커넥터 05",
+      "reactPoint": {
+        "x": 2584.2545,
+        "y": 1250.8574
+      },
+      "swmmCoordinate": {
+        "x": 1366.3390026327138,
+        "y": 818.5713
+      },
+      "invertElevation": -360.42870000000005,
+      "maxDepth": 460.42870000000005
+    },
+    "FAC_WATER_RECLAMATION_01": {
+      "section": "STORAGE",
+      "sourceEditorId": "facility_1781754450488_54",
+      "sourceEditorType": "facility",
+      "sourceEditorName": "물재생센터 01",
+      "reactPoint": {
+        "x": 7248.961115837097,
+        "y": 2520.8234130859373
+      },
+      "swmmCoordinate": {
+        "x": 3698.6923105512624,
+        "y": 183.58829345703134
+      },
+      "invertElevation": -995.4117065429687,
+      "maxDepth": 4.0
+    },
+    "CONN_SEWER_12": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781754460995_55",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "오수 커넥터 12",
+      "reactPoint": {
+        "x": 7056.4611,
+        "y": 2520.8234
+      },
+      "swmmCoordinate": {
+        "x": 3602.442302632714,
+        "y": 183.5882999999999
+      },
+      "invertElevation": -995.4117000000001,
+      "maxDepth": 1095.4117
+    },
+    "CONN_TREATED_01": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781754492749_56",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "처리수 커넥터 01",
+      "reactPoint": {
+        "x": 7441.4611,
+        "y": 2520.8234
+      },
+      "swmmCoordinate": {
+        "x": 3794.942302632714,
+        "y": 183.5882999999999
+      },
+      "invertElevation": -995.4117000000001,
+      "maxDepth": 1095.4117
+    },
+    "CATCH_BASIN_01": {
+      "section": "STORAGE",
+      "sourceEditorId": "facility_1781761267489_27",
+      "sourceEditorType": "catchBasin",
+      "sourceEditorName": "빗물받이 01",
+      "reactPoint": {
+        "x": 1961.9260749816895,
+        "y": 382.0
+      },
+      "swmmCoordinate": {
+        "x": 1055.1747901235585,
+        "y": 1253.0
+      },
+      "invertElevation": 74.0,
+      "maxDepth": 1.2
+    },
+    "CONN_STORM_01": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781761450638_28",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "우수 커넥터 01",
+      "reactPoint": {
+        "x": 2058.4261,
+        "y": 382.0
+      },
+      "swmmCoordinate": {
+        "x": 1103.424802632714,
+        "y": 1253.0
+      },
+      "invertElevation": 74.0,
+      "maxDepth": 26.0
+    },
+    "CATCH_BASIN_02": {
+      "section": "STORAGE",
+      "sourceEditorId": "catchBasin_copy_1781761504445_1",
+      "sourceEditorType": "catchBasin",
+      "sourceEditorName": "빗물받이 02",
+      "reactPoint": {
+        "x": 3299.4537849426274,
+        "y": 382.0
+      },
+      "swmmCoordinate": {
+        "x": 1723.9386451040277,
+        "y": 1253.0
+      },
+      "invertElevation": 74.0,
+      "maxDepth": 1.2
+    },
+    "ELBOW_STORM_01": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781761463185_30",
+      "sourceEditorType": "elbowConnector",
+      "sourceEditorName": "우수 ㄱ자 커넥터 01",
+      "reactPoint": {
+        "x": 2210.6072,
+        "y": 464.5
+      },
+      "swmmCoordinate": {
+        "x": 1179.515352632714,
+        "y": 1211.75
+      },
+      "invertElevation": 32.75,
+      "maxDepth": 67.25
+    },
+    "CONN_STORM_02": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_copy_1781761504445_1",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "우수 커넥터 02",
+      "reactPoint": {
+        "x": 3202.9538,
+        "y": 382.0
+      },
+      "swmmCoordinate": {
+        "x": 1675.688652632714,
+        "y": 1253.0
+      },
+      "invertElevation": 74.0,
+      "maxDepth": 26.0
+    },
+    "ELBOW_STORM_02": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "elbowConnector_copy_1781761504445_1",
+      "sourceEditorType": "elbowConnector",
+      "sourceEditorName": "우수 ㄱ자 커넥터 02",
+      "reactPoint": {
+        "x": 3030.9348,
+        "y": 464.5
+      },
+      "swmmCoordinate": {
+        "x": 1589.6791526327138,
+        "y": 1211.75
+      },
+      "invertElevation": 32.75,
+      "maxDepth": 67.25
+    },
+    "CONN_STORM_09": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781761589661_41",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "우수 커넥터 09",
+      "reactPoint": {
+        "x": 2681.0495,
+        "y": 914.155
+      },
+      "swmmCoordinate": {
+        "x": 1414.7365026327138,
+        "y": 986.9225
+      },
+      "invertElevation": -192.0775,
+      "maxDepth": 292.0775
+    },
+    "CONN_STORM_10": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781761537986_40",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "우수 커넥터 10",
+      "reactPoint": {
+        "x": 2551.0495,
+        "y": 914.155
+      },
+      "swmmCoordinate": {
+        "x": 1349.7365026327138,
+        "y": 986.9225
+      },
+      "invertElevation": -192.0775,
+      "maxDepth": 292.0775
+    },
+    "ELBOW_STORM_05": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781761642405_44",
+      "sourceEditorType": "elbowConnector",
+      "sourceEditorName": "우수 ㄱ자 커넥터 05",
+      "reactPoint": {
+        "x": 3509.8478,
+        "y": 1058.155
+      },
+      "swmmCoordinate": {
+        "x": 1829.135652632714,
+        "y": 914.9225
+      },
+      "invertElevation": -264.0775,
+      "maxDepth": 364.0775
+    },
+    "CONN_STORM_12": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781761671967_47",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "우수 커넥터 12",
+      "reactPoint": {
+        "x": 4043.975,
+        "y": 1905.0965
+      },
+      "swmmCoordinate": {
+        "x": 2096.199252632714,
+        "y": 491.45174999999995
+      },
+      "invertElevation": -687.54825,
+      "maxDepth": 787.54825
+    },
+    "FAC_PUMP_STATION_01": {
+      "section": "STORAGE",
+      "sourceEditorId": "facility_1781761685977_48",
+      "sourceEditorType": "facility",
+      "sourceEditorName": "빗물펌프장 01",
+      "reactPoint": {
+        "x": 4236.475025177002,
+        "y": 1905.0964599609374
+      },
+      "swmmCoordinate": {
+        "x": 2192.449265221215,
+        "y": 491.4517700195313
+      },
+      "invertElevation": -687.5482299804687,
+      "maxDepth": 2.4
+    },
+    "HOUSE_01": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "facility_1781761745724_50",
+      "sourceEditorType": "house",
+      "sourceEditorName": "주거지 01",
+      "reactPoint": {
+        "x": 3982.7184726573378,
+        "y": 265.0
+      },
+      "swmmCoordinate": {
+        "x": 2065.5709889613827,
+        "y": 1311.5
+      },
+      "invertElevation": 100.0,
+      "maxDepth": 1.0
+    },
+    "CONN_SEWER_03": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781761761675_53",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "오수 커넥터 03",
+      "reactPoint": {
+        "x": 4079.2185,
+        "y": 304.5
+      },
+      "swmmCoordinate": {
+        "x": 2113.8210026327138,
+        "y": 1291.75
+      },
+      "invertElevation": 100.0,
+      "maxDepth": 1.5
+    },
+    "ELBOW_SEWER_03": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781761783893_54",
+      "sourceEditorType": "elbowConnector",
+      "sourceEditorName": "오수 ㄱ자 커넥터 03",
+      "reactPoint": {
+        "x": 4303.9033,
+        "y": 387.0
+      },
+      "swmmCoordinate": {
+        "x": 2226.1634026327138,
+        "y": 1250.5
+      },
+      "invertElevation": 71.5,
+      "maxDepth": 28.5
+    },
+    "HOUSE_02": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "house_copy_1781761822423_1",
+      "sourceEditorType": "house",
+      "sourceEditorName": "주거지 02",
+      "reactPoint": {
+        "x": 4598.94522968658,
+        "y": 265.0
+      },
+      "swmmCoordinate": {
+        "x": 2373.684367476004,
+        "y": 1311.5
+      },
+      "invertElevation": 100.0,
+      "maxDepth": 1.0
+    },
+    "CONN_SEWER_04": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_copy_1781761822423_1",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "오수 커넥터 04",
+      "reactPoint": {
+        "x": 4695.4452,
+        "y": 304.5
+      },
+      "swmmCoordinate": {
+        "x": 2421.934352632714,
+        "y": 1291.75
+      },
+      "invertElevation": 100.0,
+      "maxDepth": 1.5
+    },
+    "ELBOW_SEWER_04": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "elbowConnector_copy_1781761822423_1",
+      "sourceEditorType": "elbowConnector",
+      "sourceEditorName": "오수 ㄱ자 커넥터 04",
+      "reactPoint": {
+        "x": 4911.5106,
+        "y": 387.0
+      },
+      "swmmCoordinate": {
+        "x": 2529.9670526327136,
+        "y": 1250.5
+      },
+      "invertElevation": 71.5,
+      "maxDepth": 28.5
+    },
+    "CATCH_BASIN_03": {
+      "section": "STORAGE",
+      "sourceEditorId": "catchBasin_copy_1781761845125_1",
+      "sourceEditorType": "catchBasin",
+      "sourceEditorName": "빗물받이 03",
+      "reactPoint": {
+        "x": 5286.509425163269,
+        "y": 382.0
+      },
+      "swmmCoordinate": {
+        "x": 2717.4664652143483,
+        "y": 1253.0
+      },
+      "invertElevation": 74.0,
+      "maxDepth": 1.2
+    },
+    "CONN_STORM_03": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_copy_1781761845125_1",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "우수 커넥터 03",
+      "reactPoint": {
+        "x": 5383.0094,
+        "y": 382.0
+      },
+      "swmmCoordinate": {
+        "x": 2765.7164526327138,
+        "y": 1253.0
+      },
+      "invertElevation": 74.0,
+      "maxDepth": 26.0
+    },
+    "ELBOW_STORM_03": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "elbowConnector_copy_1781761845125_1",
+      "sourceEditorType": "elbowConnector",
+      "sourceEditorName": "우수 ㄱ자 커넥터 03",
+      "reactPoint": {
+        "x": 5534.0996,
+        "y": 464.5
+      },
+      "swmmCoordinate": {
+        "x": 2841.2615526327136,
+        "y": 1211.75
+      },
+      "invertElevation": 32.75,
+      "maxDepth": 67.25
+    },
+    "MH_COMB_01": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "facility_1781761857822_72",
+      "sourceEditorType": "manhole",
+      "sourceEditorName": "합류식 맨홀 01",
+      "reactPoint": {
+        "x": 5931.967524528503,
+        "y": 806.5578
+      },
+      "swmmCoordinate": {
+        "x": 3040.1955148969655,
+        "y": 1040.7211
+      },
+      "invertElevation": -138.27890000000002,
+      "maxDepth": 238.27890000000002
+    },
+    "CONN_COMB_01": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781761947774_76",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "합류식 커넥터 01",
+      "reactPoint": {
+        "x": 5866.9675,
+        "y": 806.5578
+      },
+      "swmmCoordinate": {
+        "x": 3007.6955026327137,
+        "y": 1040.7211
+      },
+      "invertElevation": -138.27890000000002,
+      "maxDepth": 238.27890000000002
+    },
+    "CONN_COMB_02": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781761955903_77",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "합류식 커넥터 02",
+      "reactPoint": {
+        "x": 5996.9675,
+        "y": 806.5578
+      },
+      "swmmCoordinate": {
+        "x": 3072.6955026327137,
+        "y": 1040.7211
+      },
+      "invertElevation": -138.27890000000002,
+      "maxDepth": 238.27890000000002
+    },
+    "FAC_OVERFLOW_CHAMBER_01": {
+      "section": "STORAGE",
+      "sourceEditorId": "facility_1781762013717_79",
+      "sourceEditorType": "facility",
+      "sourceEditorName": "우수토실-월류시설 01",
+      "reactPoint": {
+        "x": 6673.801264762878,
+        "y": 806.5577747200471
+      },
+      "swmmCoordinate": {
+        "x": 3411.112385014153,
+        "y": 1040.7211126399766
+      },
+      "invertElevation": -138.27888736002353,
+      "maxDepth": 2.8
+    },
+    "CONN_COMB_03": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781762057095_80",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "합류식 커넥터 03",
+      "reactPoint": {
+        "x": 6473.8013,
+        "y": 806.5578
+      },
+      "swmmCoordinate": {
+        "x": 3311.112402632714,
+        "y": 1040.7211
+      },
+      "invertElevation": -138.27890000000002,
+      "maxDepth": 238.27890000000002
+    },
+    "CONN_OVERFLOW_01": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781762101460_80",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "월류 커넥터 01",
+      "reactPoint": {
+        "x": 6881.3013,
+        "y": 806.5578
+      },
+      "swmmCoordinate": {
+        "x": 3514.862402632714,
+        "y": 1040.7211
+      },
+      "invertElevation": -138.27890000000002,
+      "maxDepth": 238.27890000000002
+    },
+    "CONN_OVERFLOW_02": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781762144894_82",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "월류 커넥터 02",
+      "reactPoint": {
+        "x": 8278.6888,
+        "y": 806.5578
+      },
+      "swmmCoordinate": {
+        "x": 4213.556152632714,
+        "y": 1040.7211
+      },
+      "invertElevation": -138.27890000000002,
+      "maxDepth": 238.27890000000002
+    },
+    "OVERFLOW_OUTFALL_01": {
+      "section": "OUTFALLS",
+      "sourceEditorId": "facility_1781762152512_83",
+      "sourceEditorType": "outfall",
+      "sourceEditorName": "월류 방류구 01",
+      "reactPoint": {
+        "x": 8416.188774774766,
+        "y": 807.0425159309846
+      },
+      "swmmCoordinate": {
+        "x": 4282.306140020097,
+        "y": 1040.4787420345078
+      },
+      "invertElevation": 0.2,
+      "maxDepth": 0.0
+    },
+    "CONN_STORM_13": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781762196261_85",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "우수 커넥터 13",
+      "reactPoint": {
+        "x": 4428.975,
+        "y": 1905.0965
+      },
+      "swmmCoordinate": {
+        "x": 2288.699252632714,
+        "y": 491.45174999999995
+      },
+      "invertElevation": -687.54825,
+      "maxDepth": 787.54825
+    },
+    "PUMP_OUTFALL_01": {
+      "section": "OUTFALLS",
+      "sourceEditorId": "facility_1781762205277_86",
+      "sourceEditorType": "outfall",
+      "sourceEditorName": "펌프 방류구 01",
+      "reactPoint": {
+        "x": 8430.325983631892,
+        "y": 1905.0964599609374
+      },
+      "swmmCoordinate": {
+        "x": 4289.37474444866,
+        "y": 491.4517700195313
+      },
+      "invertElevation": 0.2,
+      "maxDepth": 0.0
+    },
+    "CONN_STORM_14": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781762207275_87",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "우수 커넥터 14",
+      "reactPoint": {
+        "x": 8292.826,
+        "y": 1905.0965
+      },
+      "swmmCoordinate": {
+        "x": 4220.624752632713,
+        "y": 491.45174999999995
+      },
+      "invertElevation": -687.54825,
+      "maxDepth": 787.54825
+    },
+    "CONN_TREATED_02": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_copy_1781762212756_1",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "처리수 커넥터 02",
+      "reactPoint": {
+        "x": 8289.7742,
+        "y": 2520.8234
+      },
+      "swmmCoordinate": {
+        "x": 4219.098852632714,
+        "y": 183.5882999999999
+      },
+      "invertElevation": -995.4117000000001,
+      "maxDepth": 1095.4117
+    },
+    "TREATED_OUTFALL_01": {
+      "section": "OUTFALLS",
+      "sourceEditorId": "outfall_copy_1781762235459_1",
+      "sourceEditorType": "outfall",
+      "sourceEditorName": "처리수 방류구 01",
+      "reactPoint": {
+        "x": 8427.274172525404,
+        "y": 2520.8234130859373
+      },
+      "swmmCoordinate": {
+        "x": 4287.848838895416,
+        "y": 183.58829345703134
+      },
+      "invertElevation": 0.2,
+      "maxDepth": 0.0
+    },
+    "ROAD_02": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "facility_1781762259046_90",
+      "sourceEditorType": "road",
+      "sourceEditorName": "도로 02",
+      "reactPoint": {
+        "x": 5939.0218505859375,
+        "y": 270.0
+      },
+      "swmmCoordinate": {
+        "x": 3043.7226779256825,
+        "y": 1309.0
+      },
+      "invertElevation": 100.0,
+      "maxDepth": 2.0
+    },
+    "ROAD_01": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "road_copy_1781762273669_1",
+      "sourceEditorType": "road",
+      "sourceEditorName": "도로 01",
+      "reactPoint": {
+        "x": 2633.5414428710938,
+        "y": 270.0
+      },
+      "swmmCoordinate": {
+        "x": 1390.9824740682607,
+        "y": 1309.0
+      },
+      "invertElevation": 100.0,
+      "maxDepth": 2.0
+    },
+    "CONN_COMB_04": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781762341779_93",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "합류식 커넥터 04",
+      "reactPoint": {
+        "x": 6673.8013,
+        "y": 946.5578
+      },
+      "swmmCoordinate": {
+        "x": 3411.112402632714,
+        "y": 970.7211
+      },
+      "invertElevation": -208.27890000000002,
+      "maxDepth": 308.2789
+    },
+    "CATCH_BASIN_04": {
+      "section": "STORAGE",
+      "sourceEditorId": "catchBasin_copy_1781763961700_1",
+      "sourceEditorType": "catchBasin",
+      "sourceEditorName": "빗물받이 04",
+      "reactPoint": {
+        "x": 6557.6543226242065,
+        "y": 382.0
+      },
+      "swmmCoordinate": {
+        "x": 3353.038913944817,
+        "y": 1253.0
+      },
+      "invertElevation": 74.0,
+      "maxDepth": 1.2
+    },
+    "CONN_STORM_04": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_copy_1781763961700_1",
+      "sourceEditorType": "connector",
+      "sourceEditorName": "우수 커넥터 04",
+      "reactPoint": {
+        "x": 6461.1543,
+        "y": 382.0
+      },
+      "swmmCoordinate": {
+        "x": 3304.788902632714,
+        "y": 1253.0
+      },
+      "invertElevation": 74.0,
+      "maxDepth": 26.0
+    },
+    "ELBOW_STORM_04": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "elbowConnector_copy_1781763961700_1",
+      "sourceEditorType": "elbowConnector",
+      "sourceEditorName": "우수 ㄱ자 커넥터 04",
+      "reactPoint": {
+        "x": 6231.8766,
+        "y": 464.5
+      },
+      "swmmCoordinate": {
+        "x": 3190.1500526327136,
+        "y": 1211.75
+      },
+      "invertElevation": 32.75,
+      "maxDepth": 67.25
+    },
+    "MH_SEWER_01": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "facility_1781708438862_15",
+      "sourceEditorType": "manhole",
+      "sourceEditorName": "오수 맨홀 01",
+      "reactPoint": {
+        "x": 848.4420100122638,
+        "y": 1106.736
+      },
+      "swmmCoordinate": {
+        "x": 498.4327576388458,
+        "y": 890.632
+      },
+      "invertElevation": -288.36800000000005,
+      "maxDepth": 388.36800000000005
+    },
+    "MH_STORM_01": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "facility_1781761527399_39",
+      "sourceEditorType": "manhole",
+      "sourceEditorName": "우수 맨홀 01",
+      "reactPoint": {
+        "x": 2616.049456435375,
+        "y": 914.155
+      },
+      "swmmCoordinate": {
+        "x": 1382.2364808504012,
+        "y": 986.9225
+      },
+      "invertElevation": -192.0775,
+      "maxDepth": 292.0775
+    },
+    "connector_1781770935874_97": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781770935874_97",
+      "sourceEditorType": "teeConnector",
+      "sourceEditorName": "T자 커넥터 97",
+      "reactPoint": {
+        "x": 436.1509,
+        "y": 1103.0053
+      },
+      "swmmCoordinate": {
+        "x": 292.2872026327139,
+        "y": 892.49735
+      },
+      "invertElevation": -286.50265,
+      "maxDepth": 386.50265
+    },
+    "connector_1781771440709_98": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781771440709_98",
+      "sourceEditorType": "teeConnector",
+      "sourceEditorName": "T자 커넥터 98",
+      "reactPoint": {
+        "x": 1271.2613,
+        "y": 1106.736
+      },
+      "swmmCoordinate": {
+        "x": 709.8424026327139,
+        "y": 890.632
+      },
+      "invertElevation": -288.36800000000005,
+      "maxDepth": 388.36800000000005
+    },
+    "connector_1781771589602_100": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781771589602_100",
+      "sourceEditorType": "teeConnector",
+      "sourceEditorName": "T자 커넥터 100",
+      "reactPoint": {
+        "x": 2210.6072,
+        "y": 913.9819
+      },
+      "swmmCoordinate": {
+        "x": 1179.515352632714,
+        "y": 987.00905
+      },
+      "invertElevation": -191.99095,
+      "maxDepth": 291.99095
+    },
+    "connector_1781771680494_101": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781771680494_101",
+      "sourceEditorType": "teeConnector",
+      "sourceEditorName": "T자 커넥터 101",
+      "reactPoint": {
+        "x": 3030.9348,
+        "y": 914.155
+      },
+      "swmmCoordinate": {
+        "x": 1589.6791526327138,
+        "y": 986.9225
+      },
+      "invertElevation": -192.0775,
+      "maxDepth": 292.0775
+    },
+    "connector_1781771816146_102": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781771816146_102",
+      "sourceEditorType": "teeConnector",
+      "sourceEditorName": "T자 커넥터 102",
+      "reactPoint": {
+        "x": 4303.9033,
+        "y": 806.5578
+      },
+      "swmmCoordinate": {
+        "x": 2226.1634026327138,
+        "y": 1040.7211
+      },
+      "invertElevation": -138.27890000000002,
+      "maxDepth": 238.27890000000002
+    },
+    "teeConnector_copy_1781771850329_1": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "teeConnector_copy_1781771850329_1",
+      "sourceEditorType": "teeConnector",
+      "sourceEditorName": "T자 커넥터 102 복사",
+      "reactPoint": {
+        "x": 4911.5106,
+        "y": 806.5578
+      },
+      "swmmCoordinate": {
+        "x": 2529.9670526327136,
+        "y": 1040.7211
+      },
+      "invertElevation": -138.27890000000002,
+      "maxDepth": 238.27890000000002
+    },
+    "teeConnector_copy_1781771853047_1": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "teeConnector_copy_1781771853047_1",
+      "sourceEditorType": "teeConnector",
+      "sourceEditorName": "T자 커넥터 102 복사 복사",
+      "reactPoint": {
+        "x": 5534.0996,
+        "y": 806.5578
+      },
+      "swmmCoordinate": {
+        "x": 2841.2615526327136,
+        "y": 1040.7211
+      },
+      "invertElevation": -138.27890000000002,
+      "maxDepth": 238.27890000000002
+    },
+    "connector_1781771938741_105": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781771938741_105",
+      "sourceEditorType": "teeConnector",
+      "sourceEditorName": "T자 커넥터 105",
+      "reactPoint": {
+        "x": 6231.8766,
+        "y": 806.5578
+      },
+      "swmmCoordinate": {
+        "x": 3190.1500526327136,
+        "y": 1040.7211
+      },
+      "invertElevation": -138.27890000000002,
+      "maxDepth": 238.27890000000002
+    },
+    "connector_1781772095944_106": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781772095944_106",
+      "sourceEditorType": "teeConnector",
+      "sourceEditorName": "T자 커넥터 106",
+      "reactPoint": {
+        "x": 3509.8478,
+        "y": 1905.0965
+      },
+      "swmmCoordinate": {
+        "x": 1829.135652632714,
+        "y": 491.45174999999995
+      },
+      "invertElevation": -687.54825,
+      "maxDepth": 787.54825
+    },
+    "connector_1781772175449_107": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781772175449_107",
+      "sourceEditorType": "teeConnector",
+      "sourceEditorName": "T자 커넥터 107",
+      "reactPoint": {
+        "x": 6673.8013,
+        "y": 2520.8234
+      },
+      "swmmCoordinate": {
+        "x": 3411.112402632714,
+        "y": 183.5882999999999
+      },
+      "invertElevation": -995.4117000000001,
+      "maxDepth": 1095.4117
+    },
+    "connector_1781772244702_108": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "connector_1781772244702_108",
+      "sourceEditorType": "teeConnector",
+      "sourceEditorName": "T자 커넥터 108",
+      "reactPoint": {
+        "x": 2584.2545,
+        "y": 2520.8234
+      },
+      "swmmCoordinate": {
+        "x": 1366.3390026327138,
+        "y": 183.5882999999999
+      },
+      "invertElevation": -995.4117000000001,
+      "maxDepth": 1095.4117
+    },
+    "terrain_1781772827749_107": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "terrain_1781772827749_107",
+      "sourceEditorType": "terrain",
+      "sourceEditorName": "하천 107",
+      "reactPoint": {
+        "x": 9124.0,
+        "y": 1559.0
+      },
+      "swmmCoordinate": {
+        "x": 4636.211752632714,
+        "y": 664.5
+      },
+      "invertElevation": -514.5,
+      "maxDepth": 614.5
+    },
+    "PIPE_STORM_MAIN_01_station_000": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "pipe_free_1781761486031",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "우수 본관 01",
+      "reactPoint": {
+        "x": -16.43176209898502,
+        "y": 913.9819392751747
+      },
+      "swmmCoordinate": {
+        "x": 65.9958715832214,
+        "y": 987.0090303624127
+      },
+      "invertElevation": -191.99096963758734,
+      "maxDepth": 291.99096963758734
+    },
+    "PIPE_SEWER_MAIN_01_station_000": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "pipe_free_1781748895553",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "오수 본관 01",
+      "reactPoint": {
+        "x": -48.42350526542782,
+        "y": 1103.0053319122335
+      },
+      "swmmCoordinate": {
+        "x": 50.0,
+        "y": 892.4973340438833
+      },
+      "invertElevation": -286.50266595611674,
+      "maxDepth": 386.50266595611674
+    },
+    "PIPE_INTERCEPTOR_01_station_000": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "pipe_free_1781754392036",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "차집관거 01",
+      "reactPoint": {
+        "x": -13.429851875303939,
+        "y": 2520.8234130859373
+      },
+      "swmmCoordinate": {
+        "x": 67.49682669506194,
+        "y": 183.58829345703134
+      },
+      "invertElevation": -995.4117065429687,
+      "maxDepth": 1095.4117065429687
+    },
+    "PIPE_STORM_TRUNK_01_station_000": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "pipe_free_1781761655573",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "우수 간선관거 01",
+      "reactPoint": {
+        "x": -32.533632379263054,
+        "y": 1905.0964599609374
+      },
+      "swmmCoordinate": {
+        "x": 57.94493644308238,
+        "y": 491.4517700195313
+      },
+      "invertElevation": -687.5482299804687,
+      "maxDepth": 787.5482299804687
+    },
+    "PIPE_COMB_MAIN_01_station_000": {
+      "section": "JUNCTIONS",
+      "sourceEditorId": "pipe_free_1781761867795",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "합류식 본관 01",
+      "reactPoint": {
+        "x": -35.73515634775322,
+        "y": 806.5577705253068
+      },
+      "swmmCoordinate": {
+        "x": 56.3441744588373,
+        "y": 1040.7211147373466
+      },
+      "invertElevation": -138.27888526265338,
+      "maxDepth": 238.27888526265338
+    }
+  },
+  "swmmLinks": {
+    "PIPE_STORM_MAIN_01": {
+      "kind": "CONDUIT",
+      "fromNode": "PIPE_STORM_MAIN_01_station_000",
+      "toNode": "connector_1781771589602_100",
+      "sourceEditorId": "pipe_free_1781761486031",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "우수 본관 01",
+      "pipeKind": "storm",
+      "length": 1048.5194947122122,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_SEWER_LATERAL_H_01": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_SEWER_01",
+      "toNode": "ELBOW_SEWER_01",
+      "sourceEditorId": "pipe_free_1781708303838",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "오수 연결관 수평 01",
+      "pipeKind": "sewer",
+      "length": 28.0,
+      "diameter": 0.3,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_SEWER_LATERAL_V_01": {
+      "kind": "CONDUIT",
+      "fromNode": "ELBOW_SEWER_01",
+      "toNode": "connector_1781770935874_97",
+      "sourceEditorId": "pipe_free_1781708355304",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "오수 연결관 수직 01",
+      "pipeKind": "sewer",
+      "length": 292.02472955474957,
+      "diameter": 0.3,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_SEWER_MAIN_02": {
+      "kind": "CONDUIT",
+      "fromNode": "connector_1781771440709_98",
+      "toNode": "ELBOW_SEWER_05",
+      "sourceEditorId": "pipe_free_1781752695385",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "오수 본관 02",
+      "pipeKind": "sewer",
+      "length": 520.481856506796,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_SEWER_MAIN_01": {
+      "kind": "CONDUIT",
+      "fromNode": "PIPE_SEWER_MAIN_01_station_000",
+      "toNode": "connector_1781770935874_97",
+      "sourceEditorId": "pipe_free_1781748895553",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "오수 본관 01",
+      "pipeKind": "sewer",
+      "length": 177.2871920858389,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_SEWER_LATERAL_H_02": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_SEWER_02",
+      "toNode": "ELBOW_SEWER_02",
+      "sourceEditorId": "pipe_free_1781754189032",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "오수 연결관 수평 02",
+      "pipeKind": "sewer",
+      "length": 44.44216917210474,
+      "diameter": 0.3,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_SEWER_MAIN_DROP_01": {
+      "kind": "CONDUIT",
+      "fromNode": "ELBOW_SEWER_05",
+      "toNode": "connector_1781772244702_108",
+      "sourceEditorId": "pipe_free_1781754376482",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "오수 본관 하강관 01",
+      "pipeKind": "sewer",
+      "length": 543.1829956054687,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_INTERCEPTOR_01": {
+      "kind": "CONDUIT",
+      "fromNode": "PIPE_INTERCEPTOR_01_station_000",
+      "toNode": "connector_1781772244702_108",
+      "sourceEditorId": "pipe_free_1781754392036",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "차집관거 01",
+      "pipeKind": "sewer",
+      "length": 1209.342196320028,
+      "diameter": 1.0,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_STORM_LATERAL_H_01": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_STORM_01",
+      "toNode": "ELBOW_STORM_01",
+      "sourceEditorId": "pipe_free_1781761457323",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "우수 연결관 수평 01",
+      "pipeKind": "storm",
+      "length": 28.0,
+      "diameter": 0.3,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_STORM_LATERAL_H_02": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_STORM_02",
+      "toNode": "ELBOW_STORM_02",
+      "sourceEditorId": "pipeSegment_copy_1781761504445_1",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "우수 연결관 수평 02",
+      "pipeKind": "storm",
+      "length": 39.009472339915646,
+      "diameter": 0.3,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_STORM_MAIN_02": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_STORM_09",
+      "toNode": "connector_1781771680494_101",
+      "sourceEditorId": "pipe_free_1781761613473",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "우수 본관 02",
+      "pipeKind": "storm",
+      "length": 99.94269191371063,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_STORM_MAIN_DROP_01": {
+      "kind": "CONDUIT",
+      "fromNode": "ELBOW_STORM_05",
+      "toNode": "connector_1781772095944_106",
+      "sourceEditorId": "pipe_free_1781761648013",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "우수 본관 하강관 01",
+      "pipeKind": "storm",
+      "length": 331.67072998046876,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_STORM_TRUNK_01": {
+      "kind": "CONDUIT",
+      "fromNode": "PIPE_STORM_TRUNK_01_station_000",
+      "toNode": "connector_1781772095944_106",
+      "sourceEditorId": "pipe_free_1781761655573",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "우수 간선관거 01",
+      "pipeKind": "storm",
+      "length": 1681.8753853153437,
+      "diameter": 1.0,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_SEWER_LATERAL_H_03": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_SEWER_03",
+      "toNode": "ELBOW_SEWER_03",
+      "sourceEditorId": "pipe_free_1781761760089",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "오수 연결관 수평 03",
+      "pipeKind": "sewer",
+      "length": 65.34243848153164,
+      "diameter": 0.3,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_SEWER_LATERAL_V_03": {
+      "kind": "CONDUIT",
+      "fromNode": "ELBOW_SEWER_03",
+      "toNode": "connector_1781771816146_102",
+      "sourceEditorId": "pipe_free_1781761803174",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "오수 연결관 수직 03",
+      "pipeKind": "sewer",
+      "length": 143.1388852626534,
+      "diameter": 0.3,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_SEWER_LATERAL_H_04": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_SEWER_04",
+      "toNode": "ELBOW_SEWER_04",
+      "sourceEditorId": "pipeSegment_copy_1781761822423_1",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "오수 연결관 수평 04",
+      "pipeKind": "sewer",
+      "length": 61.03269636177538,
+      "diameter": 0.3,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_SEWER_LATERAL_V_04": {
+      "kind": "CONDUIT",
+      "fromNode": "ELBOW_SEWER_04",
+      "toNode": "teeConnector_copy_1781771850329_1",
+      "sourceEditorId": "pipeSegment_copy_1781761822423_2",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "오수 연결관 수직 04",
+      "pipeKind": "sewer",
+      "length": 143.32061744038776,
+      "diameter": 0.3,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_STORM_LATERAL_H_03": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_STORM_03",
+      "toNode": "ELBOW_STORM_03",
+      "sourceEditorId": "pipeSegment_copy_1781761845125_1",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "우수 연결관 수평 03",
+      "pipeKind": "storm",
+      "length": 28.0,
+      "diameter": 0.3,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_STORM_LATERAL_V_03": {
+      "kind": "CONDUIT",
+      "fromNode": "ELBOW_STORM_03",
+      "toNode": "teeConnector_copy_1781771853047_1",
+      "sourceEditorId": "pipeSegment_copy_1781761845125_2",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "우수 연결관 수직 03",
+      "pipeKind": "storm",
+      "length": 104.38888526265339,
+      "diameter": 0.3,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_COMB_MAIN_01": {
+      "kind": "CONDUIT",
+      "fromNode": "PIPE_COMB_MAIN_01_station_000",
+      "toNode": "connector_1781771816146_102",
+      "sourceEditorId": "pipe_free_1781761867795",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "합류식 본관 01",
+      "pipeKind": "combined",
+      "length": 2105.311684624702,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_OVERFLOW_OUTFALL_PIPE_01": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_OVERFLOW_01",
+      "toNode": "CONN_OVERFLOW_02",
+      "sourceEditorId": "pipe_free_1781762108006",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "월류 방류관 01",
+      "pipeKind": "overflow",
+      "length": 671.6903370371938,
+      "diameter": 1.0,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_STORM_TRUNK_02": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_STORM_13",
+      "toNode": "CONN_STORM_14",
+      "sourceEditorId": "pipe_free_1781762167610",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "우수 간선관거 02",
+      "pipeKind": "storm",
+      "length": 1906.34418039932,
+      "diameter": 1.0,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_OVERFLOW_INTERCEPTOR_DROP_01": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_COMB_04",
+      "toNode": "connector_1781772175449_107",
+      "sourceEditorId": "pipe_free_1781762361073",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "월류 차집 연결관 01",
+      "pipeKind": "combined",
+      "length": 695.3328191829453,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_TREATED_OUTFALL_PIPE_01": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_TREATED_01",
+      "toNode": "CONN_TREATED_02",
+      "sourceEditorId": "pipe_free_1781762695368",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "처리수 방류관 01",
+      "pipeKind": "treated",
+      "length": 397.15677248477823,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_STORM_LATERAL_H_04": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_STORM_04",
+      "toNode": "ELBOW_STORM_04",
+      "sourceEditorId": "pipeSegment_copy_1781763961700_1",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "우수 연결관 수평 04",
+      "pipeKind": "storm",
+      "length": 67.63886147561561,
+      "diameter": 0.3,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_STORM_LATERAL_V_04": {
+      "kind": "CONDUIT",
+      "fromNode": "ELBOW_STORM_04",
+      "toNode": "connector_1781771938741_105",
+      "sourceEditorId": "pipeSegment_copy_1781763961700_2",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "우수 연결관 수직 04",
+      "pipeKind": "storm",
+      "length": 104.7523517154923,
+      "diameter": 0.3,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_STORM_LATERAL_V_01": {
+      "kind": "CONDUIT",
+      "fromNode": "ELBOW_STORM_01",
+      "toNode": "connector_1781771589602_100",
+      "sourceEditorId": "pipe_free_1781761477346",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "우수 연결관 수직 01",
+      "pipeKind": "storm",
+      "length": 158.8280814539936,
+      "diameter": 0.3,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_STORM_LATERAL_V_02": {
+      "kind": "CONDUIT",
+      "fromNode": "ELBOW_STORM_02",
+      "toNode": "connector_1781771680494_101",
+      "sourceEditorId": "pipeSegment_copy_1781761504445_2",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "우수 연결관 수직 02",
+      "pipeKind": "storm",
+      "length": 159.153076171875,
+      "diameter": 0.3,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "pipe_free_1781771017429": {
+      "kind": "CONDUIT",
+      "fromNode": "connector_1781770935874_97",
+      "toNode": "CONN_SEWER_09",
+      "sourceEditorId": "pipe_free_1781771017429",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "파이프",
+      "pipeKind": "sewer",
+      "length": 98.83024267703058,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "pipe_free_1781771452952": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_SEWER_10",
+      "toNode": "connector_1781771440709_98",
+      "sourceEditorId": "pipe_free_1781771452952",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "파이프",
+      "pipeKind": "sewer",
+      "length": 103.90963836163564,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "pipe_free_1781771598332": {
+      "kind": "CONDUIT",
+      "fromNode": "connector_1781771589602_100",
+      "toNode": "CONN_STORM_10",
+      "sourceEditorId": "pipe_free_1781771598332",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "파이프",
+      "pipeKind": "storm",
+      "length": 95.46739141043645,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "pipe_free_1781771701381": {
+      "kind": "CONDUIT",
+      "fromNode": "connector_1781771680494_101",
+      "toNode": "ELBOW_STORM_05",
+      "sourceEditorId": "pipe_free_1781771701381",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "파이프",
+      "pipeKind": "storm",
+      "length": 103.19547028337661,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "pipe_free_1781771856872": {
+      "kind": "CONDUIT",
+      "fromNode": "connector_1781771816146_102",
+      "toNode": "teeConnector_copy_1781771850329_1",
+      "sourceEditorId": "pipe_free_1781771856872",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "파이프",
+      "pipeKind": "combined",
+      "length": 173.80363639486495,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "pipe_free_1781771871446": {
+      "kind": "CONDUIT",
+      "fromNode": "teeConnector_copy_1781771850329_1",
+      "toNode": "teeConnector_copy_1781771853047_1",
+      "sourceEditorId": "pipe_free_1781771871446",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "파이프",
+      "pipeKind": "combined",
+      "length": 180.9307368257878,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "pipe_free_1781771885636": {
+      "kind": "CONDUIT",
+      "fromNode": "teeConnector_copy_1781771853047_1",
+      "toNode": "CONN_COMB_01",
+      "sourceEditorId": "pipe_free_1781771885636",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "파이프",
+      "pipeKind": "combined",
+      "length": 91.98814392089844,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "pipe_free_1781772019999": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_COMB_02",
+      "toNode": "connector_1781771938741_105",
+      "sourceEditorId": "pipe_free_1781772019999",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "파이프",
+      "pipeKind": "combined",
+      "length": 41.90595358786095,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "pipeSegment_copy_1781772027152_1": {
+      "kind": "CONDUIT",
+      "fromNode": "connector_1781771938741_105",
+      "toNode": "CONN_COMB_03",
+      "sourceEditorId": "pipeSegment_copy_1781772027152_1",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "파이프 복사",
+      "pipeKind": "combined",
+      "length": 45.96233254495155,
+      "diameter": 0.6,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "pipe_free_1781772135198": {
+      "kind": "CONDUIT",
+      "fromNode": "connector_1781772095944_106",
+      "toNode": "CONN_STORM_12",
+      "sourceEditorId": "pipe_free_1781772135198",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "파이프",
+      "pipeKind": "storm",
+      "length": 163.8136358456013,
+      "diameter": 1.0,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "pipe_free_1781772198383": {
+      "kind": "CONDUIT",
+      "fromNode": "connector_1781772175449_107",
+      "toNode": "CONN_SEWER_12",
+      "sourceEditorId": "pipe_free_1781772198383",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "파이프",
+      "pipeKind": "sewer",
+      "length": 88.26473999023438,
+      "diameter": 1.0,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "pipe_free_1781772269295": {
+      "kind": "CONDUIT",
+      "fromNode": "connector_1781772244702_108",
+      "toNode": "connector_1781772175449_107",
+      "sourceEditorId": "pipe_free_1781772269295",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "파이프",
+      "pipeKind": "sewer",
+      "length": 1865.7733619990631,
+      "diameter": 1.0,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "PIPE_SEWER_LATERAL_V_02": {
+      "kind": "CONDUIT",
+      "fromNode": "ELBOW_SEWER_02",
+      "toNode": "connector_1781771440709_98",
+      "sourceEditorId": "pipe_free_1781708418875",
+      "sourceEditorType": "pipeSegment",
+      "sourceEditorName": "오수 연결관 수직 02",
+      "pipeKind": "sewer",
+      "length": 293.7088317871094,
+      "diameter": 0.3,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_001_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "APT_01",
+      "toNode": "CONN_SEWER_01",
+      "sourceEditorId": "link_1781708325059",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 001: 아파트 01 → 오수 커넥터 01",
+      "pipeKind": "sewer",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_006_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_SEWER_09",
+      "toNode": "MH_SEWER_01",
+      "sourceEditorId": "link_1781748792222",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 006: 오수 커넥터 09 → 오수 맨홀 01",
+      "pipeKind": "sewer",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_009_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "MH_SEWER_01",
+      "toNode": "CONN_SEWER_10",
+      "sourceEditorId": "link_1781752693866",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 009: 오수 맨홀 01 → 오수 커넥터 10",
+      "pipeKind": "sewer",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_015_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "APT_02",
+      "toNode": "CONN_SEWER_02",
+      "sourceEditorId": "link_1781754212047",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 015: 아파트 02 → 오수 커넥터 02",
+      "pipeKind": "sewer",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_019_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_SEWER_12",
+      "toNode": "FAC_WATER_RECLAMATION_01",
+      "sourceEditorId": "link_1781754486444",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 019: 오수 커넥터 12 → 물재생센터 01",
+      "pipeKind": "sewer",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_021_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "FAC_WATER_RECLAMATION_01",
+      "toNode": "CONN_TREATED_01",
+      "sourceEditorId": "link_1781754504440",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 021: 물재생센터 01 → 처리수 커넥터 01",
+      "pipeKind": "treated",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_022_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "CATCH_BASIN_01",
+      "toNode": "CONN_STORM_01",
+      "sourceEditorId": "link_1781761456041",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 022: 빗물받이 01 → 우수 커넥터 01",
+      "pipeKind": "storm",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_029_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_STORM_10",
+      "toNode": "MH_STORM_01",
+      "sourceEditorId": "link_1781761542111",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 029: 우수 커넥터 10 → 우수 맨홀 01",
+      "pipeKind": "storm",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_030_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "MH_STORM_01",
+      "toNode": "CONN_STORM_09",
+      "sourceEditorId": "link_1781761591745",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 030: 우수 맨홀 01 → 우수 커넥터 09",
+      "pipeKind": "storm",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_036_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_STORM_12",
+      "toNode": "FAC_PUMP_STATION_01",
+      "sourceEditorId": "link_1781761700672",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 036: 우수 커넥터 12 → 빗물펌프장 01",
+      "pipeKind": "storm",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_038_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "HOUSE_01",
+      "toNode": "CONN_SEWER_03",
+      "sourceEditorId": "link_1781761766472",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 038: 주거지 01 → 오수 커넥터 03",
+      "pipeKind": "sewer",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_042_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "HOUSE_02",
+      "toNode": "CONN_SEWER_04",
+      "sourceEditorId": "link_copy_1781761822423_1",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 042: 주거지 02 → 오수 커넥터 04",
+      "pipeKind": "sewer",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_046_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "CATCH_BASIN_03",
+      "toNode": "CONN_STORM_03",
+      "sourceEditorId": "link_copy_1781761845125_1",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 046: 빗물받이 03 → 우수 커넥터 03",
+      "pipeKind": "storm",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_057_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_COMB_01",
+      "toNode": "MH_COMB_01",
+      "sourceEditorId": "link_1781761954496",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 057: 합류식 커넥터 01 → 합류식 맨홀 01",
+      "pipeKind": "combined",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_058_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "MH_COMB_01",
+      "toNode": "CONN_COMB_02",
+      "sourceEditorId": "link_1781761960975",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 058: 합류식 맨홀 01 → 합류식 커넥터 02",
+      "pipeKind": "combined",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_061_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_COMB_03",
+      "toNode": "FAC_OVERFLOW_CHAMBER_01",
+      "sourceEditorId": "link_1781762083267",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 061: 합류식 커넥터 03 → 우수토실-월류시설 01",
+      "pipeKind": "combined",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_066_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "FAC_PUMP_STATION_01",
+      "toNode": "CONN_STORM_13",
+      "sourceEditorId": "link_1781762200258",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 066: 빗물펌프장 01 → 우수 커넥터 13",
+      "pipeKind": "storm",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_069_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_TREATED_02",
+      "toNode": "TREATED_OUTFALL_01",
+      "sourceEditorId": "link_1781762240045",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 069: 처리수 커넥터 02 → 처리수 방류구 01",
+      "pipeKind": "treated",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_070_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_STORM_14",
+      "toNode": "PUMP_OUTFALL_01",
+      "sourceEditorId": "link_1781762242924",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 070: 우수 커넥터 14 → 펌프 방류구 01",
+      "pipeKind": "storm",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_071_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "FAC_OVERFLOW_CHAMBER_01",
+      "toNode": "CONN_COMB_04",
+      "sourceEditorId": "link_1781762359792",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 071: 우수토실-월류시설 01 → 합류식 커넥터 04",
+      "pipeKind": "combined",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_079_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "CATCH_BASIN_02",
+      "toNode": "CONN_STORM_02",
+      "sourceEditorId": "link_1781763845675",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 079: 빗물받이 02 → 우수 커넥터 02",
+      "pipeKind": "storm",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "REL_085_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "CATCH_BASIN_04",
+      "toNode": "CONN_STORM_04",
+      "sourceEditorId": "link_copy_1781763961700_3",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계 085: 빗물받이 04 → 우수 커넥터 04",
+      "pipeKind": "storm",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "link_1781772889617_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "FAC_OVERFLOW_CHAMBER_01",
+      "toNode": "CONN_OVERFLOW_01",
+      "sourceEditorId": "link_1781772889617",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계",
+      "pipeKind": "overflow",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    },
+    "link_1781772899496_CONDUIT": {
+      "kind": "CONDUIT",
+      "fromNode": "CONN_OVERFLOW_02",
+      "toNode": "OVERFLOW_OUTFALL_01",
+      "sourceEditorId": "link_1781772899496",
+      "sourceEditorType": "relation",
+      "sourceEditorName": "관계",
+      "pipeKind": "overflow",
+      "length": 5.0,
+      "diameter": 1.2,
+      "roughness": 0.013,
+      "initialSetting": 1.0
+    }
+  }
+}

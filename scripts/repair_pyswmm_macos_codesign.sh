@@ -1,10 +1,16 @@
 #!/bin/zsh
 set -e
 
-ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-TOOLKIT_DIR="$ROOT_DIR/.venv/lib/python3.9/site-packages/swmm/toolkit"
+TOOLKIT_DIR="$(python3 - <<'PY'
+import importlib.util
 
-if [ ! -d "$TOOLKIT_DIR" ]; then
+spec = importlib.util.find_spec("swmm.toolkit")
+if spec and spec.submodule_search_locations:
+    print(spec.submodule_search_locations[0])
+PY
+)"
+
+if [ -z "$TOOLKIT_DIR" ] || [ ! -d "$TOOLKIT_DIR" ]; then
   echo "PySWMM toolkit directory not found: $TOOLKIT_DIR"
   exit 0
 fi

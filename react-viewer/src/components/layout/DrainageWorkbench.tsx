@@ -1,6 +1,7 @@
-import { OverallDrainageDiagramLine, SeparatedStormLine } from '../diagram/lines'
+import { OverallDrainageDiagramLine } from '../diagram/lines'
 import { DrainageGraphProvider, GraphSummaryPanel } from '../diagram/graph'
 import { EditorCanvas } from '../editor'
+import { SimulationWorkbench } from '../simulation/SimulationWorkbench'
 import { useLayoutEffect, useRef, useState } from 'react'
 
 const SKY_HEIGHT = 260
@@ -27,7 +28,7 @@ const VIEW_CONFIG: Record<
   },
   'storm-line': {
     label: '실험 라인',
-    description: '파이프, 커넥터, 맨홀, 시설 컴포넌트의 스냅/체인 구조를 확인하는 실험 화면입니다.',
+    description: '편집 모드의 저장된 설계를 SWMM 엔진으로 실행하고 1초 tick 결과를 확인하는 화면입니다.',
     canvasWidth: 1600,
     minCanvasHeight: 740,
     innerMinWidth: 1720,
@@ -105,6 +106,8 @@ export function DrainageWorkbench() {
 
       {mode === 'editor' ? (
         <EditorCanvas />
+      ) : mode === 'storm-line' ? (
+        <SimulationWorkbench />
       ) : (
       <section className="grid grid-cols-[minmax(0,1fr)_380px] gap-4 p-4">
         <DrainageGraphProvider>
@@ -143,7 +146,7 @@ export function DrainageWorkbench() {
                   )
                 })}
                 <g ref={contentRef}>
-                  {mode === 'overall' ? <OverallDrainageDiagramLine x={70} y={40} /> : <SeparatedStormLine x={70} y={40} />}
+                  <OverallDrainageDiagramLine x={70} y={40} />
                 </g>
               </svg>
             </div>

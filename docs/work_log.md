@@ -2,6 +2,198 @@
 
 최신 작업을 위에 기록한다. 새 작업을 시작하기 전에는 최근 3개 항목을 먼저 확인한다.
 
+## 2026-06-19 KST - 실험 화면 차오름 표시에서 용량 사용률 분리
+
+- 작업 요약: 실험 전체화면에서 특정 관이 실제 수위보다 훨씬 빨리 차오르는 것처럼 보이던 원인을 확인했다. React 실험 렌더러가 `차오름`과 배지/물 높이 계산에 `maxCapacityRatio`를 함께 섞어, 유량이 큰 관은 실제 만관율이 낮아도 용량 사용률 때문에 높게 표시되고 있었다. `getRuntimeFillRatio()`와 선택 객체 `차오름` 상세값에서 `maxCapacityRatio`를 제외하고, 수위 계열인 `maxFullness`/`maxDepthRatio`만 차오름으로 쓰도록 수정했다. `maxCapacityRatio`는 오른쪽 상세의 `용량` 항목에만 남겼다.
+- 주요 파일: `react-viewer/src/components/simulation/SimulationLayoutPreview.tsx`, `react-viewer/src/components/simulation/SimulationWorkbench.tsx`, `docs/work_log.md`
+- 검증 결과: `cd react-viewer && npm run build` 통과. 현재 snapshot 샘플에서 `pipe_free_1781761613473`은 기존 표시 기준 `95.51%`였지만 실제 수위 기준은 `40.89%`, 용량 사용률은 `95.51%`로 분리됨을 확인했다.
+- 계층 영향: React 실험 화면의 표시 기준만 변경했다. SWMM 계산값, FastAPI snapshot shape, INP 변환기, 편집 JSON 구조는 변경하지 않았다.
+- 주의점: 앞으로 `차오름`은 물 높이/만관율이고, `용량`은 유량이 관 처리능력에 얼마나 가까운지 보는 별도 지표다. 폭우 1000% 조건에서는 `용량`이 빠르게 올라갈 수 있지만 이것을 물 높이로 해석하면 안 된다.
+
+## 2026-06-19 KST - 폭우 10배 강수 제어와 전체화면 실행 정보 패널 추가
+
+- 작업 요약: 실험모드 강수량 슬라이더를 기존 0~100%에서 0~1000%까지 확장해, 기존 100% 대비 10배 폭우 조건을 줄 수 있게 했다. 서버에서는 강수 비율만 최대 10.0까지 허용하고, 막힘 비율은 기존처럼 1.0까지만 허용하도록 clamp 함수를 분리했다. 시뮬레이션 전체화면에서는 오른쪽에 실행 정보 패널을 추가해 tick, 강수, 기준 배수, 속도, 선택 객체의 SWMM 매핑/유량/유속/차오름/막힘 상태를 바로 확인할 수 있게 했다.
+- 주요 파일: `server/swmm_fastapi_server.py`, `react-viewer/src/services/swmm/editorRuntime.ts`, `react-viewer/src/components/simulation/SimulationWorkbench.tsx`, `react-viewer/src/components/simulation/SimulationLayoutPreview.tsx`, `docs/work_log.md`
+- 검증 결과: `python3 -m py_compile server/swmm_fastapi_server.py` 통과, `cd react-viewer && npm run build` 통과. 서버 clamp 확인에서 `clamp_rainfall_ratio(1000) == 10.0`, `clamp_ratio(1000) == 1.0`을 확인했다. FastAPI 서버를 `127.0.0.1:8765`에서 새 코드로 재시작하고 `/health` 정상 응답을 확인했다.
+- 계층 영향: React 실험 화면의 강수 제어 UI/전체화면 정보 표시와 FastAPI runtime control clamp가 변경됐다. SWMM INP 변환기, 편집 JSON 구조, 기존 HTML viewer contract는 변경하지 않았다.
+- 주의점: 1000%는 `maxRainfallMmPerHour=100` 기준 10배 비율을 의미하므로 실제 주입 강우는 1000mm/h 상당이다. 폭우 테스트 후 일반 조건으로 돌아오려면 슬라이더를 100% 이하로 내려야 한다.
+
+## 2026-06-19 KST - 본관 시작점 유입 오판 수정과 최종 막힘 감사 재실행
+
+- 작업 요약: 막힌 관 하류의 빗물펌프장/후속 관이 독립적으로 차오르는 문제를 추적했다. 원인은 React JSON -> SWMM 변환기의 본관 시작점 유입 판정이 `pipeSegment`만 보고, relation에서 생성되는 내부 conduit를 상류 연결로 세지 않던 것이다. 이 때문에 `CONN_STORM_09`, `CONN_STORM_13` 같은 중간 커넥터가 실제 연결 중간점인데도 새 본관 시작점처럼 오인되어 강우 유입이 붙었다. `add_main_head_inflows()`에서 pipeSegment뿐 아니라 모든 SWMM conduit의 `to_node`를 pipe kind별 incoming node로 반영하도록 수정했다.
+- 주요 파일: `scripts/editor_layout_to_swmm_inp.py`, `scripts/run_swmm_physics_audit.py`, `sample-results/physics-audit-20260619-100249/physics-audit-report.md`, `docs/work_log.md`
+- 검증 결과: `python3 -m py_compile scripts/editor_layout_to_swmm_inp.py scripts/run_swmm_physics_audit.py` 통과. `/Users/onseoktae/Downloads/drainage-layout (1).json` 기준 강수 100%/600초/link 65개 100% 막힘 전체 감사 재실행 완료. 최종 실행 `sample-results/physics-audit-20260619-100249` 기준 pass 33개, baseline 유량 부족 판단 보류 20개, suspect 12개였다. 특정 재현 조건인 `pipe_free_1781772135198` 100% 막힘에서는 하류 `PIPE_STORM_TRUNK_02`, `CONN_STORM_13`, `CONN_STORM_14` 쪽 유량/수위가 0 또는 극소값으로 떨어져, 막힌 관 뒤쪽이 거짓 강우 유입으로 차오르던 현상이 해소됨을 확인했다.
+- 계층 영향: React editor JSON -> SWMM INP 변환기의 유입 대상 판정과 감사 산출물만 변경했다. React 실험 UI, FastAPI snapshot shape, PySWMM 서버 API, 기존 HTML viewer contract는 변경하지 않았다.
+- 주의점: 모든 배관에 유입량을 넣는 모델이 아니라, 빗물받이/집/아파트/맨홀 일부 강우 유입/실제 상류 본관 시작점에만 외부 유입이 붙는 구조여야 한다. 남은 suspect 12개는 “막힘은 적용되지만 상류 수위 상승이 기대보다 작음” 유형이므로, 다음 단계에서 관별 invert/slope/profile 및 relation 방향 warning 6개를 함께 점검해야 한다.
+
+## 2026-06-19 KST - 전체 SWMM link 물리 막힘 감사와 커넥터 접속점 고도 보정
+
+- 작업 요약: `/Users/onseoktae/Downloads/drainage-layout (1).json` 기준 React editor JSON을 SWMM으로 변환한 뒤, 강수 100%/600초 baseline과 SWMM link 65개 각각의 100% 막힘 시나리오를 자동 실행하는 물리 감사 스크립트를 추가했다. 1차 감사에서 `우수 본관 01/02`, `오수 본관 01`, `합류식 본관 01`, `우수 간선관거 01` 등이 baseline에서 음수 유량으로 잡혔고, 원인은 connector/T자/ㄱ자 connector의 SWMM node가 실제 관 접속점이 아니라 시각 중심 y를 사용해 수평관이 오르막으로 변한 것이었다. 변환기에서 connector 계열도 relation attach point 중 가장 깊은 접속부를 hydraulic node 위치로 쓰도록 보정했고, 최종 감사에서는 해당 본관들이 정방향 유량으로 바뀌었다.
+- 주요 파일: `scripts/editor_layout_to_swmm_inp.py`, `scripts/run_swmm_physics_audit.py`, `sample-results/physics-audit-20260619-012748/physics-audit-report.md`, `sample-results/physics-audit-20260619-012748/fix-prep.md`, `docs/work_log.md`
+- 검증 결과: `python3 -m py_compile scripts/editor_layout_to_swmm_inp.py scripts/run_swmm_physics_audit.py` 통과. 감사는 총 3회 실행했다. 최종 실행 `sample-results/physics-audit-20260619-012748` 기준 node 71개/link 65개/relation 내부 conduit 24개, 결과는 pass 33개, baseline 유량 부족으로 판단 보류 18개, suspect 14개였다. 주요 본관 baseline flow는 `PIPE_STORM_MAIN_01 -0.002281 -> 0.000233 CMS`, `PIPE_STORM_MAIN_02 -0.004662 -> 0.008151 CMS`, `PIPE_SEWER_MAIN_01 -0.002376 -> 0.002573 CMS`, `PIPE_COMB_MAIN_01 -0.000503 -> 0.000055 CMS`, `PIPE_STORM_TRUNK_01 -0.000733 -> 0.000089 CMS`로 정방향 회복을 확인했다.
+- 계층 영향: React editor JSON -> SWMM INP 변환기의 connector/elbowConnector/teeConnector hydraulic 위치 산정과 신규 진단 스크립트가 변경됐다. React UI, FastAPI snapshot shape, PySWMM runtime server API, 기존 HTML viewer contract는 변경하지 않았다.
+- 주의점: 변환 warning 6개는 여전히 남아 있으며, relation 클릭 방향과 pipe rotation 충돌을 다음 단계에서 audit fail로 승격해야 한다. 최종 baseline에서도 relation/자유 파이프 10개는 음수 유량이 남아 있어 sourceEditorId 기준으로 위치를 찾아 relation 방향 오류인지 실제 head 조건인지 분리해야 한다. 수평관 접속점 y를 맞추면서 일부 수평관 기본 경사가 거의 0에 가까워졌으므로, 다음 수정은 conduit offset 또는 station 기반 invert profile로 기본 경사를 명시하는 쪽이 좋다.
+
+## 2026-06-19 KST - 실험 시뮬레이션 10배속 옵션 추가
+
+- 작업 요약: 실험모드 속도 제어에 `10x` 버튼을 추가하고, React runtime control payload와 FastAPI 서버 clamp 한계를 모두 10배속까지 허용하도록 변경했다.
+- 주요 파일: `react-viewer/src/components/simulation/SimulationWorkbench.tsx`, `react-viewer/src/services/swmm/editorRuntime.ts`, `server/swmm_fastapi_server.py`, `docs/work_log.md`
+- 검증 결과: `python3 -m py_compile server/swmm_fastapi_server.py` 통과, `cd react-viewer && npm run build` 통과. FastAPI 서버를 `127.0.0.1:8765`에서 새 코드로 재시작했고 `/health` 응답 정상 확인.
+- 계층 영향: React 실험 화면의 속도 UI와 FastAPI runtime control clamp만 변경했다. SWMM INP 변환기, 편집 JSON 구조, snapshot 필드명은 변경하지 않았다.
+- 주의점: 10배속은 SWMM 계산 step 자체를 10초로 바꾸는 것이 아니라 1초 step을 더 빠르게 진행하는 UI/서버 실행 속도 배율이다.
+
+## 2026-06-19 KST - 우수토실/펌프장 시설 작동 임계값 복귀
+
+- 작업 요약: 직전 우수토실 게이트 확인을 위해 낮춰둔 실험용 임계값이 실제 운영 감각보다 너무 민감해, 우수토실-월류시설 게이트 개방 기준을 `2% -> 50%`로 되돌렸다. 빗물펌프장 팬 회전도 작은 수위/소량 유량에서 바로 돌지 않도록, 시설 표시 수위 60% 이상 또는 유량 `0.02 CMS` 초과일 때만 활성화되도록 조정했다. 낮은 수위의 차오름/물결 표시는 “물이 조금 있음” 표시로 유지하고, 게이트/팬 같은 시설 작동 애니메이션만 높은 임계값을 쓰도록 분리했다.
+- 주요 파일: `react-viewer/src/components/simulation/SimulationLayoutPreview.tsx`, `docs/work_log.md`
+- 검증 결과: `cd react-viewer && npm run build` 통과. 코드 기준 `OVERFLOW_GATE_OPEN_RATIO = 0.5`, `STORM_PUMP_START_RATIO = 0.6`, `STORM_PUMP_ACTIVE_FLOW_THRESHOLD_CMS = 0.02` 반영을 확인했다.
+- 계층 영향: React 실험 화면의 시설 작동 애니메이션 기준만 변경했다. SWMM INP 변환기, FastAPI snapshot, PySWMM 계산값, 편집 JSON 구조는 변경하지 않았다.
+- 주의점: 우수토실 내부 물결은 낮은 수위에서도 보일 수 있지만, 월류 막대가 눕는 것은 50% 이상일 때만 동작한다. 펌프장도 3~4% 수준의 낮은 수위에서는 팬이 회전하지 않는 것이 정상이다.
+
+## 2026-06-19 KST - 시설 STORAGE 체적 보정과 시설 연결관 집계/막힘 제어 보강
+
+- 작업 요약: 실험 화면에서 우수토실-월류시설과 물재생센터가 `<0.1%`로 거의 차오르지 않던 문제를 줄이기 위해 React editor JSON -> SWMM 변환기의 시설 STORAGE 면적을 UI 검증 가능한 규모로 조정했다. 우수토실은 `100.0㎡ -> 4.0㎡`, 물재생센터는 `1000.0㎡ -> 80.0㎡`로 낮추고, 물재생센터 초기 수위는 0으로 맞췄다. FastAPI snapshot 집계에서는 `facility`/`catchBasin`도 맨홀처럼 연결된 conduit fullness를 editor object 상태에 함께 반영하도록 바꿨다. 실험 화면 막힘 슬라이더는 한 편집 파이프가 여러 SWMM segment로 쪼개진 경우 같은 editor object에서 나온 모든 SWMM 링크에 같은 막힘 값을 적용하도록 보강했다. 우수토실 게이트 개방 임계값은 현재 단순 모델에서 확인 가능하도록 2%로 낮췄다.
+- 주요 파일: `scripts/editor_layout_to_swmm_inp.py`, `server/swmm_fastapi_server.py`, `react-viewer/src/components/simulation/SimulationLayoutPreview.tsx`, `react-viewer/src/components/simulation/SimulationWorkbench.tsx`, `docs/work_log.md`
+- 검증 결과: `python3 -m py_compile scripts/editor_layout_to_swmm_inp.py server/swmm_fastapi_server.py` 통과, `cd react-viewer && npm run build` 통과. `/Users/onseoktae/Downloads/drainage-layout.json` 변환 결과에서 `FAC_OVERFLOW_CHAMBER_01`이 `MaxDepth 2.80 / Area 4.00`, `FAC_WATER_RECLAMATION_01`이 `MaxDepth 4.00 / Area 80.00 / InitDepth 0.00`으로 생성되는 것을 확인했다. FastAPI 서버를 `127.0.0.1:8765`에서 새 코드로 재시작했고, 강수 100% + `PIPE_OVERFLOW_INTERCEPTOR_DROP_01` 100% 막힘 조건 tick 387에서 우수토실 editor object가 `maxDepthRatio 0.00144`, 연결관 기반 `maxFullness 0.01853`, 유량 `0.00437 CMS`를 집계하는 것을 확인했다.
+- 계층 영향: SWMM INP 변환기의 facility storage 파라미터, FastAPI runtime snapshot editor aggregation, React 실험 화면의 시설 차오름/게이트 표시, 실험 제어 payload 생성이 함께 변경됐다. 편집 JSON 스키마와 기존 HTML viewer contract는 변경하지 않았다.
+- 주의점: 현재 우수토실 게이트 임계값 2%는 실험 UI에서 동작 확인을 쉽게 하기 위한 임시 운영값이다. 이후 실제 월류 기준을 정하면 `OVERFLOW_GATE_OPEN_RATIO`를 UI 설정 또는 SWMM 제어 링크 상태 기반으로 빼야 한다. 서버 코드가 바뀌었으므로 실험모드에서 이미 떠 있던 엔진 세션은 `엔진 시작` 또는 `초기화`로 다시 만들 때 새 변환 규칙이 적용된다.
+
+## 2026-06-19 KST - 실험 파이프 저수위 시각 최소 높이와 상세 라벨 보정
+
+- 작업 요약: 실험 화면을 0.5배로 축소한 뒤 1~8% 수준의 관 수위가 2~4px 정도로만 보여 빈 관처럼 보이던 문제를 완화했다. 파이프는 실제 차오름이 1%를 넘을 때 화면 표시용 최소 수위 8%를 적용하고, 배지는 실제 값을 그대로 표시하도록 했다. 아주 작은 음수 유량 때문에 전체 관이 역류처럼 보이는 문제를 줄이기 위해 역류 표시 임계값을 높였다. 선택 객체 상세 패널은 관의 `flowCms`를 `관 유량`, node 외부 주입량인 `totalInflowCms`를 `외부 유입`으로 바꿔 “파이프 유입량 0”을 실제 흐름 없음으로 오해하지 않게 정리했다.
+- 주요 파일: `react-viewer/src/components/simulation/SimulationLayoutPreview.tsx`, `react-viewer/src/components/simulation/SimulationWorkbench.tsx`, `docs/work_log.md`
+- 검증 결과: `python3 -m py_compile server/swmm_fastapi_server.py scripts/editor_layout_to_swmm_inp.py` 통과, `cd react-viewer && npm run build` 통과. `/Users/onseoktae/Downloads/drainage-layout.json`으로 엔진을 재시작하고 강수 100% tick 679 기준 `합류식 본관 01` 31.03%, `합류식 본관 02` 30.58%, `우수 본관 02` 6.35%, `우수 본관 하강관 01` 4.30%, `월류 차집 연결관 01` 1.75%를 확인했다.
+- 계층 영향: React 실험 화면의 수위 표시/화살표 방향 판정/상세 라벨만 변경했다. SWMM INP 변환기, FastAPI snapshot shape, PySWMM 계산값, 편집 JSON 구조, 기존 HTML viewer contract는 변경하지 않았다.
+- 주의점: `PIPE_VISIBLE_FILL_MIN`은 화면용 최소 높이일 뿐 실제 SWMM 수위가 아니다. 실제 값은 배지와 오른쪽 상세 패널의 `차오름`, `관 만관율`을 기준으로 봐야 한다. 파이프의 `외부 유입`은 node에 직접 주입되는 강우/오수 유입이 아니므로 보통 0일 수 있고, 관을 통과하는 양은 `관 유량`을 봐야 한다.
+
+## 2026-06-19 KST - 실험 배지 저유량 소수점 표시와 T 지점 런타임 확인
+
+- 작업 요약: 실험 화면에서 실제 유입/저류가 있어도 정수 반올림 때문에 `0%`로 보이던 배지를 보정했다. 이제 10% 미만은 소수점 1자리, 0.1% 미만은 `<0.1%`로 표시한다. 배지 활동 표시도 `flowCms`가 0일 때 `totalInflowCms`를 함께 보도록 바꿔 빗물받이처럼 유입만 있는 저장 객체가 완전히 정지한 것처럼 보이지 않게 했다. `/Users/onseoktae/Downloads/drainage-layout.json` 기준 오수 맨홀 하부 T처럼 보이는 지점은 실제 `teeConnector`가 아니라 일반 커넥터/맨홀/본관 조합이며, runtime snapshot에서 오른쪽 `오수 본관 02`는 0%가 아니라 약 53.79% fullness로 확인했다.
+- 주요 파일: `react-viewer/src/components/simulation/SimulationLayoutPreview.tsx`, `docs/work_log.md`
+- 검증 결과: `python3 -m py_compile server/swmm_fastapi_server.py scripts/editor_layout_to_swmm_inp.py` 통과, `cd react-viewer && npm run build` 통과. 실행 중인 FastAPI snapshot에서 `오수 본관 01` 51.08%, `오수 본관 02` 53.79%, `빗물받이 01/03/04` 약 0.40%, `빗물받이 02` 약 101.92%를 확인했다. `OVERFLOW_GATE_PREVIEW_ANIMATION=false` 상태도 재확인했다.
+- 계층 영향: React 실험 화면의 배지/활동 표시만 변경했다. SWMM INP 변환기, FastAPI snapshot shape, PySWMM 계산값, 편집 JSON 구조, 기존 HTML viewer contract는 변경하지 않았다.
+- 주의점: 빗물받이 1/3/4번은 storage/inflow가 있으나 현재 기본 storage 깊이 대비 수위가 약 0.4%라 낮게 보이는 것이 정상이다. 이후 실제 시설별 체적/수심 스케일을 UI에서 조정하면 같은 유입량에서도 차오름 속도가 달라진다. 오수 T 지점이 화면에서 0%처럼 보이면 브라우저가 이전 bundle/session을 보고 있는지 새로고침 또는 엔진 재시작으로 확인해야 한다.
+
+## 2026-06-19 KST - 맨홀/파이프 0% 표시 보정과 상세 소수점 정보 추가
+
+- 작업 요약: 맨홀 표시에서 연결 관 fullness를 맨홀 전체 높이에 그대로 적용해 맨홀이 90% 이상 찬 것처럼 보이던 문제를 완화했다. 맨홀 본체는 실제 node depth를 우선하고, 연결 관 수위는 맨홀 하부의 얕은 보조 수위로만 표시되도록 capped/scale 처리했다. 월류방류관 등 `pipeSegment`는 1% 미만일 때 더 이상 최소 물결을 강제로 띄우지 않게 했다. 우수토실 게이트 확인용 반복 애니메이션은 keyTimes가 있는 반복 회전값으로 조정했고, 오른쪽 선택 객체 정보에는 `fill`, `node depth`, `link full`, `capacity`, `inflow`를 소수점 단위로 볼 수 있게 추가했다.
+- 주요 파일: `react-viewer/src/components/simulation/SimulationLayoutPreview.tsx`, `react-viewer/src/components/simulation/SimulationWorkbench.tsx`, `docs/work_log.md`
+- 검증 결과: `python3 -m py_compile server/swmm_fastapi_server.py` 통과, `cd react-viewer && npm run build` 통과.
+- 계층 영향: React 실험 화면의 표시/애니메이션/상세 정보만 변경했다. SWMM INP 변환기, FastAPI snapshot shape, PySWMM 계산값, 편집 JSON 구조, 기존 HTML viewer contract는 변경하지 않았다.
+- 주의점: 맨홀 하부 보조 수위는 `maxFullness`를 그대로 쓰지 않고 `MANHOLE_CONNECTED_FILL_SCALE`/`MAX`로 제한하는 화면 표현이다. 실제 맨홀 월류/범람 판단에는 node `depthRatio`/`floodingCms`를 별도로 봐야 한다. 우수토실 `OVERFLOW_GATE_PREVIEW_ANIMATION`은 이후 임계값 기반으로 되돌렸다.
+
+## 2026-06-18 KST - 맨홀 표시 수위에 연결 관 fullness 반영
+
+- 작업 요약: 실험 런타임 뷰에서 맨홀 양쪽 본관은 차 있는데 맨홀만 0%로 표시되던 문제를 수정했다. SWMM node 자체의 `depthRatio`는 깊은 맨홀 기준이라 매우 작게 나올 수 있으므로, 맨홀 editor object에 한해 해당 SWMM node에 직접 연결된 conduit들의 `fullness`도 `maxFullness`로 함께 집계하도록 FastAPI snapshot aggregation을 보강했다.
+- 주요 파일: `server/swmm_fastapi_server.py`, `docs/work_log.md`
+- 검증 결과: `python3 -m py_compile server/swmm_fastapi_server.py` 통과, `cd react-viewer && npm run build` 통과. 서버를 `127.0.0.1:8765`에서 새 코드로 재시작하고 `/Users/onseoktae/Downloads/drainage-layout.json` 세션을 시작했다. 강수 100%, tick 66 기준 `합류식 맨홀`은 node depth 0.02% / 연결관 fullness 8.73%, `오수 맨홀`은 0.02% / 11.82%, `우수 맨홀`은 0.01% / 5.04%로 editor object 표시값에 연결관 수위가 반영되는 것을 확인했다.
+- 계층 영향: FastAPI runtime snapshot의 editor object 집계만 변경했다. SWMM INP 변환기, PySWMM 계산값, React 편집 JSON 구조, 기존 HTML viewer contract는 변경하지 않았다. React 실험 화면은 기존 `maxFullness` 표시 경로를 그대로 사용한다.
+- 주의점: SWMM node depth 자체를 바꾼 것이 아니라 표시용 editor aggregation에서 맨홀 주변 conduit fullness를 같이 반영한 것이다. 실제 수리 판단/경보에서는 node flooding/depth와 link fullness를 구분해서 봐야 한다.
+
+## 2026-06-18 KST - 우수토실 게이트 확인용 반복 애니메이션과 맨홀 0% 차오름 보정
+
+- 작업 요약: 우수토실-월류시설 게이트 동작을 눈으로 확인할 수 있도록, 수위 조건과 무관하게 게이트 막대가 서기/눕기를 반복하는 임시 preview animation을 켰다. 또한 맨홀도 작은 유량 때문에 최소 차오름이 강제로 보이던 문제를 수정해, 실제 SWMM 수위/용량 비율이 1%를 넘을 때만 물 채움/물결이 표시되도록 했다.
+- 주요 파일: `react-viewer/src/components/simulation/SimulationLayoutPreview.tsx`, `docs/work_log.md`
+- 검증 결과: `cd react-viewer && npm run build` 통과.
+- 계층 영향: React 실험 화면의 시각 애니메이션/표시 조건만 변경했다. SWMM 변환기, FastAPI payload shape, PySWMM 계산, 편집 JSON 구조, 기존 HTML viewer contract는 변경하지 않았다.
+- 주의점: `OVERFLOW_GATE_PREVIEW_ANIMATION = true`는 우수토실 게이트 동작 확인을 위한 임시 설정이다. 게이트 움직임을 확인한 뒤 실제 운영 규칙으로 되돌릴 때는 이 값을 끄거나, SWMM 월류/제어 상태 payload에 연결해야 한다.
+
+## 2026-06-18 KST - 실험 시설 0% 차오름/펌프/월류 게이트 표시 보정
+
+- 작업 요약: 실험 런타임 뷰에서 시설물이 작은 유량만 있어도 최소 차오름을 강제로 표시하던 조건을 제거했다. 빗물펌프장, 우수토실-월류시설, 방류구/시설 계열은 실제 SWMM 수위/용량 비율이 1%를 넘을 때만 물 채움/물결을 표시하고, 빗물펌프장 팬도 같은 기준을 넘을 때만 회전하도록 바꿨다. 우수토실 조절 막대는 opacity 깜빡임 대신 수위 50% 이상에서 바닥 방향으로 눕는 게이트 애니메이션으로 변경했다.
+- 주요 파일: `react-viewer/src/components/simulation/SimulationLayoutPreview.tsx`, `docs/work_log.md`
+- 검증 결과: `cd react-viewer && npm run build` 통과. `http://127.0.0.1:5173/` 실험 라인에서 현재 localStorage 설계 기준 강수 0% 상태를 확인했고, 빗물펌프장 SVG 내부의 물 채움/물결/팬 회전 animation이 0개인 것을 확인했다. 현재 브라우저 저장본에는 우수토실 객체가 없어 우수토실은 빌드와 코드 경로로 확인했다.
+- 계층 영향: React 실험 화면의 표시 조건과 시설 애니메이션만 변경했다. SWMM 변환기, FastAPI payload shape, PySWMM 계산, 편집 JSON 구조, 기존 HTML viewer contract는 변경하지 않았다.
+- 주의점: 우수토실 월류 게이트 개방 임계값은 현재 `OVERFLOW_GATE_OPEN_RATIO = 0.5`로 고정했다. 이후 SWMM 결과의 실제 월류/제어 링크 setting과 연결하면 이 임계값을 서버 payload 기반으로 바꾸는 것이 좋다. 파이프/맨홀/빗물받이의 저유량 최소 표시 로직은 그대로 유지했고, 시설 계열만 더 엄격하게 처리했다.
+
+## 2026-06-18 KST - 우수토실 실험 렌더 편집모드 정렬과 맨홀 강우 유입 추가
+
+- 작업 요약: 실험모드 우수토실-월류시설의 임의 조절 스틱을 제거하고 편집모드의 overflow chamber 게이트/그릴/내부 패널 계산과 같은 구조로 다시 맞췄다. 맨홀도 지표 구멍으로 강수 일부가 들어오는 가정을 반영해 React editor JSON -> SWMM 변환에서 `TS_MANHOLE_RAIN` 유입 계열을 추가하고, FastAPI runtime에서 맨홀 강우 유입은 빗물받이 기본 강우 유입의 25% 계수로 주입하도록 했다.
+- 주요 파일: `scripts/editor_layout_to_swmm_inp.py`, `server/swmm_fastapi_server.py`, `react-viewer/src/components/simulation/SimulationLayoutPreview.tsx`, `docs/work_log.md`
+- 검증 결과: `python3 -m py_compile scripts/editor_layout_to_swmm_inp.py server/swmm_fastapi_server.py` 통과, `cd react-viewer && npm run build` 통과. `/Users/onseoktae/Downloads/drainage-layout.json` 변환 report에서 rainfall target이 13개로 증가하고 `MH_COMB_01`, `MH_SEWER_01`, `MH_STORM_01`에 `0.25` weight가 붙는 것을 확인했다. 새 서버로 재시작 후 rainfall 100%로 `/engine/start`/`/engine/snapshot`을 실행해 세 맨홀의 `totalInflowCms`가 생기는 것을 확인했다. Chrome headless에서 우수토실 렌더가 편집모드형 게이트 구조로 표시되고 SVG 내부 커넥터 이름은 0개인 것을 확인했다.
+- 계층 영향: JSON -> SWMM INP 변환기의 inflow target, FastAPI runtime 강우 주입, React 실험 화면의 우수토실 시각 표현을 함께 변경했다. 편집 JSON 스키마와 relation topology, 기존 HTML viewer contract는 변경하지 않았다.
+- 주의점: 맨홀 강우 유입은 현재 전역 기본 계수 `0.25`로 고정되어 있다. 이후 UI에서 맨홀별 `지표 유입 허용/유입 강도/개구율`을 추가하면 이 weight를 객체별 props에서 계산하도록 확장하는 것이 좋다. 실험모드와 편집모드의 완전한 시각 동일성을 보장하려면 장기적으로 편집 렌더러를 공용 컴포넌트로 분리해야 한다.
+
+## 2026-06-18 KST - 실험 뷰 커넥터 표시와 미리보기 전체화면 보정
+
+- 작업 요약: 실험 뷰의 전체화면을 제어 패널/실행 정보까지 키우는 방식이 아니라 시뮬레이션 미리보기만 viewport 전체를 덮는 오버레이 방식으로 바꿨다. 커넥터/ㄱ자 커넥터/T자 커넥터는 SWMM node/junction 후보라 runtime 수심 값이 들어오지만, 실험 화면에서는 저장부피가 있는 맨홀처럼 보이지 않도록 차오름 물결, 객체 이름 라벨, 퍼센트 배지를 숨겼다. 우수토실-월류시설의 조절 막대는 시설 밖으로 튀어나오는 긴 사선 막대 대신 내부 패널 안의 짧은 스틱 형태로 정리했다.
+- 주요 파일: `react-viewer/src/components/simulation/SimulationLayoutPreview.tsx`, `react-viewer/src/components/simulation/SimulationWorkbench.tsx`, `docs/work_log.md`
+- 검증 결과: `cd react-viewer && npm run build` 통과. Chrome headless에서 `127.0.0.1:5173` 실험 라인에 `/Users/onseoktae/Downloads/drainage-layout.json`을 주입해 SVG 내부 `커넥터` 텍스트가 0개인 것, 전체화면 오버레이가 viewport 전체를 덮고 `실행 정보` 패널은 포함하지 않는 것, 우수토실 조절 스틱이 내부 패널 안에 들어오는 것을 확인했다.
+- 계층 영향: React 실험 화면의 시각 표현만 변경했다. SWMM 변환기, FastAPI payload shape, PySWMM 계산, 편집 JSON/INP 구조는 변경하지 않았다.
+- 주의점: 커넥터 runtime 값 자체는 사라진 것이 아니다. SWMM 연결 topology를 유지하기 위해 커넥터는 계속 node/junction 후보로 남고, 실험 화면에서만 차오름/배지를 숨긴다. 커넥터를 클릭하면 선택 객체 정보 패널에서는 여전히 매핑 정보를 확인할 수 있다.
+
+## 2026-06-18 KST - 실험 라인 런타임 UI 축소/방향/정보 표시 정리
+
+- 작업 요약: 실험 라인과 편집 캔버스의 시각 배율을 0.5로 낮추고, 편집 모드 상단 메뉴를 sticky로 고정했다. 실험 라인에는 전체화면 버튼, 1x/2x/3x/4x 속도 제어, 상단 물 종류 범례, 선택 객체 정보 패널을 추가했다. 관 내부 이름 라벨은 실험 뷰에서 숨겨 흐름 화살표와 물결을 더 잘 보이게 했고, 물결/차오름 애니메이션은 실제 `flowCms`가 reverse threshold를 넘는 경우에만 오른쪽->왼쪽으로 움직이도록 수정했다. 배지 레이어는 SVG 마지막에 분리 렌더링해 퍼센트가 다른 객체 뒤에 가려지지 않도록 했다.
+- 주요 파일: `react-viewer/src/components/editor/EditorCanvas.tsx`, `react-viewer/src/components/simulation/SimulationWorkbench.tsx`, `react-viewer/src/components/simulation/SimulationLayoutPreview.tsx`, `react-viewer/src/services/swmm/client.ts`, `react-viewer/src/services/swmm/editorRuntime.ts`, `server/swmm_fastapi_server.py`, `docs/work_log.md`
+- 검증 결과: `python3 -m py_compile server/swmm_fastapi_server.py` 통과, `cd react-viewer && npm run build` 통과. `127.0.0.1:8765` FastAPI 서버를 새 코드로 재시작해 `/health`, `/engine/status`에서 `speedMultiplier`가 포함되는 것 확인. Chrome headless로 `127.0.0.1:5173` 실험 라인에 `/Users/onseoktae/Downloads/drainage-layout.json`을 localStorage 주입해 물 종류 범례, 선택 객체 정보, 속도 제어, 전체화면 버튼 노출과 관 내부 `파이프` 라벨 제거를 확인했다.
+- 계층 영향: React 실험/편집 화면 표현과 FastAPI runtime control payload에 `speedMultiplier`를 추가했다. SWMM 변환기, INP 생성 규칙, 기존 HTML viewer contract, 편집 JSON 좌표/관계 구조는 변경하지 않았다.
+- 주의점: `/Users/onseoktae/Downloads/drainage-layout.json` 기준 실제 음수 유량은 본관 전체가 아니라 `REL_019_CONDUIT`, `REL_029_CONDUIT`, `REL_030_CONDUIT` 같은 1m 내부 relation conduit에서 잡혔다. 현재 테스트 JSON에는 `우수 본관 01` 막힘 100%가 저장되어 있어 `PIPE_STORM_MAIN_01` 제어값이 1.0으로 적용된다.
+
+## 2026-06-18 KST - 실험 뷰 본관 상류 표시용 왼쪽 연장 추가
+
+- 작업 요약: 실험 라인에서 본관/간선/차집관거의 왼쪽 시작부가 중간에서 끊긴 것처럼 보이는 문제를 표시 전용 렌더링으로 보정했다. 수평 `pipeSegment` 중 `본관`, `간선`, `차집`, `main`, `trunk`, `interceptor` 계열이고 왼쪽 포트에 직접 relation이 없는 상류 시작 관만 SVG 왼쪽 경계까지 같은 색/물결/화살표로 연장해 그린다.
+- 주요 파일: `react-viewer/src/components/simulation/SimulationLayoutPreview.tsx`, `docs/work_log.md`
+- 검증 결과: `cd react-viewer && npm run build` 통과. 현재 `/Users/onseoktae/Downloads/drainage-layout (1).json` 기준 표시 연장 대상이 `우수 본관 01`, `오수 본관 01`, `차집관거 01`, `우수 간선관거 01`, `합류식 본관 01`로 잡히는 것을 확인했다. React dev server `127.0.0.1:5173`, SWMM engine `127.0.0.1:8765` 응답 정상.
+- 계층 영향: React 실험 화면의 시각 표현만 변경했다. 편집 JSON 좌표/길이, SWMM 변환기, FastAPI API shape, PySWMM 계산, INP 모델은 변경하지 않았다.
+- 주의점: 이 연장은 실제 SWMM 관 길이를 늘리는 것이 아니라 상류 유입이 화면 밖에서 이어진다는 것을 보여주는 visual extension이다. 실제 모델 길이 비교는 원본 `pipeSegment` 좌표와 변환 결과를 기준으로 봐야 한다.
+
+## 2026-06-18 KST - 실험 뷰 저유량 화살표 표시 기준 보정
+
+- 작업 요약: 실험 라인에서 우수본관1처럼 유입/수심은 있지만 유량과 유속이 작을 때 화살표가 정지해 보이던 문제를 수정했다. 흐름 애니메이션 활성 기준에 `totalInflowCms`와 차오름 비율을 함께 반영하고, 아주 작은 음수 유량은 수치 흔들림으로 보고 역류 화살표로 표시하지 않도록 threshold를 높였다. 긴 파이프에서 화살표가 앞쪽 일부에만 나오던 문제는 최대 화살표 개수 제한을 늘려 전체 관 길이를 덮도록 수정했다.
+- 주요 파일: `react-viewer/src/components/simulation/SimulationLayoutPreview.tsx`, `docs/work_log.md`
+- 검증 결과: `cd react-viewer && npm run build` 통과. 현재 `/engine/snapshot` 기준 `PIPE_STORM_MAIN_01`, `PIPE_STORM_MAIN_02` 모두 새 UI 판정에서 `active=true`, `reverseUi=false`가 되는 것을 확인했다.
+- 계층 영향: React 실험 화면의 화살표 표시/애니메이션 기준만 변경했다. SWMM 변환기, FastAPI API shape, PySWMM 계산, 편집 모드 JSON 스키마는 변경하지 않았다.
+- 주의점: SWMM raw `flowCms`가 음수여도 낮은 유량 구간에서는 역류로 과하게 표시하지 않는다. 실제 역류 판단/경보는 이후에 별도 기준을 만들고, 지금 화살표는 설계 방향 흐름을 읽기 쉽게 보여주는 용도에 가깝다.
+
+## 2026-06-18 KST - 실험 모드 설계 사라짐 방지와 JSON 복구 버튼 추가
+
+- 작업 요약: 실험 모드가 편집 설계 localStorage를 읽지 못할 때 기본 레이아웃으로 조용히 fallback하면서 이전 설계 구조가 사라진 것처럼 보이는 문제를 수정했다. 이제 실험 모드 상단에 `JSON 불러오기`를 추가해 편집 모드에서 내보낸 `drainage-layout.json`을 바로 불러오고 localStorage에 다시 저장할 수 있다. 저장 설계가 없어서 기본 fallback이 표시되는 경우에는 경고 문구를 보여주고, `layout source`도 `default fallback`으로 표시한다.
+- 주요 파일: `react-viewer/src/components/simulation/SimulationWorkbench.tsx`, `docs/work_log.md`
+- 검증 결과: `cd react-viewer && npm run build` 통과.
+- 계층 영향: React 실험 화면의 layout 로딩/복구 UX만 변경했다. SWMM 변환기, FastAPI API shape, 엔진 계산, 편집 모드 JSON 스키마는 변경하지 않았다.
+- 주의점: 기존 설계 파일 자체는 삭제되지 않았고 `/Users/onseoktae/Downloads/drainage-layout (1).json`, `/Users/onseoktae/Downloads/drainage-layout.json` 등에 남아 있다. 실험 화면에서 `JSON 불러오기`로 해당 파일을 선택하면 다시 localStorage 기준 설계로 복구된다.
+
+## 2026-06-18 KST - React 실험 모드 서버 시작 실패 수정
+
+- 작업 요약: React 실험 모드의 `엔진 시작` 실패 원인을 확인했다. `127.0.0.1:8765` 서버가 꺼져 있었고, `Start_SWMM_Engine_Server.command`는 기본적으로 예전 HTML viewer용 `server/swmm_engine_server.py`를 실행하고 있었다. 또한 `.venv/bin/python`에는 FastAPI/Uvicorn이 없어 Finder/screen 같은 비대화형 실행에서 서버가 바로 종료될 수 있었다. 시작 스크립트를 React 실험 모드 기준으로 `server/swmm_fastapi_server.py`를 기본 실행하도록 바꾸고, `.venv`, pyenv 설치본, 일반 `python3` 중 실제 필요한 dependency를 import할 수 있는 Python을 자동 선택하도록 수정했다. 기존 HTML viewer 서버는 `SWMM_ENGINE_MODE=legacy`로 실행 가능하게 남겼다.
+- 주요 파일: `Start_SWMM_Engine_Server.command`, `docs/work_log.md`
+- 검증 결과: `zsh -n Start_SWMM_Engine_Server.command` 통과. `screen -dmS swmm-fastapi-8765 ...`로 서버를 분리 실행했을 때 `/Users/onseoktae/.pyenv/versions/3.14.4/bin/python3`을 선택하고 `http://127.0.0.1:8765/health`가 정상 응답하는 것 확인. `/Users/onseoktae/Downloads/drainage-layout.json` 기준 `/engine/start` 성공, node 71개/link 64개/rainfall target 10개/blockage target 40개 확인 후 `/engine/stop`으로 테스트 세션을 정지했다.
+- 계층 영향: 서버 시작 스크립트만 변경했다. FastAPI API shape, SWMM 변환기, React 화면, 기존 HTML viewer contract는 변경하지 않았다.
+- 주의점: 현재 서버 프로세스는 `screen` 세션 `swmm-fastapi-8765`에서 실행 중이다. 터미널에서 확인하려면 `screen -ls`, 종료하려면 `screen -S swmm-fastapi-8765 -X quit`를 사용한다. 기존 HTML viewer용 서버가 필요하면 `SWMM_ENGINE_MODE=legacy zsh ./Start_SWMM_Engine_Server.command`로 실행한다.
+
+## 2026-06-18 KST - 실험 뷰 파이프 흐름 화살표 유속 연동
+
+- 작업 요약: 실험 라인 런타임 뷰의 퍼센트 배지는 현재 편집 객체에 매핑된 SWMM 결과의 최대 차오름/수심/용량 비율을 표시한다는 기준을 확인했다. 파이프 내부 화살표를 단순 점멸에서 실제 이동 애니메이션으로 바꾸고, 서버 snapshot의 편집 객체 상태에 `maxVelocityMps`를 추가해 유속이 커질수록 화살표 이동 반복 시간이 짧아지도록 했다. 역방향 유량이면 화살표 방향도 반대로 돌린다.
+- 주요 파일: `server/swmm_fastapi_server.py`, `react-viewer/src/services/swmm/client.ts`, `react-viewer/src/components/simulation/SimulationLayoutPreview.tsx`, `docs/work_log.md`
+- 검증 결과: `python3 -m py_compile server/swmm_fastapi_server.py` 통과, `cd react-viewer && npm run build` 통과. 새 서버 코드로 `http://127.0.0.1:8765/health` 확인 후 `/Users/onseoktae/Downloads/drainage-layout.json` 기준 `/engine/start`와 `/engine/snapshot`을 실행했고, snapshot `editorObjects` 120개와 `maxVelocityMps`가 0보다 큰 pipe/link 샘플 5개를 확인했다. 테스트 후 `/engine/stop`으로 세션을 정지하고 포그라운드 서버 세션도 종료했다.
+- 계층 영향: FastAPI runtime snapshot payload에 `editorObjects.*.maxVelocityMps`를 추가했고 React client 타입과 실험 뷰 렌더링이 이를 사용한다. SWMM 변환기, 기존 HTML viewer contract, 편집 모드 JSON 스키마는 변경하지 않았다.
+- 주의점: PySWMM raw velocity가 0이거나 아주 작은 흐름에서 기존 helper가 0으로 처리하는 경우가 있어, FastAPI runtime에서는 SWMM 유량과 관 단면적을 이용한 보조 표시 유속을 계산한다. 이 값은 UI 애니메이션 속도용 표시값이며, 수리 결과의 source of truth는 계속 SWMM flow/depth snapshot이다.
+
+## 2026-06-18 KST - 실험 라인에 편집 JSON 런타임 렌더러 추가
+
+- 작업 요약: `실험 라인` 시뮬레이션 화면 안에서 편집 모드 localStorage JSON을 그대로 다시 그리는 SVG 런타임 뷰를 추가했다. 지형/도로/건물/맨홀/빗물받이/시설/방류구/파이프/일반 커넥터/ㄱ자 커넥터/T자 커넥터를 편집기 좌표 기준으로 렌더링하고, SWMM WebSocket snapshot의 `editorObjects` 값을 이용해 물 차오름, 물결, 흐름 점멸, 막힘 강조, 객체별 상태 배지를 표시한다. 강수량 슬라이더 값은 빗줄기 애니메이션으로도 표시하고, 막힘 대상 객체를 미리보기에서 클릭하면 오른쪽 제어 대상 선택과 연동되도록 했다.
+- 주요 파일: `react-viewer/src/components/simulation/SimulationWorkbench.tsx`, `react-viewer/src/components/simulation/SimulationLayoutPreview.tsx`, `docs/work_log.md`
+- 검증 결과: `cd react-viewer && npm run build` 통과. FastAPI `http://127.0.0.1:8765/health` 200 확인, React dev server `http://127.0.0.1:5173/` 200 확인. `/Users/onseoktae/Downloads/drainage-layout.json` 기준 `/engine/start` 성공 후 node 71개, link 64개, rainfall target 10개, blockage target 40개 확인. `/engine/control`로 강수량 60%, `PIPE_STORM_MAIN_01_segment_01` 막힘 45% 적용 시 active blockage 1개 확인. `/engine/snapshot`에서 `editorObjects` 120개와 `apartment_1`의 `maxDepthRatio`, `totalInflowCms` 등 UI 오버레이용 값을 확인하고 `/engine/stop`으로 세션 정지했다.
+- 계층 영향: React 실험 화면 렌더링과 제어 UX만 변경했다. SWMM 변환기, FastAPI API shape, PySWMM runtime 계산 규칙, 기존 HTML viewer contract는 변경하지 않았다. 런타임 뷰의 물/막힘 표시는 서버 snapshot 값을 source of truth로 사용하며, `relation`은 계속 UI 연결 메타데이터로만 렌더링한다.
+- 주의점: 이번 렌더러는 실험 화면 전용 1차 런타임 뷰다. 편집기의 모든 세부 SVG 장식과 입력 핸들을 그대로 복제하지 않고, 시뮬레이션 상태 확인에 필요한 시각 요소 중심으로 단순화했다. 이 턴에는 브라우저 제어 도구가 노출되지 않아 실제 화면 스크린샷 검증은 수행하지 못했고, 빌드/HTTP/API 스모크로 대체했다.
+
+## 2026-06-18 KST - 실험 라인 탭을 실시간 시뮬레이션 화면으로 교체
+
+- 작업 요약: 기존 `실험 라인` 탭의 `SeparatedStormLine` 실험 캔버스와 그래프 확인 화면을 제거하고, 편집 모드 localStorage 저장본을 기반으로 SWMM 엔진을 실행하는 `SimulationWorkbench` 화면으로 교체했다. 편집 모드 오른쪽 패널에 임시로 있던 실시간 엔진 조작부는 제거하고, 편집 모드는 JSON/INP 변환 검증 중심으로 정리했다. 새 시뮬레이션 화면은 엔진 시작/정지/초기화, 저장본 새로고침, 상태 확인, 강수량 0~100%, SWMM link별 막힘 제어, 최근 node/link 상태표, WebSocket 연결 상태와 tick 요약을 제공한다.
+- 주요 파일: `react-viewer/src/components/layout/DrainageWorkbench.tsx`, `react-viewer/src/components/simulation/SimulationWorkbench.tsx`, `react-viewer/src/services/swmm/editorRuntime.ts`, `react-viewer/src/components/editor/EditorCanvas.tsx`, `docs/work_log.md`
+- 검증 결과: `cd react-viewer && npm run build` 통과. `/Users/onseoktae/Downloads/drainage-layout.json` 기준 `/engine/start` 성공 후 summary `nodeCount=71`, `linkCount=64`, `rainfallTargetCount=10`, `blockageTargetCount=40` 확인. `ws://127.0.0.1:8765/ws/simulation`에서 `status`, `tick` 메시지 수신 확인. `/engine/stop`으로 테스트 세션 정지 확인. FastAPI 서버는 `http://127.0.0.1:8765`, React dev server는 `http://127.0.0.1:5173`에서 실행 중이다.
+- 계층 영향: React 탭/화면 구조와 WebSocket client 화면 배치를 변경했다. FastAPI 서버 API shape, SWMM 변환 규칙, 기존 HTML viewer contract는 변경하지 않았다. `relation`은 계속 UI metadata이며, 실시간 화면은 저장된 React editor JSON을 서버로 보내 SWMM/PySWMM 결과만 표시한다.
+- 주의점: 시뮬레이션 탭은 편집 모드가 localStorage에 저장한 최신 layout을 읽는다. 편집 후 탭을 이미 열어둔 상태라면 `저장본 새로고침`을 눌러 새 설계를 반영해야 한다. Playwright/브라우저 자동 스크린샷 도구는 현재 설치되어 있지 않아 화면 클릭 검증은 빌드와 API/WebSocket 스모크로 대체했다.
+
+## 2026-06-18 KST - FastAPI/PySWMM 1초 엔진과 React WebSocket 제어 패널 추가
+
+- 작업 요약: React editor layout을 직접 받아 임시 SWMM INP/mapping/report를 만든 뒤 PySWMM을 1초 단위로 진행하는 FastAPI 서버를 추가했다. 새 서버는 `/engine/start`, `/engine/stop`, `/engine/reset`, `/engine/status`, `/engine/control`, `/engine/snapshot`, `/ws/simulation`을 제공하고, 기존 `/editor/convert/validate`, `/editor/convert/download`, `/editor/export-inp` 변환 API도 같은 서버에서 유지한다. React 오른쪽 `시뮬레이션` 패널에는 실시간 엔진 시작/정지/초기화, 강수량 0~100%, 제어값 적용, WebSocket 상태, 최근 tick 요약을 추가했다. 선택 객체 패널에는 파이프/시설/맨홀/빗물받이/방류구의 `막힘 정도` 입력을 추가했고, 런타임 payload는 변환 mapping을 기준으로 SWMM link/node ID에 맞춰 전송한다.
+- 주요 파일: `server/swmm_fastapi_server.py`, `react-viewer/src/services/swmm/client.ts`, `react-viewer/src/components/editor/EditorCanvas.tsx`, `requirements.txt`, `scripts/repair_pyswmm_macos_codesign.sh`, `docs/work_log.md`
+- 검증 결과: `python3 -m py_compile server/swmm_fastapi_server.py server/swmm_engine_server.py scripts/editor_layout_to_swmm_inp.py scripts/swmm_html_bridge.py` 통과. `cd react-viewer && npm run build` 통과. `python3 -m pip install -r requirements.txt`로 FastAPI/Uvicorn/PySWMM 설치 성공. PySWMM macOS binary 서명 복구 후 import 성공. `http://127.0.0.1:8765/health` 200 확인. `/Users/onseoktae/Downloads/drainage-layout.json` 기준 `/editor/convert/validate` 결과 error 0개, warning 3개, conduit 64개 확인. `/engine/start` 성공 후 1초 loop가 `stepIndex`를 증가시키는 것 확인. `/engine/control`에서 강수량 55%, `PIPE_STORM_MAIN_01_segment_01` 막힘 100% 적용 확인. WebSocket `ws://127.0.0.1:8765/ws/simulation`에서 `status`, `tick` 메시지 수신 확인. React dev server는 `http://127.0.0.1:5173/`, FastAPI server는 `http://127.0.0.1:8765/`로 실행했다.
+- 계층 영향: React editor JSON -> SWMM INP 변환, FastAPI runtime server, PySWMM 1초 step loop, React 제어 패널, WebSocket client가 연결됐다. 기존 HTML viewer contract와 기존 `server/swmm_engine_server.py`는 제거하지 않고 유지했다. `relation`은 계속 UI attach metadata이고, 런타임 수리 상태는 SWMM/PySWMM snapshot만 source of truth로 취급한다.
+- 주의점: 현재 런타임 막힘은 conduit의 경우 PySWMM `flow_limit`, ORIFICE/WEIR/PUMP의 경우 `target_setting` 중심으로 적용한다. Manning n을 실행 중 직접 변경하는 방식은 PySWMM 지원 여부가 불명확해 사용하지 않았다. 시작 직후 첫 tick 전에는 PySWMM `current_time`이 없어 `modelTime=null`일 수 있고, 첫 step 이후부터 실제 시간이 들어온다. 브라우저 스크린샷 도구가 이번 턴에 노출되지 않아 실제 클릭 화면 검증은 빌드/서버/API 검증으로 대체했다.
+
 ## 2026-06-18 KST - 커넥터-맨홀 등 node-node relation을 내부 conduit로 변환
 
 - 작업 요약: SWMM GUI에서 `CONN_SEWER_09`, `CONN_SEWER_10` 사이가 `-o  o-`처럼 끊겨 보이던 문제를 수정했다. 원인은 relation 방향이 아니라, 기존 변환기가 `pipeSegment`만 SWMM `CONDUIT`로 만들고 커넥터-맨홀 같은 node-node relation은 수리 링크로 펼치지 않았기 때문이다. 이제 pipe가 아닌 두 hydraulic node 사이 relation은 최소 길이 1.0m 이상인 짧은 내부 conduit로 변환한다. 맨홀 SWMM 좌표도 시각 중심점이 아니라 relation이 붙는 하단 접속부 y를 기준으로 잡아 SWMM Map에서 연결선이 맨홀 하단부에 붙어 보이도록 했다.

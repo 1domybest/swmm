@@ -1,0 +1,348 @@
+{
+  "ok": true,
+  "counts": {
+    "junctions": 61,
+    "storages": 7,
+    "outfalls": 3,
+    "conduits": 65,
+    "pumps": 0,
+    "weirs": 0,
+    "inflowNodes": 17,
+    "warnings": 6,
+    "errors": 0
+  },
+  "warnings": [
+    "Pipe flow direction follows relation click order but conflicts with rotation: 오수 연결관 수평 02 expected ascending station order.",
+    "Pipe flow direction follows relation click order but conflicts with rotation: 우수 연결관 수평 02 expected ascending station order.",
+    "Pipe flow direction follows relation click order but conflicts with rotation: 우수 연결관 수평 04 expected ascending station order.",
+    "Pipe flow direction follows relation click order but conflicts with rotation: 파이프 expected descending station order.",
+    "Pipe flow direction follows relation click order but conflicts with rotation: 파이프 expected descending station order.",
+    "Pipe flow direction follows relation click order but conflicts with rotation: 파이프 expected descending station order."
+  ],
+  "errors": [],
+  "decisions": {
+    "scaleMPerPx": 0.5,
+    "baseGroundElevationM": 100.0,
+    "mapCoordinateMode": "react_layout_bounds_normalized_with_y_inversion",
+    "mapDimensions": [
+      0.0,
+      0.0,
+      5036.211752632714,
+      1409.0
+    ],
+    "horizontalSlope": 0.001,
+    "verticalPipeMode": "drop_by_invert_elevation",
+    "mainHeadInflowDetection": "name_based",
+    "rainfallMode": "direct_inflow_now_subcatchments_later",
+    "rainfallDefaultMmPerHour": 0.0,
+    "catchmentAreaM2": 500.0,
+    "runoffCoefficient": 0.8,
+    "manholeRainfallFactor": 0.25,
+    "dryWeatherFlowCms": 0.005,
+    "outfallType": "FREE",
+    "pipeDiametersM": {
+      "small": 0.3,
+      "medium": 0.6,
+      "large": 1.0
+    },
+    "manningN": 0.013,
+    "maxBlockedManningN": 0.15,
+    "minConduitLengthM": 1.0,
+    "teeHandling": "explicit_junction_no_auto_split"
+  },
+  "dynamicControls": {
+    "rainfallTargets": [
+      "CATCH_BASIN_01",
+      "CATCH_BASIN_02",
+      "CATCH_BASIN_03",
+      "CATCH_BASIN_04",
+      "CONN_STORM_09",
+      "CONN_STORM_13",
+      "MH_COMB_01",
+      "MH_SEWER_01",
+      "MH_STORM_01",
+      "PIPE_COMB_MAIN_01_station_000",
+      "PIPE_STORM_MAIN_01_station_000",
+      "PIPE_STORM_TRUNK_01_station_000"
+    ],
+    "rainfallTargetWeights": {
+      "CATCH_BASIN_01": 1.0,
+      "CATCH_BASIN_02": 1.0,
+      "CATCH_BASIN_03": 1.0,
+      "CATCH_BASIN_04": 1.0,
+      "CONN_STORM_09": 1.0,
+      "CONN_STORM_13": 1.0,
+      "MH_COMB_01": 0.25,
+      "MH_SEWER_01": 0.25,
+      "MH_STORM_01": 0.25,
+      "PIPE_COMB_MAIN_01_station_000": 1.0,
+      "PIPE_STORM_MAIN_01_station_000": 1.0,
+      "PIPE_STORM_TRUNK_01_station_000": 1.0
+    },
+    "dryWeatherTargets": [
+      "APT_01",
+      "APT_02",
+      "HOUSE_01",
+      "HOUSE_02",
+      "PIPE_COMB_MAIN_01_station_000",
+      "PIPE_SEWER_MAIN_01_station_000"
+    ],
+    "rainfallCmsFormula": "rainfall_mm_per_hour / 1000 / 3600 * 500 * 0.8 * rainfallTargetWeight",
+    "blockageRule": "0-99% increases Manning n up to 0.15; 100% sets conduit setting to 0.0",
+    "blockageTargets": [
+      {
+        "swmmLinkId": "PIPE_STORM_MAIN_01",
+        "sourceEditorId": "pipe_free_1781761486031",
+        "sourceEditorName": "우수 본관 01",
+        "pipeKind": "storm"
+      },
+      {
+        "swmmLinkId": "PIPE_SEWER_LATERAL_H_01",
+        "sourceEditorId": "pipe_free_1781708303838",
+        "sourceEditorName": "오수 연결관 수평 01",
+        "pipeKind": "sewer"
+      },
+      {
+        "swmmLinkId": "PIPE_SEWER_LATERAL_V_01",
+        "sourceEditorId": "pipe_free_1781708355304",
+        "sourceEditorName": "오수 연결관 수직 01",
+        "pipeKind": "sewer"
+      },
+      {
+        "swmmLinkId": "PIPE_SEWER_MAIN_02",
+        "sourceEditorId": "pipe_free_1781752695385",
+        "sourceEditorName": "오수 본관 02",
+        "pipeKind": "sewer"
+      },
+      {
+        "swmmLinkId": "PIPE_SEWER_MAIN_01",
+        "sourceEditorId": "pipe_free_1781748895553",
+        "sourceEditorName": "오수 본관 01",
+        "pipeKind": "sewer"
+      },
+      {
+        "swmmLinkId": "PIPE_SEWER_LATERAL_H_02",
+        "sourceEditorId": "pipe_free_1781754189032",
+        "sourceEditorName": "오수 연결관 수평 02",
+        "pipeKind": "sewer"
+      },
+      {
+        "swmmLinkId": "PIPE_SEWER_MAIN_DROP_01",
+        "sourceEditorId": "pipe_free_1781754376482",
+        "sourceEditorName": "오수 본관 하강관 01",
+        "pipeKind": "sewer"
+      },
+      {
+        "swmmLinkId": "PIPE_INTERCEPTOR_01",
+        "sourceEditorId": "pipe_free_1781754392036",
+        "sourceEditorName": "차집관거 01",
+        "pipeKind": "sewer"
+      },
+      {
+        "swmmLinkId": "PIPE_STORM_LATERAL_H_01",
+        "sourceEditorId": "pipe_free_1781761457323",
+        "sourceEditorName": "우수 연결관 수평 01",
+        "pipeKind": "storm"
+      },
+      {
+        "swmmLinkId": "PIPE_STORM_LATERAL_H_02",
+        "sourceEditorId": "pipeSegment_copy_1781761504445_1",
+        "sourceEditorName": "우수 연결관 수평 02",
+        "pipeKind": "storm"
+      },
+      {
+        "swmmLinkId": "PIPE_STORM_MAIN_02",
+        "sourceEditorId": "pipe_free_1781761613473",
+        "sourceEditorName": "우수 본관 02",
+        "pipeKind": "storm"
+      },
+      {
+        "swmmLinkId": "PIPE_STORM_MAIN_DROP_01",
+        "sourceEditorId": "pipe_free_1781761648013",
+        "sourceEditorName": "우수 본관 하강관 01",
+        "pipeKind": "storm"
+      },
+      {
+        "swmmLinkId": "PIPE_STORM_TRUNK_01",
+        "sourceEditorId": "pipe_free_1781761655573",
+        "sourceEditorName": "우수 간선관거 01",
+        "pipeKind": "storm"
+      },
+      {
+        "swmmLinkId": "PIPE_SEWER_LATERAL_H_03",
+        "sourceEditorId": "pipe_free_1781761760089",
+        "sourceEditorName": "오수 연결관 수평 03",
+        "pipeKind": "sewer"
+      },
+      {
+        "swmmLinkId": "PIPE_SEWER_LATERAL_V_03",
+        "sourceEditorId": "pipe_free_1781761803174",
+        "sourceEditorName": "오수 연결관 수직 03",
+        "pipeKind": "sewer"
+      },
+      {
+        "swmmLinkId": "PIPE_SEWER_LATERAL_H_04",
+        "sourceEditorId": "pipeSegment_copy_1781761822423_1",
+        "sourceEditorName": "오수 연결관 수평 04",
+        "pipeKind": "sewer"
+      },
+      {
+        "swmmLinkId": "PIPE_SEWER_LATERAL_V_04",
+        "sourceEditorId": "pipeSegment_copy_1781761822423_2",
+        "sourceEditorName": "오수 연결관 수직 04",
+        "pipeKind": "sewer"
+      },
+      {
+        "swmmLinkId": "PIPE_STORM_LATERAL_H_03",
+        "sourceEditorId": "pipeSegment_copy_1781761845125_1",
+        "sourceEditorName": "우수 연결관 수평 03",
+        "pipeKind": "storm"
+      },
+      {
+        "swmmLinkId": "PIPE_STORM_LATERAL_V_03",
+        "sourceEditorId": "pipeSegment_copy_1781761845125_2",
+        "sourceEditorName": "우수 연결관 수직 03",
+        "pipeKind": "storm"
+      },
+      {
+        "swmmLinkId": "PIPE_COMB_MAIN_01",
+        "sourceEditorId": "pipe_free_1781761867795",
+        "sourceEditorName": "합류식 본관 01",
+        "pipeKind": "combined"
+      },
+      {
+        "swmmLinkId": "PIPE_OVERFLOW_OUTFALL_PIPE_01",
+        "sourceEditorId": "pipe_free_1781762108006",
+        "sourceEditorName": "월류 방류관 01",
+        "pipeKind": "overflow"
+      },
+      {
+        "swmmLinkId": "PIPE_STORM_TRUNK_02",
+        "sourceEditorId": "pipe_free_1781762167610",
+        "sourceEditorName": "우수 간선관거 02",
+        "pipeKind": "storm"
+      },
+      {
+        "swmmLinkId": "PIPE_OVERFLOW_INTERCEPTOR_DROP_01",
+        "sourceEditorId": "pipe_free_1781762361073",
+        "sourceEditorName": "월류 차집 연결관 01",
+        "pipeKind": "combined"
+      },
+      {
+        "swmmLinkId": "PIPE_TREATED_OUTFALL_PIPE_01",
+        "sourceEditorId": "pipe_free_1781762695368",
+        "sourceEditorName": "처리수 방류관 01",
+        "pipeKind": "treated"
+      },
+      {
+        "swmmLinkId": "PIPE_STORM_LATERAL_H_04",
+        "sourceEditorId": "pipeSegment_copy_1781763961700_1",
+        "sourceEditorName": "우수 연결관 수평 04",
+        "pipeKind": "storm"
+      },
+      {
+        "swmmLinkId": "PIPE_STORM_LATERAL_V_04",
+        "sourceEditorId": "pipeSegment_copy_1781763961700_2",
+        "sourceEditorName": "우수 연결관 수직 04",
+        "pipeKind": "storm"
+      },
+      {
+        "swmmLinkId": "PIPE_STORM_LATERAL_V_01",
+        "sourceEditorId": "pipe_free_1781761477346",
+        "sourceEditorName": "우수 연결관 수직 01",
+        "pipeKind": "storm"
+      },
+      {
+        "swmmLinkId": "PIPE_STORM_LATERAL_V_02",
+        "sourceEditorId": "pipeSegment_copy_1781761504445_2",
+        "sourceEditorName": "우수 연결관 수직 02",
+        "pipeKind": "storm"
+      },
+      {
+        "swmmLinkId": "pipe_free_1781771017429",
+        "sourceEditorId": "pipe_free_1781771017429",
+        "sourceEditorName": "파이프",
+        "pipeKind": "sewer"
+      },
+      {
+        "swmmLinkId": "pipe_free_1781771452952",
+        "sourceEditorId": "pipe_free_1781771452952",
+        "sourceEditorName": "파이프",
+        "pipeKind": "sewer"
+      },
+      {
+        "swmmLinkId": "pipe_free_1781771598332",
+        "sourceEditorId": "pipe_free_1781771598332",
+        "sourceEditorName": "파이프",
+        "pipeKind": "storm"
+      },
+      {
+        "swmmLinkId": "pipe_free_1781771701381",
+        "sourceEditorId": "pipe_free_1781771701381",
+        "sourceEditorName": "파이프",
+        "pipeKind": "storm"
+      },
+      {
+        "swmmLinkId": "pipe_free_1781771856872",
+        "sourceEditorId": "pipe_free_1781771856872",
+        "sourceEditorName": "파이프",
+        "pipeKind": "combined"
+      },
+      {
+        "swmmLinkId": "pipe_free_1781771871446",
+        "sourceEditorId": "pipe_free_1781771871446",
+        "sourceEditorName": "파이프",
+        "pipeKind": "combined"
+      },
+      {
+        "swmmLinkId": "pipe_free_1781771885636",
+        "sourceEditorId": "pipe_free_1781771885636",
+        "sourceEditorName": "파이프",
+        "pipeKind": "combined"
+      },
+      {
+        "swmmLinkId": "pipe_free_1781772019999",
+        "sourceEditorId": "pipe_free_1781772019999",
+        "sourceEditorName": "파이프",
+        "pipeKind": "combined"
+      },
+      {
+        "swmmLinkId": "pipeSegment_copy_1781772027152_1",
+        "sourceEditorId": "pipeSegment_copy_1781772027152_1",
+        "sourceEditorName": "파이프 복사",
+        "pipeKind": "combined"
+      },
+      {
+        "swmmLinkId": "pipe_free_1781772135198",
+        "sourceEditorId": "pipe_free_1781772135198",
+        "sourceEditorName": "파이프",
+        "pipeKind": "storm"
+      },
+      {
+        "swmmLinkId": "pipe_free_1781772198383",
+        "sourceEditorId": "pipe_free_1781772198383",
+        "sourceEditorName": "파이프",
+        "pipeKind": "sewer"
+      },
+      {
+        "swmmLinkId": "pipe_free_1781772269295",
+        "sourceEditorId": "pipe_free_1781772269295",
+        "sourceEditorName": "파이프",
+        "pipeKind": "sewer"
+      },
+      {
+        "swmmLinkId": "PIPE_SEWER_LATERAL_V_02",
+        "sourceEditorId": "pipe_free_1781708418875",
+        "sourceEditorName": "오수 연결관 수직 02",
+        "pipeKind": "sewer"
+      }
+    ]
+  },
+  "facilityNotes": [
+    "FAC_WATER_RECLAMATION_01: 물재생센터는 STORAGE 처리시설로 변환됩니다.",
+    "FAC_PUMP_STATION_01: 펌프장은 STORAGE + PUMP 확장 대상입니다.",
+    "FAC_OVERFLOW_CHAMBER_01: 월류시설은 ORIFICE + WEIR 확장 대상입니다."
+  ],
+  "inpSha256": "be197332ff0c1657b006a54dc484981940b2c9eff3d91cbabb49088be0a2d7d4",
+  "inpBytes": 37752
+}

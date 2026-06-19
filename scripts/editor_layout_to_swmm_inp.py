@@ -34,9 +34,12 @@ DEFAULT_DRY_WEATHER_FLOW_CMS = 0.005
 DEFAULT_RAINFALL_MM_PER_HOUR = 0.0
 DEFAULT_CATCHMENT_AREA_M2 = 500.0
 DEFAULT_RUNOFF_COEFFICIENT = 0.8
+DEFAULT_MANHOLE_RAINFALL_FACTOR = 0.25
 DEFAULT_MANNING_N = 0.013
 MAX_BLOCKED_MANNING_N = 0.15
 MAP_PADDING_M = 50.0
+INTERNAL_RELATION_MIN_LENGTH_M = 5.0
+INTERNAL_RELATION_MIN_DIAMETER_M = 1.20
 
 PIPE_DIAMETER_M = {
     "small": 0.30,
@@ -93,10 +96,10 @@ OUTFALL_WATER_KIND = {
 }
 
 STORAGE_AREA_BY_FACILITY_KIND = {
-    "generic": 100.0,
-    "overflowChamber": 100.0,
-    "stormPumpStation": 200.0,
-    "waterReclamationCenter": 1000.0,
+    "generic": 20.0,
+    "overflowChamber": 4.0,
+    "stormPumpStation": 12.0,
+    "waterReclamationCenter": 80.0,
 }
 
 
@@ -309,7 +312,7 @@ def node_section(node: dict[str, Any]) -> NodeSection | None:
         return None
     if node_type == "outfall":
         return "OUTFALLS"
-    if node_type == "facility":
+    if node_type in {"catchBasin", "facility"}:
         return "STORAGE"
     return "JUNCTIONS"
 
@@ -324,7 +327,7 @@ def node_depth_defaults(node: dict[str, Any]) -> tuple[float, float, float, floa
     if node_type == "facility":
         kind = normalize_facility_kind(node)
         if kind == "waterReclamationCenter":
-            return 4.00, 0.15, 0.80, 0.0
+            return 4.00, 0.00, 0.80, 0.0
         if kind == "stormPumpStation":
             return 2.40, 0.00, 0.50, 0.0
         if kind == "overflowChamber":
@@ -351,6 +354,8 @@ def node_inflow_series(node: dict[str, Any]) -> str | None:
     node_type = node.get("type")
     if node_type == "catchBasin":
         return "TS_STORM_RAIN"
+    if node_type == "manhole":
+        return "TS_MANHOLE_RAIN"
     if node_type in {"apartment", "house"}:
         return "TS_SEWER_DWF"
     return None
@@ -479,7 +484,13 @@ def make_swmm_node(
     max_depth, init_depth, surcharge_depth, ponded_area = node_depth_defaults(source_node or {})
     depth_m = depth_for_point(point, ground_surface_y, map_transform.scale_m_per_px)
     if section != "OUTFALLS":
-        max_depth = max(depth_m, 1.0)
+        if section == "STORAGE":
+            # Storage-like editor objects have their own hydraulic depth.
+            # Screen depth can be hundreds of meters in the diagram and should
+            # not become the tank depth used for filling/overflow behavior.
+            max_depth = max(max_depth, 1.0)
+        else:
+            max_depth = max(depth_m, max_depth, 1.0)
     mapped = map_point(point, map_transform)
     return SwmmNode(
         id=node_id,
@@ -558,11 +569,20 @@ def convert_layout(
 
     def hydraulic_point_for_node(node: dict[str, Any]) -> Point:
         center = node_center(node)
-        if node.get("type") == "manhole":
-            attach_points = relation_attach_points_by_node.get(str(node.get("id")), [])
+        node_type = node.get("type")
+        attach_points = relation_attach_points_by_node.get(str(node.get("id")), [])
+        if node_type == "manhole":
             if attach_points:
                 # 맨홀은 시각 중심보다 실제 관이 붙는 하단 접속부를 SWMM node 위치로 쓴다.
                 return Point(center.x, max(point.y for point in attach_points))
+        if node_type in {"connector", "elbowConnector", "teeConnector"} and attach_points:
+            # 커넥터류의 시각 중심은 관 중심선보다 위에 있을 수 있다. 이를 그대로
+            # invert elevation에 쓰면 수평관이 오르막으로 변하므로, 실제 관이 붙는
+            # 가장 깊은 접속부를 hydraulic junction 위치로 사용한다.
+            deepest_y = max(point.y for point in attach_points)
+            deepest_points = [point for point in attach_points if abs(point.y - deepest_y) < 1e-6]
+            deepest_x = sum(point.x for point in deepest_points) / max(1, len(deepest_points))
+            return Point(deepest_x, deepest_y)
         return center
 
     used_node_ids: set[str] = set()
@@ -857,13 +877,14 @@ def convert_layout(
             from_point = relation_endpoint_point(relation, "from") or standard_port_point(from_editor_node, str(from_endpoint.get("portId")))
             to_point = relation_endpoint_point(relation, "to") or standard_port_point(to_editor_node, str(to_endpoint.get("portId")))
             pipe_kind, diameter, roughness = hydraulic_relation_defaults(from_editor_node, to_editor_node, relation)
+            diameter = max(diameter, INTERNAL_RELATION_MIN_DIAMETER_M)
             relation_id = str(relation.get("swmmId") or relation.get("id") or "relation")
             add_link(SwmmLink(
                 id=f"{sanitize_id(relation_id, 'relation')}_CONDUIT",
                 kind="CONDUIT",
                 from_node=from_node,
                 to_node=to_node,
-                length=visual_length_m(from_point, to_point, scale_m_per_px),
+                length=visual_length_m(from_point, to_point, scale_m_per_px, INTERNAL_RELATION_MIN_LENGTH_M),
                 roughness=roughness,
                 diameter=diameter,
                 slope_hint=DEFAULT_HORIZONTAL_SLOPE,
@@ -937,7 +958,9 @@ def convert_layout(
             if link.kind == "CONDUIT" and link.source_editor_type == "pipeSegment"
         ]
         incoming_by_kind: dict[str, set[str]] = {}
-        for link in conduits:
+        for link in swmm_links:
+            if link.kind != "CONDUIT":
+                continue
             incoming_by_kind.setdefault(link.pipe_kind, set()).add(link.to_node)
 
         for link in conduits:
@@ -1123,6 +1146,9 @@ def render_inp(result: ConvertResult, *, title: str) -> str:
         if "TS_STORM_RAIN" in all_series:
             add("TS_STORM_RAIN                           00:00    0.0000")
             add("TS_STORM_RAIN                           01:00    0.0000")
+        if "TS_MANHOLE_RAIN" in all_series:
+            add("TS_MANHOLE_RAIN                         00:00    0.0000")
+            add("TS_MANHOLE_RAIN                         01:00    0.0000")
         if "TS_SEWER_DWF" in all_series:
             add(f"TS_SEWER_DWF                            00:00    {DEFAULT_DRY_WEATHER_FLOW_CMS:.4f}")
             add(f"TS_SEWER_DWF                            01:00    {DEFAULT_DRY_WEATHER_FLOW_CMS:.4f}")
@@ -1184,8 +1210,17 @@ def render_conversion_report(result: ConvertResult, *, inp_text: str | None = No
     rainfall_targets = [
         node_id
         for node_id, series_list in sorted(result.inflow_nodes.items())
-        if "TS_STORM_RAIN" in series_list
+        if "TS_STORM_RAIN" in series_list or "TS_MANHOLE_RAIN" in series_list
     ]
+    rainfall_target_weights = {
+        node_id: (
+            DEFAULT_MANHOLE_RAINFALL_FACTOR
+            if "TS_MANHOLE_RAIN" in series_list and "TS_STORM_RAIN" not in series_list
+            else 1.0
+        )
+        for node_id, series_list in sorted(result.inflow_nodes.items())
+        if "TS_STORM_RAIN" in series_list or "TS_MANHOLE_RAIN" in series_list
+    }
     dry_weather_targets = [
         node_id
         for node_id, series_list in sorted(result.inflow_nodes.items())
@@ -1219,6 +1254,7 @@ def render_conversion_report(result: ConvertResult, *, inp_text: str | None = No
             "rainfallDefaultMmPerHour": DEFAULT_RAINFALL_MM_PER_HOUR,
             "catchmentAreaM2": DEFAULT_CATCHMENT_AREA_M2,
             "runoffCoefficient": DEFAULT_RUNOFF_COEFFICIENT,
+            "manholeRainfallFactor": DEFAULT_MANHOLE_RAINFALL_FACTOR,
             "dryWeatherFlowCms": DEFAULT_DRY_WEATHER_FLOW_CMS,
             "outfallType": "FREE",
             "pipeDiametersM": PIPE_DIAMETER_M,
@@ -1229,8 +1265,9 @@ def render_conversion_report(result: ConvertResult, *, inp_text: str | None = No
         },
         "dynamicControls": {
             "rainfallTargets": rainfall_targets,
+            "rainfallTargetWeights": rainfall_target_weights,
             "dryWeatherTargets": dry_weather_targets,
-            "rainfallCmsFormula": "rainfall_mm_per_hour / 1000 / 3600 * 500 * 0.8",
+            "rainfallCmsFormula": "rainfall_mm_per_hour / 1000 / 3600 * 500 * 0.8 * rainfallTargetWeight",
             "blockageRule": "0-99% increases Manning n up to 0.15; 100% sets conduit setting to 0.0",
             "blockageTargets": [
                 {
